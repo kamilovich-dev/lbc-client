@@ -1,0 +1,24 @@
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.headText {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.errorText {
+  font-size: 24px;
+  font-style: italic;
+}
+
+.image {
+  height: 300px;
+  width: 300px;
+}

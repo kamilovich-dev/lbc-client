@@ -1,0 +1,9 @@
+.outerLayout {
+  background-color: #F6F7FB;
+  flex: 1 1 auto;
+}
+
+.innerLayout {
+  max-width: 1200px;
+  margin: auto;
+}
