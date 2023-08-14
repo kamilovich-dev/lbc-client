@@ -1,6 +1,8 @@
 import { makeObservable, observable, action } from "mobx";
 import { ISessionStore, TUser } from './types';
 import type { NavigateFunction } from 'react-router-dom';
+import { Client } from "shared/api";
+import { userEndpoints } from "shared/api";
 
 class SessionStore implements ISessionStore {
 
@@ -22,14 +24,14 @@ class SessionStore implements ISessionStore {
         if (token) this.user.token = token
     }
 
-    login = async (navigate: NavigateFunction) => {
-        new Promise<string>((resolve) => {
-            setTimeout(() => resolve('2342f2f1d131rf12'), 250)})
-        .then( token => {
-            sessionStorage.setItem('token', token)
-            this.user.token = token
-            navigate('/')
-        } );
+    login = async (navigate: NavigateFunction, email:string, password: string) => {
+        await userEndpoints.login(new Client().axiosInstance, { email, password })
+            .then( response => {
+                if (response?.accessToken) {
+                    this.user.token = response.accessToken
+                    navigate('/')
+                }
+            } )
     }
 
     logout = (navigate: NavigateFunction) => {
