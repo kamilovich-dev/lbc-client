@@ -29,15 +29,19 @@ class SessionStore implements ISessionStore {
             .then( response => {
                 if (response?.accessToken) {
                     this.user.token = response.accessToken
+                    sessionStorage.setItem('token', response.accessToken)
                     navigate('/')
                 }
-            } )
+        } )
     }
 
-    logout = (navigate: NavigateFunction) => {
-        sessionStorage.removeItem('token')
-        this.user.token = null
-        navigate('/auth')
+    logout = async (navigate: NavigateFunction) => {
+        await userEndpoints.logout(new Client().axiosInstance)
+            .then( () => {
+                this.user.token = null
+                sessionStorage.removeItem('token')
+                navigate('/auth')
+        } )
     }
 }
 

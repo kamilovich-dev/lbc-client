@@ -11,10 +11,9 @@ export async function login(client: AxiosInstance, payload: TLoginPayload): Prom
   }
 }
 
-export async function logout(client: AxiosInstance): Promise<true | undefined> {
+export async function logout(client: AxiosInstance): Promise<void> {
   try {
       await client.post<TLoginResponse>('/user/login', {})
-      return true
   } catch(error) {
       console.log(error)
   }

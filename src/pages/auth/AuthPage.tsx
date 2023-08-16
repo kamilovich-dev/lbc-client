@@ -1,11 +1,10 @@
 import Button from '@mui/material/Button';
-import { Login } from 'features/login/Login';
+import { LoginForm } from 'features/login-form/LoginForm';
 
 const AuthPage = () => {
     return (
         <>
-            <Login />
-            <Button variant="contained">Регистрация</Button>
+            <LoginForm />
         </>
     );
 };
