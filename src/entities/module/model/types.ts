@@ -1,7 +1,10 @@
 interface IModuleStore {
     modules: TModule[],
-    view: IModuleViewStore,
+    filters: TModulesFilter,
+    delayTimer: typeof setTimeout | null,
+    setFilter: (type: string, value: string) => void,
     getModuleById: (id: number) => TModule | undefined,
+    refreshModules: () => Promise<void>,
     addModule: () => void,
     deleteModuleById: (id: number) => void,
     editModule: (module: TModule) => void,
@@ -15,22 +18,11 @@ interface ICardStore {
     editCard: (card: TCard) => void,
 }
 
-interface IModuleViewStore {
-    modules: TModule[],
-    filters: {
-        byOrder: string,
-        byName: string,
-    },
-    updateModules: (modules: TModule[]) => void,
-    setFilter: (type: string, value: string  ) => void,
-    filteredModules: TModule[],
-}
-
 type TModule = {
     id: number,
     name: string,
     description: string,
-    cardStore: ICardStore,
+    cardsCount: number
 }
 
 type TCard = {
@@ -41,13 +33,12 @@ type TCard = {
 }
 
 type TModulesFilter = {
-    byOrder: string,
-    byName: string,
+    by_search: string,
+    by_alphabet: string,
 }
 
 export type {
     IModuleStore,
-    IModuleViewStore,
     ICardStore,
     TModule,
     TCard,

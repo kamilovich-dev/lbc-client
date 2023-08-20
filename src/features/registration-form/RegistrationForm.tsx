@@ -5,7 +5,6 @@ import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { useSessionStore } from 'entities/session';
 
-
 const RegistrationForm = () => {
     const sessionStore = useSessionStore();
     const navigate = useNavigate();

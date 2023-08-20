@@ -1,6 +1,5 @@
 import { observer } from 'mobx-react-lite'
 import { useNavigate } from 'react-router-dom';
-import styles from './styles.module.css';
 import { ModuleRow } from 'entities/module';
 import { ButtonEdit } from 'shared/ui/buttons/button-edit/ButtonEdit';
 import { TModule } from 'entities/module/model/types';
@@ -19,10 +18,10 @@ const ShowModules = observer(( { modules }: IProps ) => {
     return (
         <>
             { modules.map( module => (
-                <div className={styles.row} key={module.id}>
+                <div className='mb-2' key={module.id}>
                     <ModuleRow
                         moduleName={module.name}
-                        cardsCount={module.cardStore.cards.length}
+                        cardsCount={module.cardsCount}
                         ButtonEdit={ <ButtonEdit
                                         onClick={() => handleButtonEditClick(module.id)}/>}
                     />

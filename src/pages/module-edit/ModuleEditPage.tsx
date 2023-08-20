@@ -5,10 +5,10 @@ import { DeleteCard } from 'features/delete-card/DeleteCard';
 import { CardTerm, CardDefinition } from 'features/edit-card';
 import { ModuleDescription, ModuleName } from 'features/edit-module';
 import { AddCard } from 'features/add-card/AddCard';
-import { useModuleStore } from 'entities/module';
+import { ModuleStore } from 'entities/module';
 
 const ModuleEditPage = observer(() => {
-    const moduleStore = useModuleStore();
+    const moduleStore = new ModuleStore();
     if (!moduleStore) return;
 
     const { moduleId } = useParams();
@@ -17,10 +17,10 @@ const ModuleEditPage = observer(() => {
     const module = moduleStore.getModuleById( parseInt(moduleId) );
     if (!module) return;
 
-    const cards = module.cardStore.cards;
+    // const cards = module.cardStore.cards;
     return (
         <>
-            <div className={'py-2 w-1/2'}>
+            {/* <div className={'py-2 w-1/2'}>
                 <ModuleName
                     moduleStore={moduleStore}
                     module={module}
@@ -59,7 +59,7 @@ const ModuleEditPage = observer(() => {
                         />
                     ))
                 }
-            </div>
+            </div> */}
 
         </>
     );

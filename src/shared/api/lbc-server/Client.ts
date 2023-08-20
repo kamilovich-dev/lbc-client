@@ -5,7 +5,8 @@ class Client {
   BASE_URL: string = 'http://localhost:5000/api'
   axiosInstance: AxiosInstance
 
-  constructor(accessToken?: string) {
+  constructor() {
+    const accessToken = sessionStorage.getItem('token')
     this.axiosInstance = axios.create({
       baseURL: this.BASE_URL,
       headers: {

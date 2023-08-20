@@ -1,38 +1,64 @@
-import Grid from '@mui/material/Grid';
+import { useEffect  } from 'react'
 import { observer} from 'mobx-react-lite'
-import styles from './styles.module.css';
-import { AddModule } from 'features/add-module/AddModule';
-import { FilterModules } from 'features/filter-modules/FilterModules';
-import { SearchModules } from 'features/search-modules/SearchModules';
+import { Alert, Button, Select, MenuItem, TextField } from '@mui/material';
 import { ShowModules } from 'features/show-modules/ShowModules';
-import { useModuleStore } from 'entities/module';
+import { ModuleStore, IModuleStore } from 'entities/module';
 
-const ModulesPage = observer(() => {
-    const moduleStore = useModuleStore();
-    if (!moduleStore) return;
+interface Props {
+    moduleStore: IModuleStore
+}
+
+const _ModulesPage = observer(( { moduleStore }: Props ) => {
+
+    useEffect( () => {
+        moduleStore.refreshModules()
+    }, [] )
 
     return (
-        <>
-            <div className={styles.containerOuter}>
-            <Grid container className={styles.containerInner}>
-                <Grid item xs={12} className={styles.firstRow} >
-                    <AddModule
-                        moduleStore={moduleStore}/>
-                    <FilterModules
-                        moduleViewStore={moduleStore.view}
-                        byOrderValue={moduleStore.view.filters.byOrder}/>
-                    <SearchModules
-                        moduleViewStore={moduleStore.view}
-                        byNameValue={moduleStore.view.filters.byName}/>
-                </Grid>
-                <Grid item xs={12}>
-                    <ShowModules
-                        modules={moduleStore.view.filteredModules} />
-                </Grid>
-            </Grid>
-        </div>
-        </>
+            <>
+                <div className='p-2'>
+                    <div className='flex gap-4 mb-4'>
+                        <Button
+                                variant="contained"
+                                onClick={moduleStore.addModule}>
+                            + ДОБАВИТЬ МОДУЛЬ</Button>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={moduleStore.filters.by_alphabet}
+                            label="Age"
+                            onChange={e => moduleStore.setFilter('byAlphabet', e.target.value)}
+                            size={"small"}
+                        >
+                            <MenuItem value={'asc'}>По возрастанию</MenuItem>
+                            <MenuItem value={'desc'}>По убыванию</MenuItem>
+                        </Select>
+                        <TextField
+                            onChange={e => {
+                                moduleStore.setFilter('bySearch',e.target.value)
+                            }}
+                            label="Поиск модулей"
+                            variant="outlined"
+                            value={moduleStore.filters.by_search}
+                            size={"small"}
+                        />
+                    </div>
+                    <div>
+                        {moduleStore.modules.length ?
+                            <ShowModules modules={moduleStore.modules} />
+                                        : <Alert severity="info" sx={{ width: '100%' }}>
+                                            Модули не созданы!
+                                        </Alert>
+                        }
+                    </div>
+                </div>
+            </>
     );
 });
+
+const ModulesPage = () => {
+    const moduleStore = new ModuleStore();
+    return <_ModulesPage moduleStore={moduleStore} />
+}
 
 export { ModulesPage };

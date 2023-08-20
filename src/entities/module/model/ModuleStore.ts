@@ -1,23 +1,31 @@
-import { makeObservable, observable, action, autorun } from 'mobx';
-import type { IModuleStore, TModule } from './types';
-import { CardStore } from './CardStore';
-import { ModuleViewStore } from "./ModuleViewStore";
+import { makeObservable, observable, action } from 'mobx';
+import type { IModuleStore, TModule, TModulesFilter } from './types';
+import { Client, moduleEndpoints } from 'shared/api'
+import { AxiosInstance } from 'axios';
+
 
 class ModuleStore implements IModuleStore {
     modules: TModule[] = [];
-    view = new ModuleViewStore();
+    axiosInstanse: AxiosInstance;
+    filters: TModulesFilter = {
+        by_alphabet: 'asc',
+        by_search: ''
+    }
+    delayTimer: any
 
     constructor() {
         makeObservable(this,{
                 modules: observable,
+                filters: observable,
+                delayTimer: observable,
+                refreshModules: action,
+                setFilter: action,
                 addModule: action,
                 deleteModuleById: action,
                 editModule: action
             }
-        )
-        autorun(() => {
-            this.view.updateModules([...this.modules])
-        } );
+        ),
+        this.axiosInstanse = new Client().axiosInstance
     }
 
     getModuleById = (id: number) => {
@@ -27,14 +35,12 @@ class ModuleStore implements IModuleStore {
     }
 
     addModule = () => {
-        const id = this.modules.length === 0 ? 0 : this.modules.length;
-        const cardStore = new CardStore();
-        this.modules.push({
-            id: id,
-            name: `Новый модуль ${id}`,
-            description: '',
-            cardStore: cardStore,
-        })
+        moduleEndpoints.createModule(this.axiosInstanse, {
+                name: 'Новый модуль',
+                'description': '' })
+            .then( () => {
+                this.refreshModules()
+            })
     }
 
     deleteModuleById = (id: number) => {
@@ -46,6 +52,34 @@ class ModuleStore implements IModuleStore {
     editModule = (module: TModule) => {
         const idx = this.modules.findIndex( item => item.id === module.id );
         this.modules[idx] = module;
+    }
+
+    refreshModules = async () => {
+        const modules = (await moduleEndpoints.getModules(this.axiosInstanse, this.filters))?.modules
+        if (!modules) return;
+        this.modules = modules
+    }
+
+    deferedRefreshModules = () => {
+        clearTimeout(this.delayTimer)
+        this.delayTimer = setTimeout(() => {
+            this.refreshModules()
+        }, 1000)
+    }
+
+    setFilter = ( type: string, value: string ) => {
+        switch(type) {
+            case 'byAlphabet':
+                this.filters.by_alphabet = value;
+                this.refreshModules()
+                break;
+            case 'bySearch':
+                this.filters.by_search = value;
+                this.deferedRefreshModules()
+                break;
+            default:
+                console.log(`cant set filter: type=${type}, value=${value}`);
+        }
     }
 
 }

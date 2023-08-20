@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { AppHeader } from 'widgets/app-header/AppHeader'
-import { UserProfileLayout} from "layouts/user-profile/UserProfileLayout";
 import { useSessionStore } from 'entities/session';
 
 
@@ -16,9 +15,11 @@ const RootPage = ( ) => {
     return (
         <>
             <AppHeader />
-            <UserProfileLayout>
-                <Outlet/>
-            </UserProfileLayout>
+            <div className='bg-blue-50 flex p-4'>
+                <div className='w-full m-auto'>
+                    <Outlet/>
+                </div>
+            </div>
         </>
     );
 }

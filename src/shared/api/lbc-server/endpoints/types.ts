@@ -3,10 +3,24 @@ export type TModule = {
     id: number,
     name: string,
     description: string,
+    cardsCount: number
   }
 
 export type TGetModulesResponse = {
     modules: TModule[]
+}
+
+export type TCreateModuleResponse = {
+    module: TModule
+}
+export type TCreateModulePayload = {
+    name: string,
+    description: string
+}
+
+export type TMduleSearchParams = {
+    by_search: string,
+    by_alphabet: string // 'asc' | 'desc'
 }
 
 /*user */
@@ -34,10 +48,4 @@ export type TUser = {
     id: number,
     email: string,
     isActivated: boolean,
-}
-
-/*error */
-export type TApiError = {
-    status: number | undefined,
-    message: string,
 }

@@ -3,7 +3,6 @@ import { useNavigate, Outlet} from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import styles from './styles.module.css';
 
 
 const ProfileHeader = () => {
@@ -22,7 +21,7 @@ const ProfileHeader = () => {
 
     return (
         <>
-            <div className={styles.container}>
+            <div className='p-2'>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '100%' }}>
                     <Tabs value={tabIndex === -1 ? false : tabIndex} >
                             <Tab label="Модули" onClick={e => handleClick('/modules')}/>
