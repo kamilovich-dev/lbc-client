@@ -7,10 +7,10 @@ import { useSessionStore } from 'entities/session';
 
 const RootPage = ( ) => {
     const navigate = useNavigate();
-    const sessionStore: any = useSessionStore();
+    const sessionStore = useSessionStore();
 
     useEffect( () => {
-        sessionStore.user.token ? navigate('/modules') : navigate('/auth')
+        sessionStore?.session.token ? navigate('/modules') : navigate('/login')
     }, [] )
 
     return (

@@ -1,6 +1,8 @@
 import {createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AppLayout } from "layouts/app/AppLayout";
-import { AuthPage} from "pages/auth/AuthPage";
+import { LoginPage} from "pages/login/LoginPage";
+import { RegistrationPage } from "pages/registration/RegistrationPage";
+import { RegistrationLetterSentPage } from 'pages/registration-letter-sent/RegistrationLetterSentPage'
 import { RootPage } from 'pages/root/RootPage';
 import { ErrorPage } from 'pages/error/ErrorPage';
 import { ModulesPage } from 'pages/modules/ModulesPage';
@@ -14,8 +16,16 @@ const AppRouterProvider = () => {
             errorElement: <ErrorPage />,
             children: [
                 {
-                    path: '/auth',
-                    element: <AuthPage/>,
+                    path: '/login',
+                    element: <LoginPage/>,
+                },
+                {
+                    path: '/register',
+                    element: <RegistrationPage />
+                },
+                {
+                    path: '/registration-letter-sent',
+                    element: <RegistrationLetterSentPage />
                 },
                 {
                     path: "/",

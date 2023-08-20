@@ -1,17 +1,18 @@
 import type { NavigateFunction } from 'react-router-dom';
 
 interface ISessionStore {
-    user: TUser,
-    initUser: () => void,
+    session: TSession,
+    initSession: () => void,
+    register: ( navigate: NavigateFunction, email: string, password: string ) => Promise<boolean>,
     login: ( navigate: NavigateFunction, email: string, password: string ) => Promise<void>,
     logout: ( navigate: NavigateFunction ) => void,
 }
 
-type TUser = {
+type TSession = {
     token: string | null,
 }
 
 export type {
     ISessionStore,
-    TUser
+    TSession
 }

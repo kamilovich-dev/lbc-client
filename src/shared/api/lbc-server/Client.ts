@@ -10,6 +10,9 @@ class Client {
       baseURL: this.BASE_URL,
       headers: {
         'Authorization': `Bearer ${accessToken}`
+      },
+      validateStatus: function (status) {
+        return (status >= 200 && status <= 299)
       }
     })
   }

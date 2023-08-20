@@ -9,7 +9,7 @@ const Logout = observer(() => {
 
     return (
         <>
-            {sessionStore.user.token &&
+            {sessionStore.session.token &&
                 <Button
                     onClick={() => sessionStore.logout(navigate)}>
                     Выйти

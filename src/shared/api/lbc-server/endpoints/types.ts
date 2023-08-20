@@ -12,15 +12,18 @@ export type TGetModulesResponse = {
 /*user */
 export type TRegisterPayload = TLoginPayload
 export type TRegisterResponse = TLoginResponse
+
 export type TLoginPayload = {
     email: string,
     password: string
 }
-export type TLoginResponse = {
+
+export type TLoginResponse ={
     accessToken: string,
     refreshToken: string,
-    user: TUser
+    user: TUser,
 }
+
 export type TRefreshTokenResponse = {
     accessToken: string,
     refreshToken: string,
@@ -29,6 +32,12 @@ export type TRefreshTokenResponse = {
 
 export type TUser = {
     id: number,
-    name: string,
-    description: string,
+    email: string,
+    isActivated: boolean,
+}
+
+/*error */
+export type TApiError = {
+    status: number | undefined,
+    message: string,
 }

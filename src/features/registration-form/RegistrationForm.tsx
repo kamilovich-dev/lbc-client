@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSessionStore } from 'entities/session';
 
 
-const LoginForm = () => {
+const RegistrationForm = () => {
     const sessionStore = useSessionStore();
     const navigate = useNavigate();
 
@@ -21,19 +21,19 @@ const LoginForm = () => {
             .required('Обязательное поле')
         }),
         onSubmit: async values => {
-            await sessionStore?.login(navigate, values.email, values.password)
-            if (!sessionStore?.session.token) setIsLoginActionError(true)
+            const isSuccess = await sessionStore?.register(navigate, values.email, values.password)
+            if (!isSuccess) setIsRegisterActionError(true)
         },
     });
 
-    const [isLoginActionError, setIsLoginActionError] = useState(false)
+    const [isRegisterActionError, setIsRegisterActionError] = useState(false)
 
     return (
         <>
             <div className='flex justify-center p-5'>
                 <form className='flex flex-col p-10 border-2 rounded-md border-blue-100 shadow-sm'
                     onSubmit={formik.handleSubmit}>
-                    <div className='mb-12 text-gray-500 text-lg font-bold'>Авторизация пользователя</div>
+                    <div className='mb-12 text-gray-500 text-lg font-bold'>Регистрация пользователя</div>
                     <div className='mb-12 flex items-center'>
                         <FormControl variant="standard" sx={{width: '250px'}} >
                             <InputLabel shrink htmlFor="email">
@@ -73,15 +73,15 @@ const LoginForm = () => {
                     </div>
 
                     <div className='mb-4'>
-                        <Button type="submit" variant="contained">Войти</Button>
+                        <Button type="submit" variant="contained">Зарегестрироваться</Button>
                     </div>
 
                     <div>
-                        <Button variant="outlined" onClick={ () => navigate('/register') }>Регистрация</Button>
+                        <Button variant="outlined" onClick={ () => navigate('/login') }>Авторизация</Button>
                     </div>
                 </form>
 
-                <Snackbar open={isLoginActionError} autoHideDuration={3000} onClose={() => setIsLoginActionError(false)}>
+                <Snackbar open={isRegisterActionError} autoHideDuration={3000} onClose={() => setIsRegisterActionError(false)}>
                     <Alert severity="error" sx={{ width: '100%' }}>
                         Ошибка при отправке запроса!
                     </Alert>
@@ -92,4 +92,4 @@ const LoginForm = () => {
     );
 };
 
-export { LoginForm };
+export { RegistrationForm };

@@ -5,15 +5,15 @@ import { TLoginPayload, TLoginResponse,
 
 export async function login(client: AxiosInstance, payload: TLoginPayload): Promise<TLoginResponse | undefined> {
   try {
-    return (await client.post<TLoginResponse>('/user/login', payload)).data;
+    return (await client.post<TLoginResponse>('/user/login', payload)).data
   } catch(error) {
-    console.log(error)
+    console.log('Unexpected error: ' + error)
   }
 }
 
 export async function logout(client: AxiosInstance): Promise<void> {
   try {
-      await client.post<TLoginResponse>('/user/login', {})
+      await client.post<TLoginResponse>('/user/logout', {})
   } catch(error) {
       console.log(error)
   }
