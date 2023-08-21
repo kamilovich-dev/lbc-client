@@ -1,9 +1,11 @@
 import type { NavigateFunction } from 'react-router-dom';
+import { IClient } from 'shared/api';
 
 interface ISessionStore {
     session: TSession,
+    client: IClient,
     initSession: () => void,
-    register: ( navigate: NavigateFunction, email: string, password: string ) => Promise<boolean>,
+    register: ( navigate: NavigateFunction, email: string, password: string ) => Promise<void>,
     login: ( navigate: NavigateFunction, email: string, password: string ) => Promise<void>,
     logout: ( navigate: NavigateFunction ) => void,
 }

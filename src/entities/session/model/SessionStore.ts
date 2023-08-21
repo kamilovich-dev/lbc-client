@@ -1,14 +1,14 @@
 import { makeObservable, observable, action } from "mobx";
 import { ISessionStore, TSession } from './types';
 import type { NavigateFunction } from 'react-router-dom';
-import { Client } from "shared/api";
-import { userEndpoints } from "shared/api";
+import { Client, userEndpoints, IClient } from "shared/api";
 
 class SessionStore implements ISessionStore {
 
     session: TSession = {
         token: null,
     }
+    client: IClient
 
     constructor() {
         makeObservable(this, {
@@ -16,6 +16,7 @@ class SessionStore implements ISessionStore {
             login: action,
             logout: action,
         })
+        this.client = new Client()
         this.initSession();
     }
 
@@ -25,18 +26,17 @@ class SessionStore implements ISessionStore {
     }
 
     register = async (navigate: NavigateFunction, email:string, password: string) => {
-        await userEndpoints.register(new Client().axiosInstance, { email, password })
+        await userEndpoints.register(this.client, { email, password })
             .then( response => {
                 if (response?.user) {
                     const email = response.user.email
                     navigate('/registration-letter-sent', { state: { email } })
                 }
         } )
-        return false
     }
 
     login = async (navigate: NavigateFunction, email:string, password: string) => {
-        await userEndpoints.login(new Client().axiosInstance, { email, password })
+        await userEndpoints.login(this.client, { email, password })
             .then( response => {
                 if (response?.accessToken) {
                     this.session.token = response.accessToken
@@ -47,7 +47,7 @@ class SessionStore implements ISessionStore {
     }
 
     logout = async (navigate: NavigateFunction) => {
-        await userEndpoints.logout(new Client().axiosInstance)
+        await userEndpoints.logout(this.client)
             .then( () => {
                 this.session.token = null
                 sessionStorage.removeItem('token')

@@ -1,12 +1,11 @@
 import { makeObservable, observable, action } from 'mobx';
 import type { IModuleStore, TModule, TModulesFilter } from './types';
-import { Client, moduleEndpoints } from 'shared/api'
-import { AxiosInstance } from 'axios';
+import { Client, IClient, moduleEndpoints } from 'shared/api'
 
 
 class ModuleStore implements IModuleStore {
     modules: TModule[] = [];
-    axiosInstanse: AxiosInstance;
+    client: IClient;
     filters: TModulesFilter = {
         by_alphabet: 'asc',
         by_search: ''
@@ -24,8 +23,8 @@ class ModuleStore implements IModuleStore {
                 deleteModuleById: action,
                 editModule: action
             }
-        ),
-        this.axiosInstanse = new Client().axiosInstance
+        )
+        this.client = new Client()
     }
 
     getModuleById = (id: number) => {
@@ -35,7 +34,7 @@ class ModuleStore implements IModuleStore {
     }
 
     addModule = () => {
-        moduleEndpoints.createModule(this.axiosInstanse, {
+        moduleEndpoints.createModule(this.client, {
                 name: 'Новый модуль',
                 'description': '' })
             .then( () => {
@@ -43,10 +42,9 @@ class ModuleStore implements IModuleStore {
             })
     }
 
-    deleteModuleById = (id: number) => {
-        this.modules = this.modules.filter(
-            module => module.id !== id
-        )
+    deleteModuleById = async (id: number) => {
+        await moduleEndpoints.deleteModule( this.client, { moduleId: id } )
+            .then( () => this.refreshModules() )
     }
 
     editModule = (module: TModule) => {
@@ -55,7 +53,7 @@ class ModuleStore implements IModuleStore {
     }
 
     refreshModules = async () => {
-        const modules = (await moduleEndpoints.getModules(this.axiosInstanse, this.filters))?.modules
+        const modules = (await moduleEndpoints.getModules(this.client, this.filters))?.modules
         if (!modules) return;
         this.modules = modules
     }

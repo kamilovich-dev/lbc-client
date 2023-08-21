@@ -20,8 +20,8 @@ const RegistrationForm = () => {
             .required('Обязательное поле')
         }),
         onSubmit: async values => {
-            const isSuccess = await sessionStore?.register(navigate, values.email, values.password)
-            if (!isSuccess) setIsRegisterActionError(true)
+            await sessionStore?.register(navigate, values.email, values.password)
+            setIsRegisterActionError(true)
         },
     });
 

@@ -1,35 +1,36 @@
-import { AxiosInstance } from "axios"
-import { TLoginPayload, TLoginResponse,
+import {
+        IClient,
+        TLoginPayload, TLoginResponse,
         TRegisterPayload, TRegisterResponse,
         TRefreshTokenResponse } from "./types";
 
-export async function login(client: AxiosInstance, payload: TLoginPayload): Promise<TLoginResponse | undefined> {
+export async function login(client: IClient, payload: TLoginPayload): Promise<TLoginResponse | undefined> {
   try {
-    return (await client.post<TLoginResponse>('/user/login', payload)).data
+    return (await client.axiosInstance.post<TLoginResponse>('/user/login', payload)).data
   } catch(error) {
     console.log('Unexpected error: ' + error)
   }
 }
 
-export async function logout(client: AxiosInstance): Promise<void> {
+export async function logout(client: IClient): Promise<void> {
   try {
-      await client.post<TLoginResponse>('/user/logout', {})
+      await client.axiosInstance.post<TLoginResponse>('/user/logout', {})
   } catch(error) {
       console.log(error)
   }
 }
 
-export async function register(client: AxiosInstance, payload: TRegisterPayload): Promise<TRegisterResponse | undefined> {
+export async function register(client: IClient, payload: TRegisterPayload): Promise<TRegisterResponse | undefined> {
   try {
-    return (await client.post<TRegisterResponse>('/user/registration', payload)).data;
+    return (await client.axiosInstance.post<TRegisterResponse>('/user/registration', payload)).data;
   } catch(error) {
     console.log(error)
   }
 }
 
-export async function refreshToken(client: AxiosInstance): Promise<TRefreshTokenResponse | undefined> {
+export async function refreshToken(client: IClient): Promise<TRefreshTokenResponse | undefined> {
   try {
-      return (await client.get<TRefreshTokenResponse>('/user/refresh_token')).data;
+      return (await client.axiosInstance.get<TRefreshTokenResponse>('/user/refresh_token')).data;
   } catch(error) {
       console.log(error)
   }

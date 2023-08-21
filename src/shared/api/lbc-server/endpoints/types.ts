@@ -1,3 +1,5 @@
+import { AxiosInstance } from "axios"
+
 /*module */
 export type TModule = {
     id: number,
@@ -16,6 +18,10 @@ export type TCreateModuleResponse = {
 export type TCreateModulePayload = {
     name: string,
     description: string
+}
+
+export type TDeleteModulePayload = {
+    moduleId: number
 }
 
 export type TMduleSearchParams = {
@@ -49,3 +55,9 @@ export type TUser = {
     email: string,
     isActivated: boolean,
 }
+
+/*client */
+export interface IClient {
+    BASE_URL: string,
+    axiosInstance: AxiosInstance,
+  }

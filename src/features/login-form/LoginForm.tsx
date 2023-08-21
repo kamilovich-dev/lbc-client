@@ -83,7 +83,7 @@ const LoginForm = () => {
 
                 <Snackbar open={isLoginActionError} autoHideDuration={3000} onClose={() => setIsLoginActionError(false)}>
                     <Alert severity="error" sx={{ width: '100%' }}>
-                        Ошибка при отправке запроса!
+                        Не удалось авторизоваться!
                     </Alert>
                 </Snackbar>
             </div>

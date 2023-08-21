@@ -34,9 +34,7 @@ const _ModulesPage = observer(( { moduleStore }: Props ) => {
                             <MenuItem value={'desc'}>По убыванию</MenuItem>
                         </Select>
                         <TextField
-                            onChange={e => {
-                                moduleStore.setFilter('bySearch',e.target.value)
-                            }}
+                            onChange={e => moduleStore.setFilter('bySearch',e.target.value) }
                             label="Поиск модулей"
                             variant="outlined"
                             value={moduleStore.filters.by_search}
@@ -45,9 +43,11 @@ const _ModulesPage = observer(( { moduleStore }: Props ) => {
                     </div>
                     <div>
                         {moduleStore.modules.length ?
-                            <ShowModules modules={moduleStore.modules} />
+                            <ShowModules
+                                moduleStore={moduleStore}
+                                modules={moduleStore.modules} />
                                         : <Alert severity="info" sx={{ width: '100%' }}>
-                                            Модули не созданы!
+                                            Модули не найдены!
                                         </Alert>
                         }
                     </div>

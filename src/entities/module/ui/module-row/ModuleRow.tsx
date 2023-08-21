@@ -7,10 +7,11 @@ import styles from './styles.module.css';
 interface IProps {
     moduleName: string,
     cardsCount: number,
+    ButtonDelete: JSX.Element,
     ButtonEdit: JSX.Element,
 }
 
-const ModuleRow = observer(( { moduleName, cardsCount, ButtonEdit }: IProps ) => {
+const ModuleRow = observer(( { moduleName, cardsCount, ButtonDelete, ButtonEdit }: IProps ) => {
 
     return (
         <>
@@ -23,6 +24,7 @@ const ModuleRow = observer(( { moduleName, cardsCount, ButtonEdit }: IProps ) =>
                             variant="h6">{moduleName}</Typography>
                     </div>
                     <div className={styles.rightSide}>
+                        {ButtonDelete}
                         {ButtonEdit}
                     </div>
                 </Stack>

@@ -1,12 +1,15 @@
+import { IClient } from 'shared/api'
+
 interface IModuleStore {
     modules: TModule[],
     filters: TModulesFilter,
     delayTimer: typeof setTimeout | null,
+    client: IClient;
     setFilter: (type: string, value: string) => void,
     getModuleById: (id: number) => TModule | undefined,
     refreshModules: () => Promise<void>,
     addModule: () => void,
-    deleteModuleById: (id: number) => void,
+    deleteModuleById: (id: number) => Promise<void>,
     editModule: (module: TModule) => void,
 }
 
