@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { InputLabel, Input, FormControl, Button, Alert, Snackbar } from '@mui/material';
+import { InputLabel, Input, FormControl, Button, Alert } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
@@ -21,11 +20,9 @@ const RegistrationForm = () => {
         }),
         onSubmit: async values => {
             await sessionStore?.register(navigate, values.email, values.password)
-            setIsRegisterActionError(true)
         },
     });
 
-    const [isRegisterActionError, setIsRegisterActionError] = useState(false)
 
     return (
         <>
@@ -80,11 +77,6 @@ const RegistrationForm = () => {
                     </div>
                 </form>
 
-                <Snackbar open={isRegisterActionError} autoHideDuration={3000} onClose={() => setIsRegisterActionError(false)}>
-                    <Alert severity="error" sx={{ width: '100%' }}>
-                        Ошибка при отправке запроса!
-                    </Alert>
-                </Snackbar>
             </div>
 
         </>

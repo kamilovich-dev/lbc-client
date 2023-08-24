@@ -22,11 +22,8 @@ const LoginForm = () => {
         }),
         onSubmit: async values => {
             await sessionStore?.login(navigate, values.email, values.password)
-            if (!sessionStore?.session.token) setIsLoginActionError(true)
         },
     });
-
-    const [isLoginActionError, setIsLoginActionError] = useState(false)
 
     return (
         <>
@@ -81,11 +78,6 @@ const LoginForm = () => {
                     </div>
                 </form>
 
-                <Snackbar open={isLoginActionError} autoHideDuration={3000} onClose={() => setIsLoginActionError(false)}>
-                    <Alert severity="error" sx={{ width: '100%' }}>
-                        Не удалось авторизоваться!
-                    </Alert>
-                </Snackbar>
             </div>
 
         </>
