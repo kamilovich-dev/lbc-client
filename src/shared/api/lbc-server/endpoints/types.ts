@@ -1,4 +1,5 @@
 import { AxiosInstance } from "axios"
+import ReactDOM from 'react-dom/client'
 
 /*module */
 export type TModule = {
@@ -57,7 +58,16 @@ export type TUser = {
 }
 
 /*client */
-export interface IClient {
+export type IClient = {
     BASE_URL: string,
+    MESSAGE_NODE_ID: string,
+    MESSAGE_DURATION: number,
+    timerId: NodeJS.Timeout | undefined,
     axiosInstance: AxiosInstance,
-  }
+    initializeInterceptors: () => void,
+    renderMessage: (
+        component: (args: any) => JSX.Element,
+        message: string | undefined,
+        status: number | undefined
+    ) => void,
+}

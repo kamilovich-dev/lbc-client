@@ -7,15 +7,15 @@ interface IProps {
     duration: number
 }
 
-function ApiError( { message, status, duration } : IProps ) {
+function ApiSuccess( { message, status, duration } : IProps ) {
     const [showSnackbar, setShowSnackbar] = useState(true)
 
     return (
         <>
             <Snackbar open={showSnackbar} autoHideDuration={duration} onClose={() => setShowSnackbar(false)}>
-                <Alert onClose={() => setShowSnackbar(false)} severity="error" sx={{ width: '100%' }}>
+                <Alert onClose={() => setShowSnackbar(false)} severity="success" sx={{ width: '100%' }}>
                     <div>
-                        Ошибка при запросе к серверу! <br/>
+                        Запрос прошел успешно! <br/>
                         {message}, {status}
                     </div>
                 </Alert>
@@ -24,7 +24,7 @@ function ApiError( { message, status, duration } : IProps ) {
     )
 }
 
-export { ApiError }
+export { ApiSuccess }
 
 
 
