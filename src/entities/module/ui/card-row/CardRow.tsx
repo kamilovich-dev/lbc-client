@@ -4,10 +4,11 @@ interface IProps {
     cardIdx: number,
     Term: JSX.Element,
     Definition: JSX.Element,
+    Image: JSX.Element,
     DeleteCard: JSX.Element,
 }
 
-const CardRow = observer(( { cardIdx, DeleteCard, Term, Definition }: IProps ) => {
+const CardRow = observer(( { cardIdx, DeleteCard, Term, Definition, Image }: IProps ) => {
     return (
         <>
             <div className='bg-white shadow-md p-4 rounded-md '>
@@ -20,11 +21,14 @@ const CardRow = observer(( { cardIdx, DeleteCard, Term, Definition }: IProps ) =
                     </div>
                 </div>
                 <div className='flex gap-20'>
-                    <div className='w-1/2'>
+                    <div className='w-1/3'>
                         {Term}
                     </div>
-                    <div className='w-1/2'>
+                    <div className='w-1/3'>
                         {Definition}
+                    </div>
+                    <div className='w-1/3'>
+                        {Image}
                     </div>
                 </div>
             </div>

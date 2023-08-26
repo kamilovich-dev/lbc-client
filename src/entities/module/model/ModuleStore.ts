@@ -1,36 +1,34 @@
 import { makeObservable, observable, action } from 'mobx';
-import type { IModuleStore, TModule, TModulesFilter } from './types';
-import { Client, IClient, moduleEndpoints } from 'shared/api'
-
+import { Client, IClient, moduleEndpoints } from 'shared/api/lbc-server'
 
 class ModuleStore implements IModuleStore {
     modules: TModule[] = [];
-    client: IClient;
+    moduleById: TModule | undefined;
     filters: TModulesFilter = {
         by_alphabet: 'asc',
         by_search: ''
     }
-    delayTimer: any
+    delayTimer: NodeJS.Timer | undefined
+    client: IClient;
 
     constructor() {
         makeObservable(this,{
                 modules: observable,
+                moduleById: observable,
                 filters: observable,
                 delayTimer: observable,
-                refreshModules: action,
-                setFilter: action,
+                client: observable,
                 addModule: action,
                 deleteModuleById: action,
-                editModule: action
+                deferedEditModule: action,
+                editModule: action,
+                refreshModules: action,
+                refreshModuleById: action,
+                deferedRefreshModules: action,
+                setFilter: action,
             }
         )
         this.client = new Client()
-    }
-
-    getModuleById = (id: number) => {
-        return this.modules.find(
-            module => module.id == id
-        )
     }
 
     addModule = () => {
@@ -47,15 +45,40 @@ class ModuleStore implements IModuleStore {
             .then( () => this.refreshModules() )
     }
 
-    editModule = (module: TModule) => {
-        const idx = this.modules.findIndex( item => item.id === module.id );
-        this.modules[idx] = module;
+    deferedEditModule = ( { name, value } : TEditModule ) => {
+        if (!this.moduleById) return
+
+        if (name == 'name') this.moduleById.name = value
+        if (name == 'description') this.moduleById.description = value
+
+        clearTimeout(this.delayTimer)
+        this.delayTimer = setTimeout(() => {
+            this.editModule()
+        }, 1000)
+    }
+
+    editModule = async () => {
+        if (!this.moduleById) return
+
+        await moduleEndpoints.editModule(this.client, {
+            moduleId: this.moduleById.id,
+            name: this.moduleById.name,
+            description: this.moduleById.description
+        })
     }
 
     refreshModules = async () => {
         const modules = (await moduleEndpoints.getModules(this.client, this.filters))?.modules
         if (!modules) return;
         this.modules = modules
+    }
+
+    refreshModuleById = async (id: number) => {
+        const modules = (await moduleEndpoints.getModules(this.client, this.filters))?.modules
+        if (!modules) return;
+        this.moduleById = modules.find(
+            module => module.id == id
+        )
     }
 
     deferedRefreshModules = () => {
@@ -80,6 +103,38 @@ class ModuleStore implements IModuleStore {
         }
     }
 
+}
+
+export interface IModuleStore {
+    modules: TModule[],
+    moduleById: TModule | undefined;
+    filters: TModulesFilter,
+    delayTimer: NodeJS.Timer | undefined,
+    client: IClient;
+    addModule: () => void,
+    deleteModuleById: (id: number) => Promise<void>,
+    deferedEditModule: ( args: TEditModule) => void,
+    refreshModules: () => Promise<void>,
+    refreshModuleById: (id: number) => Promise<void>,
+    deferedRefreshModules: () => void,
+    setFilter: (type: string, value: string) => void,
+}
+
+type TModule = {
+    id: number,
+    name: string,
+    description: string,
+    cardsCount: number
+}
+
+type TModulesFilter = {
+    by_search: string,
+    by_alphabet: string,
+}
+
+type TEditModule = {
+    name: string,
+    value: string,
 }
 
 export { ModuleStore }

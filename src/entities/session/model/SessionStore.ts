@@ -1,7 +1,7 @@
 import { makeObservable, observable, action } from "mobx";
 import { ISessionStore, TSession } from './types';
 import type { NavigateFunction } from 'react-router-dom';
-import { Client, userEndpoints, IClient } from "shared/api";
+import { Client, userEndpoints, IClient } from "shared/api/lbc-server";
 
 class SessionStore implements ISessionStore {
 

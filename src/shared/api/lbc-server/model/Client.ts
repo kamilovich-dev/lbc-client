@@ -1,13 +1,12 @@
 import axios, { AxiosInstance, isAxiosError } from "axios"
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { IClient } from './endpoints/types'
-import { ApiError } from "./ui/ApiError"
+import { ApiError } from "../ui/ApiError"
 
 class Client implements IClient {
 
   BASE_URL: string = 'http://localhost:5000/api'
-  MESSAGE_DURATION: number = 1000
+  MESSAGE_DURATION: number = 2000
   MESSAGE_NODE_ID: string = 'lbc-server-api-message'
   axiosInstance: AxiosInstance
 
@@ -61,4 +60,18 @@ class Client implements IClient {
 
 }
 
+interface IClient {
+  BASE_URL: string,
+  MESSAGE_NODE_ID: string,
+  MESSAGE_DURATION: number,
+  axiosInstance: AxiosInstance,
+  initializeInterceptors: () => void,
+  renderMessage: (
+      component: (args: any) => JSX.Element,
+      message: string | undefined,
+      status: number | undefined
+  ) => void,
+}
+
 export { Client }
+export type { IClient }

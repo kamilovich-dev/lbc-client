@@ -1,8 +1,4 @@
-import {
-        IClient,
-        TLoginPayload, TLoginResponse,
-        TRegisterPayload, TRegisterResponse,
-        TRefreshTokenResponse } from "./types";
+import { IClient } from '../model/Client'
 
 export async function login(client: IClient, payload: TLoginPayload): Promise<TLoginResponse | undefined> {
   try {
@@ -34,4 +30,32 @@ export async function refreshToken(client: IClient): Promise<TRefreshTokenRespon
   } catch(error) {
       console.log(error)
   }
+}
+
+
+/*Декларация типов */
+type TRegisterPayload = TLoginPayload
+type TRegisterResponse = TLoginResponse
+
+type TLoginPayload = {
+    email: string,
+    password: string
+}
+
+type TLoginResponse ={
+    accessToken: string,
+    refreshToken: string,
+    user: TUser,
+}
+
+type TRefreshTokenResponse = {
+    accessToken: string,
+    refreshToken: string,
+    user: TUser
+}
+
+type TUser = {
+    id: number,
+    email: string,
+    isActivated: boolean,
 }

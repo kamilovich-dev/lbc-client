@@ -1,8 +1,4 @@
-import {
-      IClient,
-      TGetModulesResponse, TMduleSearchParams,
-      TCreateModuleResponse, TCreateModulePayload,
-      TDeleteModulePayload } from './types'
+import { IClient } from '../model/Client'
 
 export async function getModules(client: IClient, searchParams?: TMduleSearchParams): Promise<TGetModulesResponse | undefined> {
   try {
@@ -29,4 +25,55 @@ export async function deleteModule(client: IClient, payload: TDeleteModulePayloa
   } catch(error) {
     console.log(error)
   }
+}
+
+export async function editModule(client: IClient, payload: TEditModulePayload): Promise<TEditModuleResponse | undefined> {
+  try {
+    return (await client.axiosInstance.post<TEditModuleResponse>('/module/update', payload)).data;
+  } catch(error) {
+    console.log(error)
+  }
+}
+
+/*Декларация типов */
+type TModule = {
+  id: number,
+  name: string,
+  description: string,
+  cardsCount: number
+}
+
+type TEditModulePayload = {
+  moduleId: number,
+  name: string,
+  description: string
+}
+
+type TEditModuleResponse = {
+  module: {
+    id: number,
+    name: string,
+    description: string,
+  }
+}
+
+type TGetModulesResponse = {
+  modules: TModule[]
+}
+
+type TCreateModuleResponse = {
+  module: TModule
+}
+type TCreateModulePayload = {
+  name: string,
+  description: string
+}
+
+type TDeleteModulePayload = {
+  moduleId: number
+}
+
+type TMduleSearchParams = {
+  by_search: string,
+  by_alphabet: string // 'asc' | 'desc'
 }
