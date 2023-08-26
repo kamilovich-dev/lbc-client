@@ -9,7 +9,6 @@ class Client implements IClient {
   BASE_URL: string = 'http://localhost:5000/api'
   MESSAGE_DURATION: number = 1000
   MESSAGE_NODE_ID: string = 'lbc-server-api-message'
-  timerId: NodeJS.Timeout | undefined
   axiosInstance: AxiosInstance
 
   constructor() {

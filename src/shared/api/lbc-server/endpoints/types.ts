@@ -62,7 +62,6 @@ export type IClient = {
     BASE_URL: string,
     MESSAGE_NODE_ID: string,
     MESSAGE_DURATION: number,
-    timerId: NodeJS.Timeout | undefined,
     axiosInstance: AxiosInstance,
     initializeInterceptors: () => void,
     renderMessage: (
