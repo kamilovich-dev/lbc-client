@@ -5,7 +5,7 @@ import { ApiError } from "../ui/ApiError"
 
 class Client implements IClient {
 
-  BASE_URL: string = 'http://localhost:5000/api'
+  BASE_URL: string = import.meta.env.VITE_LBC_SERVER_API_URL
   MESSAGE_DURATION: number = 2000
   MESSAGE_NODE_ID: string = 'lbc-server-api-message'
   axiosInstance: AxiosInstance

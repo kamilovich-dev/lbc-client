@@ -1,12 +1,15 @@
 
 import { useEffect } from 'react'
+import { useNavigate } from "react-router-dom";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import Input from '@mui/material/Input';
+import SvgIcon from '@mui/material/SvgIcon';
+import UndoIcon from '@mui/icons-material/Undo';
 import { observer } from 'mobx-react-lite';
 import { CardRow } from 'entities/module';
 import { ModuleStore, CardStore } from 'entities/module';
 import { IModuleStore, ICardStore } from 'entities/module';
+import { CardImage } from './CardImage';
 
 interface IOuterProps {
     moduleId: number
@@ -33,10 +36,12 @@ const _ModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: IInnerP
 
     useEffect( () => {
         cardStore.refreshCards(moduleId)
-        moduleStore.refreshModuleById(moduleId)
+        moduleStore.refreshModules()
     }, [])
 
-    const module = moduleStore.moduleById
+    const navigate = useNavigate();
+
+    const module = moduleStore.getModuleById(moduleId)
     if (!module) return
 
     const cards = cardStore.cards;
@@ -44,6 +49,14 @@ const _ModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: IInnerP
 
     return (
         <>
+            <div className='mb-4'>
+                <Button variant='outlined' onClick={ () => navigate(-1) }>
+                    <SvgIcon className='mr-2'>
+                        <UndoIcon></UndoIcon>
+                    </SvgIcon>
+                    Вернуться
+                </Button>
+            </div>
             <div className={'py-2 w-1/2'}>
                 <TextField
                     fullWidth
@@ -51,7 +64,7 @@ const _ModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: IInnerP
                     label="Название"
                     variant="standard"
                     value={module.name}
-                    onChange={(e) => moduleStore.deferedEditModule({name: e.target.name, value: e.target.value})}/>
+                    onChange={(e) => moduleStore.editModule({id: moduleId, name: e.target.name, value: e.target.value})}/>
             </div>
             <div className={'py-2 mb-5 w-1/2'}>
                     <TextField
@@ -60,7 +73,7 @@ const _ModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: IInnerP
                         label="Описание"
                         variant="standard"
                         value={module.description}
-                        onChange={(e) => moduleStore.deferedEditModule({name: e.target.name, value: e.target.value})} />
+                        onChange={(e) => moduleStore.editModule({id: moduleId, name: e.target.name, value: e.target.value})} />
             </div>
             <div className='mb-5'>
                 <Button
@@ -79,19 +92,29 @@ const _ModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: IInnerP
                                 label="ТЕРМИН"
                                 variant="standard"
                                 value={card.term}
-                                onChange={(e) => {}}/>}
+                                onChange={(e) => cardStore.editCard({
+                                    moduleId,
+                                    cardId: card.id,
+                                    name: e.target.name,
+                                    value: e.target.value
+                                })}/>}
                             Definition={<TextField
                                 fullWidth
                                 name='definition'
                                 label="ОПРЕДЕЛЕНИЕ"
                                 variant="standard"
                                 value={card.definition}
-                                onChange={(e) => {}}/>}
+                                onChange={(e) => cardStore.editCard({
+                                    moduleId,
+                                    cardId: card.id,
+                                    name: e.target.name,
+                                    value: e.target.value
+                                })}/>}
                             DeleteCard={<Button
                                 color='error'
                                 variant="contained"
                                 onClick={() => cardStore.deleteCardById(module.id, card.id)}>Удалить</Button>}
-                            Image={<Input type='file'></Input>}
+                            Image={<CardImage moduleId={moduleId} cardId={card.id} url={card.imgUrl} cardStore={cardStore}/>}
                         />
                     ))
                 }

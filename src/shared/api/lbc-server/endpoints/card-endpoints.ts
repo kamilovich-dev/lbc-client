@@ -28,6 +28,14 @@ export async function deleteCard(client: IClient, payload: TDeleteCardPayload): 
     }
   }
 
+export async function editCard(client: IClient, payload: FormData ): Promise<TEditCardResponse | undefined> {
+    try {
+      const url = '/card/update'
+      return (await client.axiosInstance.post<TEditCardResponse>(url, payload)).data;
+    } catch(error) {
+      console.log(error)
+    }
+}
 
 type TCard = {
     id: number,
@@ -64,4 +72,8 @@ type TAddCardResponse = {
 
 type TDeleteCardPayload = {
     cardId: number
+}
+
+type TEditCardResponse = {
+  card: TCard
 }

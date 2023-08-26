@@ -1,33 +1,18 @@
-import { makeObservable, observable, action } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 import { Client, IClient, moduleEndpoints } from 'shared/api/lbc-server'
 
 class ModuleStore implements IModuleStore {
     modules: TModule[] = [];
-    moduleById: TModule | undefined;
     filters: TModulesFilter = {
         by_alphabet: 'asc',
         by_search: ''
     }
+    DELAY_TIME: number = 1000
     delayTimer: NodeJS.Timer | undefined
     client: IClient;
 
     constructor() {
-        makeObservable(this,{
-                modules: observable,
-                moduleById: observable,
-                filters: observable,
-                delayTimer: observable,
-                client: observable,
-                addModule: action,
-                deleteModuleById: action,
-                deferedEditModule: action,
-                editModule: action,
-                refreshModules: action,
-                refreshModuleById: action,
-                deferedRefreshModules: action,
-                setFilter: action,
-            }
-        )
+        makeAutoObservable(this)
         this.client = new Client()
     }
 
@@ -40,52 +25,41 @@ class ModuleStore implements IModuleStore {
             })
     }
 
+    getModuleById = (id: number) => {
+        return this.modules.find(module => module.id == id)
+    }
+
     deleteModuleById = async (id: number) => {
         await moduleEndpoints.deleteModule( this.client, { moduleId: id } )
             .then( () => this.refreshModules() )
     }
 
-    deferedEditModule = ( { name, value } : TEditModule ) => {
-        if (!this.moduleById) return
+    editModule = ( { id, name, value } : TEditModule ) => {
 
-        if (name == 'name') this.moduleById.name = value
-        if (name == 'description') this.moduleById.description = value
+        const module = this.modules.find(module => module.id == id)
+        if (!module) return
+
+        if (name == 'name') module.name = value
+        if (name == 'description') module.description = value
 
         clearTimeout(this.delayTimer)
-        this.delayTimer = setTimeout(() => {
-            this.editModule()
-        }, 1000)
-    }
+        this.delayTimer = setTimeout(async () => {
 
-    editModule = async () => {
-        if (!this.moduleById) return
+            await moduleEndpoints.editModule(this.client, {
+                moduleId: module.id,
+                name: module.name,
+                description: module.description
+            })
+            .then( () => this.refreshModules())
 
-        await moduleEndpoints.editModule(this.client, {
-            moduleId: this.moduleById.id,
-            name: this.moduleById.name,
-            description: this.moduleById.description
-        })
+        }, this.DELAY_TIME)
+
     }
 
     refreshModules = async () => {
         const modules = (await moduleEndpoints.getModules(this.client, this.filters))?.modules
         if (!modules) return;
         this.modules = modules
-    }
-
-    refreshModuleById = async (id: number) => {
-        const modules = (await moduleEndpoints.getModules(this.client, this.filters))?.modules
-        if (!modules) return;
-        this.moduleById = modules.find(
-            module => module.id == id
-        )
-    }
-
-    deferedRefreshModules = () => {
-        clearTimeout(this.delayTimer)
-        this.delayTimer = setTimeout(() => {
-            this.refreshModules()
-        }, 1000)
     }
 
     setFilter = ( type: string, value: string ) => {
@@ -96,7 +70,10 @@ class ModuleStore implements IModuleStore {
                 break;
             case 'bySearch':
                 this.filters.by_search = value;
-                this.deferedRefreshModules()
+                clearTimeout(this.delayTimer)
+                this.delayTimer = setTimeout(() => {
+                    this.refreshModules()
+                }, this.DELAY_TIME)
                 break;
             default:
                 console.log(`cant set filter: type=${type}, value=${value}`);
@@ -107,16 +84,15 @@ class ModuleStore implements IModuleStore {
 
 export interface IModuleStore {
     modules: TModule[],
-    moduleById: TModule | undefined;
     filters: TModulesFilter,
+    DELAY_TIME: number,
     delayTimer: NodeJS.Timer | undefined,
-    client: IClient;
+    client: IClient,
+    getModuleById: ( id: number) => TModule | undefined,
+    editModule: ( args: TEditModule ) => void,
     addModule: () => void,
     deleteModuleById: (id: number) => Promise<void>,
-    deferedEditModule: ( args: TEditModule) => void,
     refreshModules: () => Promise<void>,
-    refreshModuleById: (id: number) => Promise<void>,
-    deferedRefreshModules: () => void,
     setFilter: (type: string, value: string) => void,
 }
 
@@ -133,6 +109,7 @@ type TModulesFilter = {
 }
 
 type TEditModule = {
+    id: number,
     name: string,
     value: string,
 }

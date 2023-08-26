@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { ModuleEditForm } from 'features/module-edit-form/ModuleEditForm';
+import { ModuleEditForm } from 'features/module-edit-form';
 
 const ModuleEditPage = () => {
 

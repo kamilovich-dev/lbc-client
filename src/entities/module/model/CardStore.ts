@@ -1,22 +1,18 @@
-import { makeObservable, observable, action} from 'mobx';
+import { makeAutoObservable } from 'mobx';
 import { cardEndpoints, Client, IClient } from 'shared/api/lbc-server';
 
 class CardStore implements ICardStore {
     cards: TCard[] = [] ;
     client: IClient;
     filters: TCardsFilter = {
-        by_alphabet: 'asc',
+        by_alphabet: '',
         by_search: ''
     }
+    DELAY_TIME: number = 1000
     delayTimer: NodeJS.Timer | undefined
 
     constructor() {
-        makeObservable(this, {
-            cards: observable,
-            addCard: action,
-            deleteCardById: action,
-            editCard: action
-        })
+        makeAutoObservable(this)
         this.client = new Client()
     }
 
@@ -28,7 +24,7 @@ class CardStore implements ICardStore {
 
     getCardById = (id: number) => {
         return this.cards.find(
-            card => card.id === id
+            card => card.id == id
         )
     }
 
@@ -50,10 +46,45 @@ class CardStore implements ICardStore {
             })
     }
 
-    editCard = (card: TCard) => {
-        const idx = this.cards.findIndex(item => item.id === card.id);
-        this.cards[idx] = card;
+    editCard = ( { moduleId, cardId, name, value, image, isDeleteImg } :  TEditCard) => {
+
+        const card = this.cards.find(card => card.id == cardId)
+        if (!card) return
+
+        if (name == 'term') card.term = value
+        if (name == 'definition') card.definition = value
+
+        clearTimeout(this.delayTimer)
+        this.delayTimer = setTimeout(async () => {
+
+            const formData = new FormData()
+            formData.append('cardId', cardId.toString())
+
+            if (card.term) formData.append('term', card.term)
+            if (card.definition) formData.append('definition', card.definition)
+
+            if (isDeleteImg) {
+                formData.append('isDeleteImg', 'true')
+            } else if (image) {
+                formData.append('img', image)
+            }
+
+            await cardEndpoints.editCard(this.client,formData)
+            .then( () => this.refreshCards( moduleId ))
+
+        }, this.DELAY_TIME)
+
     }
+
+}
+
+type TEditCard = {
+    moduleId: number,
+    cardId: number,
+    name?: string,
+    value?: string,
+    image?: Blob | undefined
+    isDeleteImg?: boolean
 }
 
 export interface ICardStore {
@@ -62,7 +93,7 @@ export interface ICardStore {
     getCardById: (id: number) => TCard | undefined,
     addCard: (moduleId: number) => Promise<void>,
     deleteCardById: (moduleId:number,  cardId: number) => void,
-    editCard: (card: TCard) => void,
+    editCard: (args: TEditCard) => void,
     refreshCards: (moduleId: number) => Promise<void>
 }
 
@@ -74,8 +105,8 @@ type TCardsFilter = {
 type TCard = {
     id: number,
     order: number,
-    term: string,
-    definition: string,
+    term?: string,
+    definition?: string,
     isFavorite: boolean,
     imgUrl: string,
 }
