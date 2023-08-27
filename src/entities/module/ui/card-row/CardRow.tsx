@@ -9,6 +9,7 @@ interface IProps {
 }
 
 const CardRow = observer(( { cardIdx, DeleteCard, Term, Definition, Image }: IProps ) => {
+
     return (
         <>
             <div className='bg-white shadow-md p-3 rounded-md '>

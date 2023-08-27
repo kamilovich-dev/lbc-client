@@ -37,6 +37,19 @@ export async function editCard(client: IClient, payload: FormData ): Promise<TEd
     }
 }
 
+export async function switchOrder(client: IClient, payload: TSwitchOrderPayload): Promise<void | undefined> {
+  try {
+    await client.axiosInstance.post<void>('/card/switch_order', payload)
+  } catch(error) {
+    console.log(error)
+  }
+}
+
+type TSwitchOrderPayload = {
+  cardId1: number,
+  cardId2: number
+}
+
 type TCard = {
     id: number,
     order: number,

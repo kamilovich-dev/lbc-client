@@ -68,7 +68,7 @@ const CardImage = observer(( { moduleId, cardId, url, cardStore }: IProps ) => {
           </input>
 
           {imgUrl ? (
-            <div className='p-1 flex justify-center items-center absolute top-1 right-1 text-gray-800 w-8 h-8 bg-slate-100 rounded-full hover:cursor-pointer hover:bg-slate-200 active:bg-slate-300'>
+            <div className='p-1 flex justify-center items-center absolute top-1 right-1 text-gray-500 w-8 h-8 bg-slate-100 rounded-full hover:cursor-pointer hover:bg-slate-200 active:bg-slate-300'>
               <SvgIcon sx={{width: '100%', height: '100%'}} onClick={() => {
                 const input = document.getElementById(inputId)
                 //@ts-ignore

@@ -71,10 +71,20 @@ class CardStore implements ICardStore {
             await cardEndpoints.editCard(this.client,formData)
             .then( () => this.refreshCards( moduleId ))
 
-        }, this.DELAY_TIME)
+        }, isDeleteImg || image ? 0 : this.DELAY_TIME)
 
     }
 
+    switchOrder = async ( { cardId1, cardId2 }: TSwitchOrder )  => {
+        console.log('send')
+        await cardEndpoints.switchOrder( this.client,  {cardId1, cardId2} )
+    }
+
+}
+
+type TSwitchOrder = {
+    cardId1: number,
+    cardId2: number
 }
 
 type TEditCard = {
@@ -94,6 +104,7 @@ export interface ICardStore {
     deleteCardById: (moduleId:number,  cardId: number) => void,
     editCard: (args: TEditCard) => void,
     refreshCards: (moduleId: number) => Promise<void>
+    switchOrder: (args: TSwitchOrder) => Promise<void>
 }
 
 type TCardsFilter = {
