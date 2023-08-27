@@ -5,6 +5,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import SvgIcon from '@mui/material/SvgIcon';
 import UndoIcon from '@mui/icons-material/Undo';
+import Alert from '@mui/material/Alert';
 import { observer } from 'mobx-react-lite';
 import { CardRow } from 'entities/module';
 import { ModuleStore, CardStore } from 'entities/module';
@@ -57,7 +58,7 @@ const _ModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: IInnerP
                     Вернуться
                 </Button>
             </div>
-            <div className={'py-2 w-1/2'}>
+            <div className={'py-2 w-2/6'}>
                 <TextField
                     fullWidth
                     name='name'
@@ -66,7 +67,7 @@ const _ModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: IInnerP
                     value={module.name}
                     onChange={(e) => moduleStore.editModule({id: moduleId, name: e.target.name, value: e.target.value})}/>
             </div>
-            <div className={'py-2 mb-5 w-1/2'}>
+            <div className={'py-2 mb-5 w-2/6'}>
                     <TextField
                         fullWidth
                         name='description'
@@ -80,43 +81,55 @@ const _ModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: IInnerP
                     variant="contained"
                     onClick={() => cardStore.addCard(module.id)}>+Добавить карточку</Button>
             </div>
-            <div className='flex flex-col gap-7 pb-10'>
+
+
+
+            <div className='flex flex-col gap-3 pb-10'>
                 {
-                    cards.map( (card, idx) => (
-                        <CardRow
-                            key={card.id}
-                            cardIdx={idx}
-                            Term={<TextField
-                                fullWidth
-                                name='term'
-                                label="ТЕРМИН"
-                                variant="standard"
-                                value={card.term}
-                                onChange={(e) => cardStore.editCard({
-                                    moduleId,
-                                    cardId: card.id,
-                                    name: e.target.name,
-                                    value: e.target.value
-                                })}/>}
-                            Definition={<TextField
-                                fullWidth
-                                name='definition'
-                                label="ОПРЕДЕЛЕНИЕ"
-                                variant="standard"
-                                value={card.definition}
-                                onChange={(e) => cardStore.editCard({
-                                    moduleId,
-                                    cardId: card.id,
-                                    name: e.target.name,
-                                    value: e.target.value
-                                })}/>}
-                            DeleteCard={<Button
-                                color='error'
-                                variant="contained"
-                                onClick={() => cardStore.deleteCardById(module.id, card.id)}>Удалить</Button>}
-                            Image={<CardImage moduleId={moduleId} cardId={card.id} url={card.imgUrl} cardStore={cardStore}/>}
-                        />
-                    ))
+                    cards.length ? (
+                        cards.map( (card, idx) => (
+                            <CardRow
+                                key={card.id}
+                                cardIdx={idx}
+                                Term={<TextField
+                                    multiline
+                                    fullWidth
+                                    name='term'
+                                    label="ТЕРМИН"
+                                    variant="standard"
+                                    value={card.term}
+                                    onChange={(e) => cardStore.editCard({
+                                        moduleId,
+                                        cardId: card.id,
+                                        name: e.target.name,
+                                        value: e.target.value
+                                    })}/>}
+                                Definition={<TextField
+                                    multiline
+                                    fullWidth
+                                    name='definition'
+                                    label="ОПРЕДЕЛЕНИЕ"
+                                    variant="standard"
+                                    value={card.definition}
+                                    onChange={(e) => cardStore.editCard({
+                                        moduleId,
+                                        cardId: card.id,
+                                        name: e.target.name,
+                                        value: e.target.value
+                                    })}/>}
+                                DeleteCard={<Button
+                                    sx={{height: '25px', fontSize: '10pt'}}
+                                    color='error'
+                                    variant="contained"
+                                    onClick={() => cardStore.deleteCardById(module.id, card.id)}>Удалить</Button>}
+                                Image={<CardImage moduleId={moduleId} cardId={card.id} url={card.imgUrl} cardStore={cardStore}/>}
+                            />
+                        ))
+                    ) : (
+                        <Alert severity="info" sx={{ width: '100%' }}>
+                            Карточки не найдены!
+                        </Alert>
+                    )
                 }
             </div>
         </>

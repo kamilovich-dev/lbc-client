@@ -10,7 +10,7 @@ const ProfileHeader = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        setTabIndex(0);
+        handleClick('/modules');
     }, [])
 
     const handleClick = (url: string) => {
@@ -21,14 +21,16 @@ const ProfileHeader = () => {
 
     return (
         <>
-            <div className='p-2'>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '100%' }}>
-                    <Tabs value={tabIndex === -1 ? false : tabIndex} >
-                            <Tab label="Модули" onClick={e => handleClick('/modules')}/>
-                    </Tabs>
-                </Box>
+            <div>
+                <div className='p-2'>
+                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                        <Tabs sx={{height: '40px', minHeight: '10px'}} value={tabIndex === -1 ? false : tabIndex} >
+                                <Tab sx={{height: '40px', minHeight: '10px'}} label="Модули" onClick={e => handleClick('/modules')}/>
+                        </Tabs>
+                    </Box>
+                </div>
+                <Outlet />
             </div>
-            <Outlet />
         </>
 
     );

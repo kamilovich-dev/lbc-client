@@ -51,17 +51,16 @@ class CardStore implements ICardStore {
         const card = this.cards.find(card => card.id == cardId)
         if (!card) return
 
-        if (name == 'term') card.term = value
-        if (name == 'definition') card.definition = value
+        if (name == 'term') card.term = value || ''
+        if (name == 'definition') card.definition = value || ''
 
         clearTimeout(this.delayTimer)
         this.delayTimer = setTimeout(async () => {
 
             const formData = new FormData()
             formData.append('cardId', cardId.toString())
-
-            if (card.term) formData.append('term', card.term)
-            if (card.definition) formData.append('definition', card.definition)
+            formData.append('term', card.term || '')
+            formData.append('definition', card.definition || '')
 
             if (isDeleteImg) {
                 formData.append('isDeleteImg', 'true')
@@ -105,10 +104,10 @@ type TCardsFilter = {
 type TCard = {
     id: number,
     order: number,
-    term?: string,
+    term: string,
     definition?: string,
-    isFavorite: boolean,
-    imgUrl: string,
+    isFavorite?: boolean,
+    imgUrl?: string,
 }
 
 export { CardStore }

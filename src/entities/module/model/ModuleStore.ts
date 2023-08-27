@@ -39,8 +39,8 @@ class ModuleStore implements IModuleStore {
         const module = this.modules.find(module => module.id == id)
         if (!module) return
 
-        if (name == 'name') module.name = value
-        if (name == 'description') module.description = value
+        if (name == 'name') module.name = value || ''
+        if (name == 'description') module.description = value || ''
 
         clearTimeout(this.delayTimer)
         this.delayTimer = setTimeout(async () => {
@@ -96,7 +96,7 @@ export interface IModuleStore {
     setFilter: (type: string, value: string) => void,
 }
 
-type TModule = {
+export type TModule = {
     id: number,
     name: string,
     description: string,

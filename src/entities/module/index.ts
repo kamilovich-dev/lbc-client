@@ -4,5 +4,5 @@ export { CardRow } from './ui/card-row/CardRow';
 export  { ModuleStore } from './model/ModuleStore'
 export  { CardStore } from './model/CardStore'
 
-export type { IModuleStore } from './model/ModuleStore'
+export type { IModuleStore, TModule } from './model/ModuleStore'
 export type { ICardStore } from './model/CardStore'

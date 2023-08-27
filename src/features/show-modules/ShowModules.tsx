@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ModuleRow } from 'entities/module';
 import { ButtonEdit } from 'shared/ui/button-edit/ButtonEdit';
 import { ButtonDelete } from 'shared/ui/button-delete/ButtonDelete'
-import { TModule, IModuleStore } from 'entities/module/model/types';
+import { TModule, IModuleStore } from 'entities/module';
 
 interface IProps {
     modules: TModule[],

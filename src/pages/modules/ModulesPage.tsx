@@ -1,6 +1,6 @@
 import { useEffect  } from 'react'
 import { observer} from 'mobx-react-lite'
-import { Alert, Button, Select, MenuItem, TextField } from '@mui/material';
+import { Alert, Button, Select, MenuItem, TextField, Box } from '@mui/material';
 import { ShowModules } from 'features/show-modules/ShowModules';
 import { ModuleStore, IModuleStore } from 'entities/module';
 
@@ -19,6 +19,7 @@ const _ModulesPage = observer(( { moduleStore }: Props ) => {
                 <div className='p-2'>
                     <div className='flex gap-4 mb-4'>
                         <Button
+                                size='small'
                                 variant="contained"
                                 onClick={moduleStore.addModule}>
                             + ДОБАВИТЬ МОДУЛЬ</Button>
@@ -28,19 +29,19 @@ const _ModulesPage = observer(( { moduleStore }: Props ) => {
                             value={moduleStore.filters.by_alphabet}
                             label="Age"
                             onChange={e => moduleStore.setFilter('byAlphabet', e.target.value)}
-                            size={"small"}
+                            size='small'
                         >
-                            <MenuItem value={'asc'}>По возрастанию</MenuItem>
-                            <MenuItem value={'desc'}>По убыванию</MenuItem>
+                            <MenuItem  value={'asc'}>По возрастанию</MenuItem>
+                            <MenuItem  value={'desc'}>По убыванию</MenuItem>
                         </Select>
                         <TextField
                             onChange={e => moduleStore.setFilter('bySearch',e.target.value) }
                             label="Поиск модулей"
                             variant="outlined"
                             value={moduleStore.filters.by_search}
-                            size={"small"}
+                            size='small'
                         />
-                    </div>
+                </div>
                     <div>
                         {moduleStore.modules.length ?
                             <ShowModules
