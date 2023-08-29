@@ -13,25 +13,31 @@ interface IProps {
 const ShowModules = observer(( { modules, moduleStore }: IProps ) => {
     const navigate = useNavigate();
 
-    const handleButtonEditClick = ( moduleId: number ) => {
+    const handleButtonEditClick = ( e:React.SyntheticEvent, moduleId: number ) => {
+        e.stopPropagation()
         navigate(`/${moduleId}/edit`)
     }
 
-    const handleButtonDeleteClick = (moduleId: number) => {
+    const handleButtonDeleteClick = (e: React.SyntheticEvent, moduleId: number) => {
+        e.stopPropagation()
         moduleStore.deleteModuleById(moduleId)
+    }
+
+    const handleModuleRowClick = (moduleId: number) => {
+        navigate(`/${moduleId}`)
     }
 
     return (
         <>
             { modules.map( module => (
-                <div className='mb-2' key={module.id}>
+                <div className='mb-2' key={module.id} onClick={() => handleModuleRowClick(module.id)}>
                     <ModuleRow
                         moduleName={module.name}
                         cardsCount={module.cardsCount}
                         ButtonDelete={ <ButtonDelete
-                                        onClick={() => handleButtonDeleteClick(module.id)}/> }
+                                        onClick={(e) => handleButtonDeleteClick(e, module.id)}/> }
                         ButtonEdit={ <ButtonEdit
-                                        onClick={() => handleButtonEditClick(module.id)}/>}
+                                        onClick={(e) => handleButtonEditClick(e, module.id)}/>}
                     />
                 </div>
             ))}

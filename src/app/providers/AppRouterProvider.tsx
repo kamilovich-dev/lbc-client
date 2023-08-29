@@ -8,6 +8,7 @@ import { ErrorPage } from 'pages/error/ErrorPage';
 import { ModulesPage } from 'pages/modules/ModulesPage';
 import { ModuleEditPage } from 'pages/module-edit/ModuleEditPage';
 import { ProfileHeader } from "widgets/profile-header/ProfileHeader";
+import { ModulePage } from "pages/module/ModulePage";
 
 const AppRouterProvider = () => {
     const appRouter = createBrowserRouter([
@@ -43,6 +44,10 @@ const AppRouterProvider = () => {
                         {
                             element: <ModuleEditPage />,
                             path: ':moduleId/edit',
+                        },
+                        {
+                            element: <ModulePage />,
+                            path: ':moduleId',
                         }
                     ]
                 },

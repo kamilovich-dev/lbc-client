@@ -1,6 +1,6 @@
 import { useEffect  } from 'react'
 import { observer} from 'mobx-react-lite'
-import { Alert, Button, Select, MenuItem, TextField, Box } from '@mui/material';
+import { Alert, Button, Select, MenuItem, TextField } from '@mui/material';
 import { ShowModules } from 'features/show-modules/ShowModules';
 import { ModuleStore, IModuleStore } from 'entities/module';
 

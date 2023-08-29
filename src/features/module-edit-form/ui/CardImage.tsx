@@ -4,8 +4,7 @@ import SvgIcon from '@mui/material/SvgIcon';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { observer } from 'mobx-react-lite';
-import Modal from '@mui/material/Modal';
-import CloseIcon from '@mui/icons-material/Close';
+import { CardImageModal } from './CardImageModal'
 
 interface IProps {
     moduleId: number,
@@ -22,21 +21,10 @@ const CardImage = observer(( { moduleId, cardId, url, cardStore }: IProps ) => {
 
   return (
     <>
-        <Modal
-            className='flex items-center justify-center'
-            open={isShowImageModal}
-            onClose={() => setIsShowImageModal(false)}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <div className='max-h-full max-w-full h-fit w-fit relative'>
-              <img className='object-cover max-w-full max-h-full' src={imgUrl}></img>
-              <SvgIcon onClick={() => setIsShowImageModal(false)}  className='hover:cursor-pointer hover:text-red-200 active:text-red-400 absolute top-2 right-2 text-gray-500 bg-gray-400 opacity-90' sx={{height: '60px', width: '60px'}}>
-                <CloseIcon/>
-              </SvgIcon>
-            </div>
-
-        </Modal>
+        <CardImageModal
+          isShowImageModal={isShowImageModal}
+          setIsShowImageModal={setIsShowImageModal}
+          imgUrl={imgUrl || ''}/>
 
         <div className='relative h-16 w-full '>
             { imgUrl ? (
