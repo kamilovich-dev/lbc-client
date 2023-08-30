@@ -46,13 +46,20 @@ class CardStore implements ICardStore {
             })
     }
 
-    editCard = ( { moduleId, cardId, name, value, image, isDeleteImg } :  TEditCard) => {
+    editCard = ( { moduleId, cardId, name, value, isSwitchFavorite, image, isDeleteImg } :  TEditCard) => {
 
         const card = this.cards.find(card => card.id == cardId)
         if (!card) return
 
         if (name == 'term') card.term = value || ''
         if (name == 'definition') card.definition = value || ''
+        if (isSwitchFavorite) {
+            if (card.isFavorite == true || card.isFavorite == false) {
+                card.isFavorite = !card.isFavorite
+            } else {
+                card.isFavorite = true
+            }
+        }
 
         clearTimeout(this.delayTimer)
         this.delayTimer = setTimeout(async () => {
@@ -61,6 +68,8 @@ class CardStore implements ICardStore {
             formData.append('cardId', cardId.toString())
             formData.append('term', card.term || '')
             formData.append('definition', card.definition || '')
+
+            if (isSwitchFavorite) formData.append('isFavorite', String(card.isFavorite))
 
             if (isDeleteImg) {
                 formData.append('isDeleteImg', 'true')
@@ -71,12 +80,11 @@ class CardStore implements ICardStore {
             await cardEndpoints.editCard(this.client,formData)
             .then( () => this.refreshCards( moduleId ))
 
-        }, isDeleteImg || image ? 0 : this.DELAY_TIME)
+        }, isDeleteImg || image || isSwitchFavorite ? 0 : this.DELAY_TIME)
 
     }
 
     switchOrder = async ( { cardId1, cardId2 }: TSwitchOrder )  => {
-        console.log('send')
         await cardEndpoints.switchOrder( this.client,  {cardId1, cardId2} )
     }
 
@@ -92,6 +100,7 @@ type TEditCard = {
     cardId: number,
     name?: string,
     value?: string,
+    isSwitchFavorite?: boolean,
     image?: Blob | undefined
     isDeleteImg?: boolean
 }

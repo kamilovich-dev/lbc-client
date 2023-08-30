@@ -7,13 +7,13 @@ interface IProps {
 
 const ButtonDelete = ( { onClick }: IProps ) => {
     return (
-        <div className='w-10 h-10 flex rounded-full justify-center items-center hover:bg-slate-200 active:bg-slate-300'
+        <button className='w-10 h-10 flex rounded-full justify-center items-center hover:bg-slate-200 active:bg-slate-300'
               onClick={onClick}>
             <SvgIcon
                      className='text-red-500'>
                 <DeleteIcon/>
             </SvgIcon>
-        </div>
+        </button>
     );
 };
 

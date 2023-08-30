@@ -30,13 +30,35 @@ const _ModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
     const routeParams = useParams();
     const navigate = useNavigate();
     const moduleId = routeParams.moduleId ? parseInt(routeParams.moduleId) : null
+    const [isEditModes, setEditModes] = useState<Array<boolean>>([])
 
     if (!moduleId) return
 
-    useEffect( () => {
+    useEffect( () => { //Инициалищация данных
         moduleStore.refreshModules()
         cardStore.refreshCards(moduleId)
     }, [])
+
+    useEffect( () => { //Инициализация режимов редактирования карточек
+        const editModesArray = new Array(cardStore.cards.length)
+        setEditModes(editModesArray.fill(false))
+    }, [cardStore.cards.length])
+
+    useEffect(() => { //Глобальный слушатель для обработки кликов
+
+        const disableCardEdit = (e: any) => { //Отключение режима редактирования для всех карточек
+            const cards = cardStore.cards
+            for(let i = 0; i < cards.length; i++) {
+                const div = e.target.closest(`div[id="${cards[i].id}"]`)
+                if (e.target.id == cards[i].id || div) return
+            }
+            const editModesArray = new Array(cardStore.cards.length)
+            setEditModes(editModesArray.fill(false))
+        }
+
+        document.body.addEventListener('click', disableCardEdit)
+        return () => document.body.removeEventListener('click', disableCardEdit)
+    }, [cardStore.cards.length])
 
     const module = moduleStore.getModuleById(moduleId)
     if (!module) return
@@ -44,17 +66,22 @@ const _ModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
     const cards = cardStore.cards
     if (!cards) return
 
-
     const handleCardsClick = () => {
 
     }
 
-    const handleEditCardClick = () => {
-
+    const handleSwitchEditMode = ( cardIdx: number ) => {
+        const newIsEditModes = [...isEditModes]
+        newIsEditModes[cardIdx] = !newIsEditModes[cardIdx]
+        setEditModes(newIsEditModes)
     }
 
-    const handleFavoriteCardClick = () => {
+    const handleEditCard = (cardId: number, name: string, value: string) => {
+        cardStore.editCard( { cardId, moduleId, name, value } )
+    }
 
+    const handleSwitchFavorite = (cardId: number) => {
+        cardStore.editCard( { cardId, moduleId, isSwitchFavorite: true } )
     }
 
     return(
@@ -88,14 +115,18 @@ const _ModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
             </div>
 
             <h2 className='font-semibold text-xl text-slate-800 mb-5'>Термины в модуле: {cards.length}</h2>
-            { cards.map(card => (
-                <div className='mb-2' key={card.id}>
+            { cards.map((card, idx) => (
+                <div className='mb-2' key={card.id} id={card.id.toString()}>
                     <CardShowRow
                         termin={card.term || ''}
                         definition={card.definition || ''}
                         imgUrl={card.imgUrl || ''}
-                        handleEditClick={handleEditCardClick}
-                        handleFavoriteClick={handleFavoriteCardClick}
+                        cardId={card.id}
+                        cardIdx={idx}
+                        isEditMode={isEditModes[idx]}
+                        handleSwitchEditMode={handleSwitchEditMode}
+                        handleEditCard={handleEditCard}
+                        handleSwitchFavorite={handleSwitchFavorite}
                         isFavorite={card.isFavorite || false}
                     />
                 </div>
