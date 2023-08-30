@@ -66,8 +66,8 @@ const _ModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
     const cards = cardStore.cards
     if (!cards) return
 
-    const handleCardsClick = () => {
-
+    const handleNavigation = () => {
+        navigate(`/${moduleId}/cards-mode`)
     }
 
     const handleSwitchEditMode = ( cardIdx: number ) => {
@@ -99,19 +99,19 @@ const _ModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
                 <ToSelectedMode
                     Icon={<ViewCarouselIcon/>}
                     text='Карточки'
-                    handleClick={handleCardsClick}/>
+                    handleClick={handleNavigation}/>
                 <ToSelectedMode
                     Icon={<RepeatIcon/>}
                     text='Заучивание'
-                    handleClick={handleCardsClick}/>
+                    handleClick={handleNavigation}/>
                 <ToSelectedMode
                     Icon={<QuizIcon/>}
                     text='Тест'
-                    handleClick={handleCardsClick}/>
+                    handleClick={handleNavigation}/>
                 <ToSelectedMode
                     Icon={<FactCheckIcon/>}
                     text='Подбор'
-                    handleClick={handleCardsClick}/>
+                    handleClick={handleNavigation}/>
             </div>
 
             <h2 className='font-semibold text-xl text-slate-800 mb-5'>Термины в модуле: {cards.length}</h2>

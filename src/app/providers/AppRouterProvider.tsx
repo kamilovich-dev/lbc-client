@@ -9,6 +9,7 @@ import { ModulesPage } from 'pages/modules/ModulesPage';
 import { ModuleEditPage } from 'pages/module-edit/ModuleEditPage';
 import { ProfileHeader } from "widgets/profile-header/ProfileHeader";
 import { ModulePage } from "pages/module/ModulePage";
+import { CardsModePage } from "pages/cards-mode/CardsModePage";
 
 const AppRouterProvider = () => {
     const appRouter = createBrowserRouter([
@@ -42,12 +43,16 @@ const AppRouterProvider = () => {
                             ]
                         },
                         {
+                            element: <ModulePage />,
+                            path: ':moduleId',
+                        },
+                        {
                             element: <ModuleEditPage />,
                             path: ':moduleId/edit',
                         },
                         {
-                            element: <ModulePage />,
-                            path: ':moduleId',
+                            element: <CardsModePage />,
+                            path: ':moduleId/cards-mode'
                         }
                     ]
                 },
