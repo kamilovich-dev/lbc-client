@@ -4,7 +4,7 @@ import SvgIcon from '@mui/material/SvgIcon';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { observer } from 'mobx-react-lite';
-import { CardImageModal } from './CardImageModal'
+import { CardImageModal } from 'shared/ui/image-modal/CardImageModal'
 
 interface IProps {
     moduleId: number,

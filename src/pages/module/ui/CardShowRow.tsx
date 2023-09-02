@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { FavoriteStar } from "shared/ui/favorite-star/FavoriteStar"
 import { ButtonEdit } from "shared/ui/button-edit/ButtonEdit"
-import { CardImageModal } from "features/module-edit-form"
+import { CardImageModal } from "shared/ui/image-modal/CardImageModal"
 import TextField from '@mui/material/TextField';
 
 interface IProps {

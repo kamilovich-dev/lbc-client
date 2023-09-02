@@ -1,19 +1,14 @@
 import { useEffect, useState } from 'react'
-import { observer } from 'mobx-react-lite'
-import { useNavigate } from "react-router-dom";
-
-import SvgIcon from '@mui/material/SvgIcon';
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-import { Button } from '@mui/material'
-
-import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
-import RepeatIcon from '@mui/icons-material/Repeat';
-import QuizIcon from '@mui/icons-material/Quiz';
-import FactCheckIcon from '@mui/icons-material/FactCheck';
-
 import { useParams } from "react-router-dom"
+import { observer } from 'mobx-react-lite'
+
+import { ToModulesButton } from 'features/navigation'
+
 import { ICardStore, IModuleStore, ModuleStore, CardStore } from 'entities/module'
-import { ToSelectedMode, CardShowRow } from './ui'
+import { CardShowRow } from './ui/CardShowRow'
+
+import { ModesBlock } from 'features/navigation';
+
 
 interface IProps {
     moduleStore: IModuleStore
@@ -28,7 +23,6 @@ const ModulePage = () => {
 
 const _ModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
     const routeParams = useParams();
-    const navigate = useNavigate();
     const moduleId = routeParams.moduleId ? parseInt(routeParams.moduleId) : null
     const [isEditModes, setEditModes] = useState<Array<boolean>>([])
 
@@ -66,10 +60,6 @@ const _ModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
     const cards = cardStore.cards
     if (!cards) return
 
-    const handleNavigation = () => {
-        navigate(`/${moduleId}/cards-mode`)
-    }
-
     const handleSwitchEditMode = ( cardIdx: number ) => {
         const newIsEditModes = [...isEditModes]
         newIsEditModes[cardIdx] = !newIsEditModes[cardIdx]
@@ -87,31 +77,11 @@ const _ModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
     return(
         <>
             <div className='mb-4'>
-                <Button variant='outlined' onClick={ () => navigate('/modules') } size='small' sx={{fontSize: '14px'}}>
-                        <SvgIcon className='mr-2'>
-                            <FormatListBulletedIcon></FormatListBulletedIcon>
-                        </SvgIcon>
-                        К списку модулей
-                </Button>
+               <ToModulesButton/>
             </div>
             <h1 className='font-bold text-xl text-slate-800 mb-5'>{module.name}</h1>
             <div className='flex items-center gap-2 mb-5'>
-                <ToSelectedMode
-                    Icon={<ViewCarouselIcon/>}
-                    text='Карточки'
-                    handleClick={handleNavigation}/>
-                <ToSelectedMode
-                    Icon={<RepeatIcon/>}
-                    text='Заучивание'
-                    handleClick={handleNavigation}/>
-                <ToSelectedMode
-                    Icon={<QuizIcon/>}
-                    text='Тест'
-                    handleClick={handleNavigation}/>
-                <ToSelectedMode
-                    Icon={<FactCheckIcon/>}
-                    text='Подбор'
-                    handleClick={handleNavigation}/>
+                <ModesBlock />
             </div>
 
             <h2 className='font-semibold text-xl text-slate-800 mb-5'>Термины в модуле: {cards.length}</h2>
