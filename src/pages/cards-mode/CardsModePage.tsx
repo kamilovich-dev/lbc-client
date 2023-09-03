@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { observer } from "mobx-react-lite"
 import { useParams } from "react-router-dom"
 import Alert from '@mui/material/Alert';
@@ -10,9 +10,14 @@ import { CardStore, ModuleStore,
 
 import { CardsModeStore } from "features/cards-mode"
 
-import { ParametersButton } from 'features/cards-mode/ui/ParametersButton'
+import { ParametersButton } from 'features/cards-mode'
 import { FlipCard } from "features/cards-mode"
 
+import { ButtonNext } from "shared/ui/buttons/ButtonNext";
+import { ButtonPrev } from "shared/ui/buttons/ButtonPrev";
+
+import { Autoplay } from "features/cards-mode";
+import { Mix } from "features/cards-mode";
 
 const CardsModePage = () => {
     const { moduleId } = useParams()
@@ -64,6 +69,9 @@ interface IProps {
 
 const _CardsModePage = observer(( { cardStore, cardsModeStore, module }: IProps ) => {
 
+    const cardRef = useRef(null)
+    const nextRef = useRef(null)
+
     return (
         <>
             <div className='flex flex-col max-w-4xl m-auto'>
@@ -88,16 +96,26 @@ const _CardsModePage = observer(( { cardStore, cardsModeStore, module }: IProps 
                     </div>
                 </div>
 
-                <div className="mb-4 h-[700px]">
+                <div className="mb-3 h-[700px]">
                     <FlipCard
                         moduleId={module.id}
                         cardsModeStore={cardsModeStore}
-                        cardStore={cardStore}/>
+                        cardStore={cardStore}
+                        externalRef={cardRef}/>
                 </div>
 
-
-                <div>Автовоспроизведение</div>
-                <div>Кнопки навигации</div>
+                <div className="flex mb-10">
+                    <div className="w-1/3">
+                        <Autoplay handleClick={() => cardsModeStore.autoplay([cardRef, nextRef])} isPlaying={cardsModeStore.autoplayOn}/>
+                    </div>
+                    <div className="w-1/3 flex gap-10 justify-center">
+                        <ButtonPrev handleClick={cardsModeStore.goPrevCard}/>
+                        <ButtonNext handleClick={cardsModeStore.goNextCard} externalRef={nextRef}/>
+                    </div>
+                    <div className="w-1/3 flex justify-end">
+                        <Mix handleClick={cardsModeStore.mixCards} isMixed={cardsModeStore.cardsMixed}/>
+                    </div>
+                </div>
 
                 <div>Счетчик еще изучаю</div>
                 <div>Счетчик знаю</div>

@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { FavoriteStar } from "shared/ui/favorite-star/FavoriteStar"
-import { ButtonEdit } from "shared/ui/button-edit/ButtonEdit"
-import { CardImageModal } from "shared/ui/image-modal/CardImageModal"
+import { ButtonFavoriteStar } from "shared/ui/buttons/ButtonFavoriteStar"
+import { ButtonEdit } from "shared/ui/buttons/ButtonEdit"
+import { CardImageModal } from "shared/ui/modals/CardImageModal"
 import TextField from '@mui/material/TextField';
 
 interface IProps {
@@ -74,7 +74,7 @@ const CardShowRow = ( {cardId, cardIdx, termin, definition, imgUrl, isFavorite, 
                 </div>
                 <div className='flex w-2/12 justify-end'>
                     <div className='mr-1'>
-                        <FavoriteStar isFavorite={isFavorite} onClick={() => handleSwitchFavorite(cardId)}/>
+                        <ButtonFavoriteStar isFavorite={isFavorite} onClick={() => handleSwitchFavorite(cardId)}/>
                     </div>
                     <div>
                         <ButtonEdit isEdit={isEditMode} onClick={() => handleSwitchEditMode(cardIdx)} />

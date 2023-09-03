@@ -1,8 +1,8 @@
 import { observer } from 'mobx-react-lite'
 import { useNavigate } from 'react-router-dom';
 import { ModuleRow } from 'entities/module';
-import { ButtonEdit } from 'shared/ui/button-edit/ButtonEdit';
-import { ButtonDelete } from 'shared/ui/button-delete/ButtonDelete'
+import { ButtonEdit } from 'shared/ui/buttons/ButtonEdit';
+import { ButtonDelete } from 'shared/ui/buttons/ButtonDelete'
 import { TModule, IModuleStore } from 'entities/module';
 
 interface IProps {

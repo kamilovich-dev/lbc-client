@@ -5,11 +5,10 @@ import TextField from '@mui/material/TextField';
 import { CardsModeStore } from "features/cards-mode"
 import { CardStore} from "entities/module"
 import { Help } from "./Help"
-import { ButtonEdit } from 'shared/ui/button-edit/ButtonEdit';
-import { FavoriteStar } from 'shared/ui/favorite-star/FavoriteStar';
-import { CardImageModal } from "shared/ui/image-modal/CardImageModal"
+import { ButtonEdit } from 'shared/ui/buttons/ButtonEdit';
+import { ButtonFavoriteStar } from 'shared/ui/buttons/ButtonFavoriteStar';
+import { CardImageModal } from "shared/ui/modals/CardImageModal"
 import { FastEditModal } from './FastEditModal';
-
 
 import { useSpring, animated } from '@react-spring/web';
 
@@ -17,9 +16,10 @@ interface IProps {
     moduleId: number,
     cardsModeStore: CardsModeStore,
     cardStore: CardStore,
+    externalRef?: React.RefObject<any>,
 }
 
-const FlipCard = observer(( { cardsModeStore, moduleId, cardStore }: IProps ) => {
+const FlipCard = observer(( { cardsModeStore, moduleId, cardStore, externalRef }: IProps ) => {
     const card = cardsModeStore.cards[cardsModeStore.currentIdx]
     if (!card) return
 
@@ -36,18 +36,19 @@ const FlipCard = observer(( { cardsModeStore, moduleId, cardStore }: IProps ) =>
     const head = (
         <div className='p-2 flex gap-4 mb-4'>
             <div className='w-3/4'>
-                <Help
-                    showHelp={cardsModeStore.helpShown}
-                    helpText={cardsModeStore.getHelpText()}
-                    handleClick={(e) => {e.stopPropagation();
+                {cardsModeStore.cardFlipped ? null
+                    :  <Help
+                        showHelp={cardsModeStore.helpShown}
+                        helpText={cardsModeStore.getHelpText()}
+                        handleClick={(e) => {e.stopPropagation();
                         cardsModeStore.showHelp()}}/>
-
+                }
             </div>
             <div className='flex w-1/4 gap-2 justify-end'>
                 <ButtonEdit
                     onClick={(e) => {e.stopPropagation();
                         setIsShowFastEditModal(true)}}/>
-                <FavoriteStar
+                <ButtonFavoriteStar
                     isFavorite={card.isFavorite}
                     onClick={(e) => {e.stopPropagation();
                         cardStore.editCard( {moduleId, cardId: card.id, isSwitchFavorite: true} );
@@ -108,7 +109,7 @@ const FlipCard = observer(( { cardsModeStore, moduleId, cardStore }: IProps ) =>
 
     return (
         <>
-            <div className='[transform-style:preserve-3d] hover:cursor-pointer h-full w-full' onClick={cardsModeStore.flipCard}>
+            <div className='[transform-style:preserve-3d] hover:cursor-pointer h-full w-full' onClick={cardsModeStore.flipCard} ref={externalRef}>
                 {front}
                 {back}
             </div>

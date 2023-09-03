@@ -20,6 +20,8 @@ interface IProps {
 const FastEditModal = observer(( {card, moduleId, showModal, setShowModal, cardsModeStore, cardStore}: IProps ) => {
 
     const handleSave = () => {
+        if (term == '') return
+
         cardStore.editCard({ moduleId, cardId: card.id, name: 'term', value: term } )
         cardStore.editCard({ moduleId, cardId: card.id, name: 'definition', value: definition } )
 

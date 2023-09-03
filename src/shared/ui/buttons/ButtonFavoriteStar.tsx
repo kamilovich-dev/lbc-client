@@ -6,7 +6,7 @@ interface IProps {
     onClick: ( params: any ) => any;
 }
 
-const FavoriteStar = ( { isFavorite, onClick }: IProps ) => {
+const ButtonFavoriteStar = ( { isFavorite, onClick }: IProps ) => {
     return (
         <button className='w-10 h-10 flex rounded-full justify-center items-center hover:bg-slate-200 active:bg-slate-300'
               onClick={onClick}>
@@ -18,4 +18,4 @@ const FavoriteStar = ( { isFavorite, onClick }: IProps ) => {
     );
 };
 
-export { FavoriteStar }
+export { ButtonFavoriteStar }

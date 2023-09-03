@@ -4,6 +4,7 @@ class CardsModeStore {
     initialCards: TCard[] = []
     cards: TCard[] = []
     currentIdx: number = 0
+    autplayTimerId: NodeJS.Timeout | undefined
 
     cardFlipped: boolean = false
     helpShown: boolean = false
@@ -25,7 +26,27 @@ class CardsModeStore {
     flipCard = () => this.cardFlipped = !this.cardFlipped
     showParams = () => this.paramsShown = !this.paramsShown
     showHelp = () => this.helpShown = !this.helpShown
-    autoplay = () => this.autoplayOn = !this.autoplayOn
+
+    /*Автовоспроизведение */
+    autoplay = (refs: Array<React.RefObject<HTMLElement>>) => {
+        if (this.autoplayOn) {
+            this.autoplayOn = false
+            clearInterval(this.autplayTimerId)
+            return
+        }
+
+        if (!this.autoplayOn) {
+            this.restart()
+            this.autoplayOn = true
+            let refIdx = 0
+            this.autplayTimerId = setInterval( () => {
+                if (this.currentIdx == this.cards.length - 1 && refIdx == refs.length - 1) clearInterval(this.autplayTimerId)
+                const ref = refs[refIdx]
+                if (ref && ref.current) ref.current?.click();
+                refIdx = refIdx == refs.length - 1 ? 0 : refIdx + 1
+            }, 1000 )
+        }
+    }
     sortCards = () => {
         this.cardsSorted = !this.cardsSorted
         this.restart()
