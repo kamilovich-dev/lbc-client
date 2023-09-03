@@ -5,9 +5,8 @@ class CardsModeStore {
     cards: TCard[] = []
     currentIdx: number = 0
 
-    cardTurned: boolean = false
+    cardFlipped: boolean = false
     helpShown: boolean = false
-    fastEditShown: boolean = false
     paramsShown: boolean = false
     whatInAnswer: TAnswer = 'definition'
     autoplayOn: boolean = false
@@ -23,10 +22,9 @@ class CardsModeStore {
         this.initialCards = [...cards]
     }
 
-    turnCard = () => this.cardTurned = !this.cardTurned
+    flipCard = () => this.cardFlipped = !this.cardFlipped
     showParams = () => this.paramsShown = !this.paramsShown
     showHelp = () => this.helpShown = !this.helpShown
-    showFastEdit = () => this.fastEditShown = !this.fastEditShown
     autoplay = () => this.autoplayOn = !this.autoplayOn
     sortCards = () => {
         this.cardsSorted = !this.cardsSorted
@@ -56,13 +54,19 @@ class CardsModeStore {
     }
     getHelpText = () => {
         const card = this.cards[this.currentIdx]
-        if (this.whatInAnswer == 'term' && card.term) {
-            return card.term[0] + '_'.repeat(card.term.length - 1)
+        if (this.helpShown) {
+            if (this.whatInAnswer == 'term' && card.term.length) {
+                const words = card.term.match(/(\w+)/)
+                if (words) return words[0] ? card.term[0] + '_'.repeat(words[0].length - 1) : '_'
+            }
+
+            if (this.whatInAnswer == 'definition' && card.definition?.length) {
+                const words = card.definition.match(/(\w+)/)
+                if (words) return words[0] ? card.definition[0] + '_'.repeat(words[0].length - 1) : '_'
+            }
+            return '_'
         }
-        if (this.whatInAnswer == 'definition' && card.definition) {
-            return card.definition[0] + '_'.repeat(card.definition.length - 1)
-        }
-        return '_'
+        return 'Показать подсказку'
     }
 
     //only view

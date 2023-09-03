@@ -10,12 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
-    "@headlessui/react": "^1.7.16",
-    "@heroicons/react": "^2.0.18",
     "@mui/icons-material": "^5.14.0",
     "@mui/material": "^5.14.0",
+    "@react-spring/web": "^9.7.3",
+    "antd": "^5.8.6",
     "axios": "^1.4.0",
     "formik": "^2.4.3",
     "lodash": "^4.17.21",
@@ -25,7 +23,6 @@
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.14.1",
-    "react-spring": "^9.7.2",
     "recharts": "^2.7.2",
     "yup": "^1.2.0"
   },

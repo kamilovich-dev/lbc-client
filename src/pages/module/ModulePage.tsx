@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from "react-router-dom"
 import { observer } from 'mobx-react-lite'
+import Alert from '@mui/material/Alert';
 
 import { ToModulesButton } from 'features/navigation'
 
@@ -85,7 +86,7 @@ const _ModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
             </div>
 
             <h2 className='font-semibold text-xl text-slate-800 mb-5'>Термины в модуле: {cards.length}</h2>
-            { cards.map((card, idx) => (
+            { cards.length ? cards.map((card, idx) => (
                 <div className='mb-2' key={card.id} id={card.id.toString()}>
                     <CardShowRow
                         termin={card.term || ''}
@@ -101,7 +102,10 @@ const _ModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
                     />
                 </div>
 
-            )) }
+            )) :
+            <Alert severity="info" sx={{ width: '100%' }}>
+                Карточки не найдены!
+            </Alert> }
         </>
     )
 })

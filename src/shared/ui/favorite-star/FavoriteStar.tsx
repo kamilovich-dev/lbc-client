@@ -2,7 +2,7 @@ import SvgIcon from '@mui/material/SvgIcon';
 import GradeIcon from '@mui/icons-material/Grade';
 
 interface IProps {
-    isFavorite: boolean,
+    isFavorite: boolean | undefined,
     onClick: ( params: any ) => any;
 }
 

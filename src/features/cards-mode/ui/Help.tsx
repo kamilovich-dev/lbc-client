@@ -2,20 +2,26 @@ import SvgIcon from '@mui/material/SvgIcon';
 import EmojiObjectsOutlinedIcon from '@mui/icons-material/EmojiObjectsOutlined';
 
 interface IProps {
-
+    helpText: string,
+    showHelp: boolean,
+    handleClick: (args: any) => void
 }
 
-const Help = () => {
+const Help = ( {handleClick, helpText, showHelp}: IProps) => {
 
     return (
         <>
-            <div className=''>
-                <SvgIcon
-                    fontSize='medium'
-                    htmlColor='#586380'>
-                    <EmojiObjectsOutlinedIcon/>
-                </SvgIcon>
-                <span className=''>{ showHelp ? helpText[0] + '_'.repeat(words[0].length - 1) : 'Показать подсказку'}</span>
+            <div className={'flex font-semibold w-fit gap-2 items-center rounded-full px-3 py-1 ' + (showHelp ? 'bg-gray-100' : '') } onClick={handleClick}>
+                <div>
+                    <SvgIcon
+                        fontSize='medium'
+                        htmlColor='#586380'>
+                        <EmojiObjectsOutlinedIcon/>
+                    </SvgIcon>
+                </div>
+                <div>
+                    <span >{ helpText }</span>
+                </div>
             </div>
         </>
     )
