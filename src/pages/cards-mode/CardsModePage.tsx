@@ -19,6 +19,8 @@ import { ButtonPrev } from "shared/ui/buttons/ButtonPrev";
 import { Autoplay } from "features/cards-mode";
 import { Mix } from "features/cards-mode";
 
+import { ParametersModal } from "features/cards-mode";
+
 const CardsModePage = () => {
     const { moduleId } = useParams()
     if (!moduleId) return;
@@ -56,7 +58,7 @@ const CardsModePage = () => {
     const cardsModeStore = new CardsModeStore(cardStore.cards)
 
     return (
-        <_CardsModePage cardsModeStore={cardsModeStore} module={module} cardStore={cardStore}/>
+        <_CardsModePage cardsModeStore={cardsModeStore} module={module} cardStore={cardStore} />
     )
 }
 
@@ -71,6 +73,8 @@ const _CardsModePage = observer(( { cardStore, cardsModeStore, module }: IProps 
 
     const cardRef = useRef(null)
     const nextRef = useRef(null)
+
+    const [isShowParametersModal, setIsShowParametersModal] = useState(false)
 
     return (
         <>
@@ -89,7 +93,7 @@ const _CardsModePage = observer(( { cardStore, cardsModeStore, module }: IProps 
                         </div>
                     </div>
                     <div className="w-1/3  flex gap-4 justify-end items-center">
-                        <ParametersButton handleClick={cardsModeStore.showParams}/>
+                        <ParametersButton handleClick={() => setIsShowParametersModal(true)}/>
                         <div className="w-10">
                             <BackButton />
                         </div>
@@ -125,6 +129,11 @@ const _CardsModePage = observer(( { cardStore, cardsModeStore, module }: IProps 
 
                 <div>Кнопка перемешивания</div>
             </div>
+
+            {isShowParametersModal ? <ParametersModal
+                cardsModeStore={cardsModeStore}
+                showModal={isShowParametersModal}
+                setShowModal={setIsShowParametersModal}/> : null}
         </>
     )
 })

@@ -1,4 +1,5 @@
 import { makeAutoObservable } from "mobx"
+import { Animation } from "./Animation"
 
 class CardsModeStore {
     initialCards: TCard[] = []
@@ -6,9 +7,10 @@ class CardsModeStore {
     currentIdx: number = 0
     autplayTimerId: NodeJS.Timeout | undefined
 
+    animation: Animation
+
     cardFlipped: boolean = false
     helpShown: boolean = false
-    paramsShown: boolean = false
     whatInAnswer: TAnswer = 'definition'
     autoplayOn: boolean = false
     cardsMixed: boolean = false
@@ -21,10 +23,14 @@ class CardsModeStore {
         makeAutoObservable(this)
         this.cards = [...cards]
         this.initialCards = [...cards]
+        this.animation = new Animation()
     }
 
-    flipCard = () => this.cardFlipped = !this.cardFlipped
-    showParams = () => this.paramsShown = !this.paramsShown
+    flipCard = () => {
+        this.cardFlipped = !this.cardFlipped
+        this.animation.flip(this.cardFlipped)
+    }
+
     showHelp = () => this.helpShown = !this.helpShown
 
     /*Автовоспроизведение */
@@ -94,11 +100,17 @@ class CardsModeStore {
     goNextCard = () => {
         if (this.currentIdx == this.cards.length - 1) return
         this.currentIdx++
+        this.cardFlipped = false
+        this.helpShown = false
+        this.animation.next()
     }
 
     goPrevCard = () => {
         if (this.currentIdx == 0) return
         this.currentIdx--
+        this.cardFlipped = false
+        this.helpShown = false
+        this.animation.prev()
     }
 
     //sort
@@ -115,6 +127,9 @@ class CardsModeStore {
 
     restart = () => {
         this.knowledge.splice(0)
+        this.animation.reset()
+        this.cardFlipped = false
+        this.helpShown = false
         this.currentIdx = 0
     }
 
@@ -130,6 +145,5 @@ export type TCard = {
     imgUrl?: string,
 }
 
-type TAnswer = 'term' | 'definition' | 'both'
-
+export type TAnswer = 'term' | 'definition' | 'both'
 export { CardsModeStore }

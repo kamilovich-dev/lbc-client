@@ -21,19 +21,10 @@ const FastEditModal = observer(( {card, moduleId, showModal, setShowModal, cards
 
     const handleSave = () => {
         if (term == '') return
-
         cardStore.editCard({ moduleId, cardId: card.id, name: 'term', value: term } )
         cardStore.editCard({ moduleId, cardId: card.id, name: 'definition', value: definition } )
-
         cardsModeStore.cards[cardsModeStore.currentIdx].term = term
         cardsModeStore.cards[cardsModeStore.currentIdx].definition = definition
-
-        setShowModal(false)
-    }
-
-    const handleClose = () => {
-        setTerm(card.term)
-        setDefinition(card.definition)
         setShowModal(false)
     }
 
@@ -44,7 +35,7 @@ const FastEditModal = observer(( {card, moduleId, showModal, setShowModal, cards
             <Modal
                 className='flex justify-center items-center'
                 open={showModal}
-                onClose={handleClose}
+                onClose={() => setShowModal(false)}
             >
                 <div className="rounded-2xl bg-white overflow-hidden">
                     <div className='p-10 flex flex-col relative h-[600px] w-[800px] overflow-y-auto'>
@@ -72,10 +63,10 @@ const FastEditModal = observer(( {card, moduleId, showModal, setShowModal, cards
                                 onChange={(e) => setDefinition(e.target.value)}/>
                         </div>
                         <div className="flex flex-row gap-6 p-4 justify-end">
-                            <Button variant='outlined' onClick={handleClose}>Отмена</Button>
+                            <Button variant='outlined' onClick={() => setShowModal(false)}>Отмена</Button>
                             <Button variant='contained' onClick={handleSave} >Сохранить</Button>
                         </div>
-                        <SvgIcon onClick={handleClose}  className='hover:cursor-pointer hover:text-red-200 active:text-red-400 absolute top-4 right-4 text-gray-500 opacity-90' sx={{height: '40px', width: '40px'}}>
+                        <SvgIcon onClick={() => setShowModal(false)}  className='hover:cursor-pointer hover:text-red-200 active:text-red-400 absolute top-4 right-4 text-gray-500 opacity-90' sx={{height: '40px', width: '40px'}}>
                             <CloseIcon/>
                         </SvgIcon>
                     </div>

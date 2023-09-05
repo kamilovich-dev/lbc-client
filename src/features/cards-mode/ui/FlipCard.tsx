@@ -10,7 +10,7 @@ import { ButtonFavoriteStar } from 'shared/ui/buttons/ButtonFavoriteStar';
 import { CardImageModal } from "shared/ui/modals/CardImageModal"
 import { FastEditModal } from './FastEditModal';
 
-import { useSpring, animated } from '@react-spring/web';
+import { animated } from '@react-spring/web';
 
 interface IProps {
     moduleId: number,
@@ -27,11 +27,6 @@ const FlipCard = observer(( { cardsModeStore, moduleId, cardStore, externalRef }
 
     const [isShowImageModal, setIsShowImageModal] = useState(false)
     const [isShowFastEditModal, setIsShowFastEditModal] = useState(false)
-
-    const { transform } = useSpring({
-      transform: `perspective(1200px) rotateX(${cardsModeStore.cardFlipped ? 180 : 0}deg)`,
-      config: { mass: 5, tension: 500, friction: 80, duration: 400 },
-    })
 
     const head = (
         <div className='p-2 flex gap-4 mb-4'>
@@ -59,14 +54,14 @@ const FlipCard = observer(( { cardsModeStore, moduleId, cardStore, externalRef }
     )
 
     const front = (
-        <animated.div style={{ transform }} className='absolute inset-0 p-4 flex flex-col text-center [backface-visibility:hidden] bg-white rounded-xl shadow-sm shadow-black/40'>
+        <div className='absolute inset-0 p-4 flex flex-col text-center [backface-visibility:hidden] bg-white rounded-xl shadow-sm shadow-black/40'>
             {head}
             <div className='flex-auto flex items-center justify-center text-7xl text-slate-800 text-center w-full overflow-y-auto'>
                 <div className='max-h-full'>
                     <TextField
                         multiline
                         fullWidth
-                        inputProps={{style: { textAlign: 'center', fontSize: 24 }}}
+                        inputProps={{style: { textAlign: 'center', fontSize: 30 }}}
                         InputProps={{ disableUnderline: true, readOnly: true}}
                         sx={{"& .MuiInputBase-input.Mui-disabled": {
                             WebkitTextFillColor: 'black'},
@@ -77,11 +72,11 @@ const FlipCard = observer(( { cardsModeStore, moduleId, cardStore, externalRef }
                     />
                 </div>
             </div>
-        </animated.div>
+        </div>
     )
 
     const back = (
-        <animated.div style={{ transform, rotateX: '180deg' }} className='absolute inset-0 p-4 flex flex-col [backface-visibility:hidden] bg-white rounded-xl shadow-sm shadow-black/40'>
+        <div className='[transform:rotateX(180deg)] absolute inset-0 p-4 flex flex-col [backface-visibility:hidden] bg-white rounded-xl shadow-sm shadow-black/40'>
             {head}
             <div className='flex gap-8 items-center flex-auto overflow-y-auto pr-4'>
                 <div className='w-1/2 h-full text-2xl text-slate-800 flex flex-col justify-center overflow-y-auto '>
@@ -89,7 +84,7 @@ const FlipCard = observer(( { cardsModeStore, moduleId, cardStore, externalRef }
                         <TextField
                             multiline
                             fullWidth
-                            inputProps={{style: { textAlign: 'center', fontSize: 24 }}}
+                            inputProps={{style: { textAlign: 'center', fontSize: 30 }}}
                             InputProps={{ disableUnderline: true, readOnly: true}}
                             sx={{"& .MuiInputBase-input.Mui-disabled": {
                                 WebkitTextFillColor: 'black'},
@@ -104,27 +99,30 @@ const FlipCard = observer(( { cardsModeStore, moduleId, cardStore, externalRef }
                     <img src={imgUrl} className='h-full w-full object-cover'></img>
                 </div>
             </div>
-        </animated.div>
+        </div>
     )
 
     return (
         <>
-            <div className='[transform-style:preserve-3d] hover:cursor-pointer h-full w-full' onClick={cardsModeStore.flipCard} ref={externalRef}>
+            <animated.div className='[transform-style:preserve-3d] hover:cursor-pointer h-full w-full'
+                style={cardsModeStore.animation.controller.springs}
+                onClick={cardsModeStore.flipCard}
+                ref={externalRef}>
                 {front}
                 {back}
-            </div>
+            </animated.div>
             <CardImageModal
                 imgUrl={imgUrl}
                 isShowImageModal={isShowImageModal}
                 setIsShowImageModal={setIsShowImageModal}
             />
-            <FastEditModal
+            {isShowFastEditModal ? <FastEditModal
                 card={card}
                 moduleId={moduleId}
                 cardStore={cardStore}
                 cardsModeStore={cardsModeStore}
                 setShowModal={setIsShowFastEditModal}
-                showModal={isShowFastEditModal}/>
+                showModal={isShowFastEditModal}/> : null}
         </>
     )
 })

@@ -61,6 +61,7 @@ class CardStore implements ICardStore {
             }
         }
 
+
         clearTimeout(this.delayTimer)
         this.delayTimer = setTimeout(async () => {
 
