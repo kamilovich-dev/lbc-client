@@ -15,8 +15,6 @@ interface IProps {
 }
 
 const ParametersModal = observer(( {showModal, setShowModal, cardsModeStore}: IProps ) => {
-    const cardsWithStarCount = cardsModeStore.cards.reduce( (accumulator, currentValue) => currentValue.isFavorite ? 1 : 0, 0 )
-
     return (
             <Modal
                 className='flex justify-center items-center'
@@ -46,7 +44,7 @@ const ParametersModal = observer(( {showModal, setShowModal, cardsModeStore}: IP
                                 <Switch
                                     checked={cardsModeStore.onlyStarsOn}
                                     onChange={cardsModeStore.onlyStars}
-                                    disabled={cardsWithStarCount == 0}/>
+                                    disabled={cardsModeStore.cardsWithStarCount == 0}/>
                             </div>
                         </div>
                         <div className="flex gap-2 items-center border-b-[1px] border-gray-100 py-4">

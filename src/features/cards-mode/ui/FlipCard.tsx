@@ -28,10 +28,12 @@ const FlipCard = observer(( { cardsModeStore, moduleId, cardStore, externalRef }
     const [isShowImageModal, setIsShowImageModal] = useState(false)
     const [isShowFastEditModal, setIsShowFastEditModal] = useState(false)
 
+
+
     const head = (
         <div className='p-2 flex gap-4 mb-4'>
             <div className='w-3/4'>
-                {cardsModeStore.cardFlipped ? null
+                {cardsModeStore.cardFlipped || cardsModeStore.whatInAnswer == 'both' ? null
                     :  <Help
                         showHelp={cardsModeStore.helpShown}
                         helpText={cardsModeStore.getHelpText()}
@@ -47,14 +49,22 @@ const FlipCard = observer(( { cardsModeStore, moduleId, cardStore, externalRef }
                     isFavorite={card.isFavorite}
                     onClick={(e) => {e.stopPropagation();
                         cardStore.editCard( {moduleId, cardId: card.id, isSwitchFavorite: true} );
-                        cardsModeStore.cards[cardsModeStore.currentIdx].isFavorite = cardStore.getCardById(card.id)?.isFavorite }}
+                        cardsModeStore.cards[cardsModeStore.currentIdx].isFavorite = cardStore.getCardById(card.id)?.isFavorite }
+                    }
                     />
             </div>
         </div>
     )
 
+    // 'term' - front, back перевернут
+    // 'definition' - back, front перевернут
+    // 'both' - front и back вместе
+
+    const frontInitialClassName= cardsModeStore.whatInAnswer == 'term' ? '[transform:rotateX(180deg)]' : ''
+    const backInitialClassName = cardsModeStore.whatInAnswer == 'definition' ? '[transform:rotateX(180deg)]' : ''
+
     const front = (
-        <div className='absolute inset-0 p-4 flex flex-col text-center [backface-visibility:hidden] bg-white rounded-xl shadow-sm shadow-black/40'>
+        <div className={`${frontInitialClassName} absolute inset-0 p-4 flex flex-col text-center [backface-visibility:hidden] bg-white rounded-xl shadow-sm shadow-black/40`}>
             {head}
             <div className='flex-auto flex items-center justify-center text-7xl text-slate-800 text-center w-full overflow-y-auto'>
                 <div className='max-h-full'>
@@ -76,7 +86,7 @@ const FlipCard = observer(( { cardsModeStore, moduleId, cardStore, externalRef }
     )
 
     const back = (
-        <div className='[transform:rotateX(180deg)] absolute inset-0 p-4 flex flex-col [backface-visibility:hidden] bg-white rounded-xl shadow-sm shadow-black/40'>
+        <div className={`${backInitialClassName} absolute inset-0 p-4 flex flex-col [backface-visibility:hidden] bg-white rounded-xl shadow-sm shadow-black/40`}>
             {head}
             <div className='flex gap-8 items-center flex-auto overflow-y-auto pr-4'>
                 <div className='w-1/2 h-full text-2xl text-slate-800 flex flex-col justify-center overflow-y-auto '>
@@ -102,14 +112,60 @@ const FlipCard = observer(( { cardsModeStore, moduleId, cardStore, externalRef }
         </div>
     )
 
+    const both = (
+        <div className='absolute inset-0 flex flex-col'>
+            <div className='mb-6 h-1/2 flex flex-col flex-auto text-7xl text-slate-800 text-center w-full overflow-y-auto bg-white rounded-xl shadow-sm shadow-black/40'>
+                <div className='pr-2 pt-2'>
+                    {head}
+                </div>
+                <div className='max-h-full  flex-auto flex items-center'>
+                    <TextField
+                        multiline
+                        fullWidth
+                        inputProps={{style: { textAlign: 'center', fontSize: 30 }}}
+                        InputProps={{ disableUnderline: true, readOnly: true}}
+                        sx={{"& .MuiInputBase-input.Mui-disabled": {
+                            WebkitTextFillColor: 'black'},
+                            '& :hover': { cursor: '' }}}
+                        name='term'
+                        variant="standard"
+                        value={card.term}
+                    />
+                </div>
+            </div>
+            <div className='flex h-1/2 gap-8 items-center flex-auto overflow-y-auto pr-4 bg-white rounded-xl shadow-sm shadow-black/40'>
+                <div className='w-1/2 h-full text-2xl text-slate-800 flex flex-col justify-center overflow-y-auto '>
+                    <div className='max-h-full'>
+                        <TextField
+                            multiline
+                            fullWidth
+                            inputProps={{style: { textAlign: 'center', fontSize: 30 }}}
+                            InputProps={{ disableUnderline: true, readOnly: true}}
+                            sx={{"& .MuiInputBase-input.Mui-disabled": {
+                                WebkitTextFillColor: 'black'},
+                                '& :hover': { cursor: '' }}}
+                            name='term'
+                            variant="standard"
+                            value={card.definition}
+                        />
+                    </div>
+                </div>
+                <div className='w-1/2 h-1/2 hover:cursor-zoom-in hover:ring-2 rounded-xl shadow-xl overflow-hidden shadow-black/40' onClick={(e) => { e.stopPropagation(); setIsShowImageModal(true)} }>
+                    <img src={imgUrl} className='h-full w-full object-cover'></img>
+                </div>
+            </div>
+        </div>
+    )
+
     return (
         <>
-            <animated.div className='[transform-style:preserve-3d] hover:cursor-pointer h-full w-full'
+            <animated.div className={`[transform-style:preserve-3d] h-full w-full ${cardsModeStore.whatInAnswer == 'both' ? '' : 'hover:cursor-pointer'}`}
                 style={cardsModeStore.animation.controller.springs}
                 onClick={cardsModeStore.flipCard}
                 ref={externalRef}>
-                {front}
-                {back}
+                {cardsModeStore.whatInAnswer == 'both' ?
+                    both :
+                    <>{front}{back}</>}
             </animated.div>
             <CardImageModal
                 imgUrl={imgUrl}

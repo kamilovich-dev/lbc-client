@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react"
+import Button from '@mui/material/Button';
 import { observer } from "mobx-react-lite"
 import { useParams } from "react-router-dom"
 import Alert from '@mui/material/Alert';
@@ -10,11 +11,11 @@ import { CardStore, ModuleStore,
 
 import { CardsModeStore } from "features/cards-mode"
 
-import { ParametersButton } from 'features/cards-mode'
 import { FlipCard } from "features/cards-mode"
 
-import { ButtonNext } from "shared/ui/buttons/ButtonNext";
-import { ButtonPrev } from "shared/ui/buttons/ButtonPrev";
+import { CardsNavigation } from "features/cards-mode";
+import { SortedNavigation } from "features/cards-mode";
+import { Cancel } from "features/cards-mode";
 
 import { Autoplay } from "features/cards-mode";
 import { Mix } from "features/cards-mode";
@@ -93,7 +94,11 @@ const _CardsModePage = observer(( { cardStore, cardsModeStore, module }: IProps 
                         </div>
                     </div>
                     <div className="w-1/3  flex gap-4 justify-end items-center">
-                        <ParametersButton handleClick={() => setIsShowParametersModal(true)}/>
+                        <div>
+                        <Button variant='outlined' onClick={() => setIsShowParametersModal(true)} size='small' sx={{fontSize: '14px'}}>
+                            Параметры
+                        </Button>
+                        </div>
                         <div className="w-10">
                             <BackButton />
                         </div>
@@ -110,11 +115,17 @@ const _CardsModePage = observer(( { cardStore, cardsModeStore, module }: IProps 
 
                 <div className="flex mb-10">
                     <div className="w-1/3">
-                        <Autoplay handleClick={() => cardsModeStore.autoplay([cardRef, nextRef])} isPlaying={cardsModeStore.autoplayOn}/>
+                        {cardsModeStore.cardsSorted && cardsModeStore.currentIdx > 0 ? <Cancel handleClick={cardsModeStore.cancelCard}/>
+                            : cardsModeStore.cardsSorted ? null
+                            : <Autoplay handleClick={() => cardsModeStore.autoplay([cardRef, nextRef])} isPlaying={cardsModeStore.autoplayOn}/>}
                     </div>
                     <div className="w-1/3 flex gap-10 justify-center">
-                        <ButtonPrev handleClick={cardsModeStore.goPrevCard}/>
-                        <ButtonNext handleClick={cardsModeStore.goNextCard} externalRef={nextRef}/>
+                        {cardsModeStore.cardsSorted ?
+                            <SortedNavigation isAccept={false} handleClick={cardsModeStore.markCardAsUnknown} />
+                            : <CardsNavigation isNext={false} handleClick={cardsModeStore.goPrevCard}/>}
+                         {cardsModeStore.cardsSorted ?
+                            <SortedNavigation isAccept={true} handleClick={cardsModeStore.markCardAsKnown} />
+                            : <CardsNavigation isNext={true} handleClick={cardsModeStore.goNextCard} externalRef={nextRef}/>}
                     </div>
                     <div className="w-1/3 flex justify-end">
                         <Mix handleClick={cardsModeStore.mixCards} isMixed={cardsModeStore.cardsMixed}/>
