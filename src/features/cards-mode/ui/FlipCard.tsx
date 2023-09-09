@@ -176,12 +176,12 @@ const FlipCard = observer(( { cardsModeStore, moduleId, cardStore, externalRef }
                         ЗНАЮ
                 </animated.div>
 
-                <animated.div
+                {/* <animated.div
                     style={cardsModeStore.cardAnimation.knownController.springs}
                     onClick={e => e.preventDefault()}
                     className={`z-99 absolute hover:cursor-default inset-0 flex flex-col items-center justify-center text-5xl font-bold text-green-500 border-2 border-green-300 w-full h-full bg-white rounded-xl`}>
                         <>{front}{back}</>
-                </animated.div>
+                </animated.div> */}
 
             </animated.div>
             <CardImageModal
