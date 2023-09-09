@@ -15,6 +15,8 @@ import { FlipCard } from "features/cards-mode"
 
 import { CardsNavigation } from "features/cards-mode";
 import { SortedNavigation } from "features/cards-mode";
+import { SortedCounterKnown } from "features/cards-mode";
+import { SortedCounterUnknown } from "features/cards-mode";
 import { Cancel } from "features/cards-mode";
 
 import { Autoplay } from "features/cards-mode";
@@ -105,6 +107,22 @@ const _CardsModePage = observer(( { cardStore, cardsModeStore, module }: IProps 
                     </div>
                 </div>
 
+                {cardsModeStore.cardsSorted ? (
+                    <div className='flex mb-4'>
+                        <div className='flex-auto'>
+                            <SortedCounterUnknown
+                                count={cardsModeStore.getCountOfUnknown()}
+                                unknownText={cardsModeStore.sortedCounterAnimation.unknownText}/>
+                        </div>
+                        <div>
+                            <SortedCounterKnown
+                                count={cardsModeStore.getCountOfKnown()}
+                                knownText={cardsModeStore.sortedCounterAnimation.knownText}/>
+                        </div>
+                    </div>
+                ) : null}
+
+
                 <div className="mb-3 h-[700px]">
                     <FlipCard
                         moduleId={module.id}
@@ -131,14 +149,6 @@ const _CardsModePage = observer(( { cardStore, cardsModeStore, module }: IProps 
                         <Mix handleClick={cardsModeStore.mixCards} isMixed={cardsModeStore.cardsMixed}/>
                     </div>
                 </div>
-
-                <div>Счетчик еще изучаю</div>
-                <div>Счетчик знаю</div>
-                <div>Отменить</div>
-                <div>Кнопка не знаю</div>
-                <div>Кнопка знаю</div>
-
-                <div>Кнопка перемешивания</div>
             </div>
 
             {isShowParametersModal ? <ParametersModal
