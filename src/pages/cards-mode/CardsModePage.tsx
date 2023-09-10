@@ -24,6 +24,9 @@ import { Mix } from "features/cards-mode";
 
 import { ParametersModal } from "features/cards-mode";
 
+import { Result } from 'features/cards-mode';
+
+
 const CardsModePage = () => {
     const { moduleId } = useParams()
     if (!moduleId) return;
@@ -107,48 +110,56 @@ const _CardsModePage = observer(( { cardStore, cardsModeStore, module }: IProps 
                     </div>
                 </div>
 
-                {cardsModeStore.cardsSorted ? (
-                    <div className='flex mb-4'>
-                        <div className='flex-auto'>
-                            <SortedCounterUnknown
-                                count={cardsModeStore.getCountOfUnknown()}
-                                unknownText={cardsModeStore.sortedCounterAnimation.unknownText}/>
-                        </div>
-                        <div>
-                            <SortedCounterKnown
-                                count={cardsModeStore.getCountOfKnown()}
-                                knownText={cardsModeStore.sortedCounterAnimation.knownText}/>
-                        </div>
-                    </div>
-                ) : null}
 
-
-                <div className="mb-3 h-[700px]">
-                    <FlipCard
-                        moduleId={module.id}
+                {cardsModeStore.resultShown ?
+                    <Result
                         cardsModeStore={cardsModeStore}
-                        cardStore={cardStore}
-                        externalRef={cardRef}/>
-                </div>
+                        countOfKnown={cardsModeStore.getCountOfKnown()}
+                        countOfUnknown={cardsModeStore.getCountOfUnknown()}/> :
+                    <>
+                        {cardsModeStore.cardsSorted ? (
+                            <div className='flex mb-4'>
+                                <div className='flex-auto'>
+                                    <SortedCounterUnknown
+                                        count={cardsModeStore.getCountOfUnknown()}
+                                        unknownText={cardsModeStore.sortedCounterAnimation.unknownText}/>
+                                </div>
+                                <div>
+                                    <SortedCounterKnown
+                                        count={cardsModeStore.getCountOfKnown()}
+                                        knownText={cardsModeStore.sortedCounterAnimation.knownText}/>
+                                </div>
+                            </div>
+                        ) : null}
+                        <div className="mb-3 h-[700px]">
+                            <FlipCard
+                                moduleId={module.id}
+                                cardsModeStore={cardsModeStore}
+                                cardStore={cardStore}
+                                externalRef={cardRef}/>
+                        </div>
 
-                <div className="flex mb-10">
-                    <div className="w-1/3">
-                        {cardsModeStore.cardsSorted && cardsModeStore.currentIdx > 0 ? <Cancel handleClick={cardsModeStore.cancelCard}/>
-                            : cardsModeStore.cardsSorted ? null
-                            : <Autoplay handleClick={() => cardsModeStore.autoplay([cardRef, nextRef])} isPlaying={cardsModeStore.autoplayOn}/>}
-                    </div>
-                    <div className="w-1/3 flex gap-10 justify-center">
-                        {cardsModeStore.cardsSorted ?
-                            <SortedNavigation isAccept={false} handleClick={cardsModeStore.markCardAsUnknown} />
-                            : <CardsNavigation isNext={false} handleClick={cardsModeStore.goPrevCard}/>}
-                         {cardsModeStore.cardsSorted ?
-                            <SortedNavigation isAccept={true} handleClick={cardsModeStore.markCardAsKnown} />
-                            : <CardsNavigation isNext={true} handleClick={cardsModeStore.goNextCard} externalRef={nextRef}/>}
-                    </div>
-                    <div className="w-1/3 flex justify-end">
-                        <Mix handleClick={cardsModeStore.mixCards} isMixed={cardsModeStore.cardsMixed}/>
-                    </div>
-                </div>
+                        <div className="flex mb-10">
+                            <div className="w-1/3">
+                                {cardsModeStore.cardsSorted && cardsModeStore.currentIdx > 0 ? <Cancel handleClick={cardsModeStore.cancelCard}/>
+                                    : cardsModeStore.cardsSorted ? null
+                                    : <Autoplay handleClick={() => cardsModeStore.autoplay([cardRef, nextRef])} isPlaying={cardsModeStore.autoplayOn}/>}
+                            </div>
+                            <div className="w-1/3 flex gap-10 justify-center">
+                                {cardsModeStore.cardsSorted ?
+                                    <SortedNavigation isAccept={false} handleClick={cardsModeStore.markCardAsUnknown} />
+                                    : <CardsNavigation isNext={false} handleClick={cardsModeStore.goPrevCard}/>}
+                                {cardsModeStore.cardsSorted ?
+                                    <SortedNavigation isAccept={true} handleClick={cardsModeStore.markCardAsKnown} />
+                                    : <CardsNavigation isNext={true} handleClick={cardsModeStore.goNextCard} externalRef={nextRef}/>}
+                            </div>
+                            <div className="w-1/3 flex justify-end">
+                                <Mix handleClick={cardsModeStore.mixCards} isMixed={cardsModeStore.cardsMixed}/>
+                            </div>
+                        </div>
+                    </>
+                }
+
             </div>
 
             {isShowParametersModal ? <ParametersModal

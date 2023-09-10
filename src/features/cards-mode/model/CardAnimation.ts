@@ -4,25 +4,25 @@ import { makeAutoObservable } from "mobx"
 /*Card animations */
 class CardAnimation {
 
-  duration: number = 500
+  basicDuration: number = 200
   controller = new Controller({
     from: { transform: '', transformOrigin: '', opacity: '' },
-    config: { mass: 5, tension: 500, friction: 80, duration: this.duration },
+    config: { mass: 5, tension: 500, friction: 80, duration: this.basicDuration },
   })
 
   knownController = new Controller({
     from: { transform: '', transformOrigin: '', opacity: 1, visibility: 'hidden' },
-    config: { mass: 5, tension: 500, friction: 80, duration: this.duration },
+    config: { mass: 5, tension: 500, friction: 80, duration: this.basicDuration },
   })
 
   unknownController = new Controller({
     from: { transform: '', transformOrigin: '', opacity: 1, visibility: 'hidden' },
-    config: { mass: 5, tension: 500, friction: 80, duration: this.duration },
+    config: { mass: 5, tension: 500, friction: 80, duration: this.basicDuration },
   })
 
   cancelController = new Controller({
     from: { transform: '', transformOrigin: '', opacity: 1, visibility: 'hidden' },
-    config: { mass: 5, tension: 500, friction: 80, duration: this.duration },
+    config: { mass: 5, tension: 500, friction: 80, duration: this.basicDuration },
   })
 
   constructor() {
@@ -40,20 +40,19 @@ class CardAnimation {
     this.controller.start({
         from: { transform: `perspective(1200px) rotateX(${startAngle}deg)` },
         to: { transform: `perspective(1200px) rotateX(${endAngle}deg)` },
-        config: { duration: 300 }
     })
   }
 
   next = () => {
     this.controller.start({
-      from: { transform: 'perspective(1200px) translateX(200px) rotateY(-20deg)', opacity: 0.3 },
+      from: { transform: 'perspective(1200px) translateX(200px) rotateY(-20deg)', opacity: 0.7 },
       to: { transform: 'perspective(1200px) translateX(0px) rotateY(0deg)', opacity: 1},
     })
   }
 
   prev = () => {
     this.controller.start({
-      from: { transform: 'perspective(1200px) translateX(-200px) rotateY(20deg)', opacity: 0.3 },
+      from: { transform: 'perspective(1200px) translateX(-200px) rotateY(20deg)', opacity: 0.7 },
       to: { transform: 'perspective(1200px) translateX(0px) rotateY(0deg)', opacity: 1},
     })
   }
@@ -71,7 +70,7 @@ class CardAnimation {
           { transform: 'rotateZ(0deg) translateX(200px)', opacity: 0, visibility: 'visible'},
           { visibility: 'hidden'},
         ],
-        config: { duration: this.duration / 4 }
+        config: { duration: 100}
       })
     })
   }
@@ -89,15 +88,19 @@ class CardAnimation {
           { transform: 'rotateZ(0deg) translateX(-200px)', opacity: 0, visibility: 'visible'},
           { visibility: 'hidden'},
         ],
-        config: { duration: this.duration / 4 }
+        config: { duration: 100 }
       })
     })
   }
 
   cancel = () => {
-    this.controller.start({
-      from: { transform: 'translateX(0px)', opacity: '1' },
-      to: { transform: 'translateX(200px)', opacity: '0'},
+    this.reset()
+    this.cancelController.start({
+      from: { transform: 'translateX(0px)', opacity: '1', visibility: 'visible' },
+      to: [
+        { transform: 'translateX(200px)', opacity: '0.3', visibility: 'visible'},
+        { visibility: 'hidden'},
+      ],
     })
   }
 

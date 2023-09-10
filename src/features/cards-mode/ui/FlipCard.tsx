@@ -154,6 +154,7 @@ const FlipCard = observer(( { cardsModeStore, moduleId, cardStore, externalRef }
     )
     return (
         <>
+
             <animated.div className={`[transform-style:preserve-3d] h-full w-full ${cardsModeStore.whatInAnswer == 'both' ? '' : 'hover:cursor-pointer'}`}
                 style={ cardsModeStore.cardAnimation.controller.springs }
                 onClick={cardsModeStore.flipCard}
@@ -165,25 +166,29 @@ const FlipCard = observer(( { cardsModeStore, moduleId, cardStore, externalRef }
                 <animated.div
                     style={cardsModeStore.cardAnimation.unknownController.springs}
                     onClick={e => e.preventDefault()}
-                    className={`z-99 absolute hover:cursor-default inset-0 flex flex-col items-center justify-center text-5xl font-bold text-orange-500 border-2 border-orange-300 w-full h-full bg-white rounded-xl`}>
+                    className={`z-2 absolute hover:cursor-default inset-0 flex flex-col items-center justify-center text-5xl font-bold text-orange-500 border-2 border-orange-300 w-full h-full bg-white rounded-xl`}>
                         Еще изучаю
                 </animated.div>
 
                 <animated.div
                     style={cardsModeStore.cardAnimation.knownController.springs}
                     onClick={e => e.preventDefault()}
-                    className={`z-99 absolute hover:cursor-default inset-0 flex flex-col items-center justify-center text-5xl font-bold text-green-500 border-2 border-green-300 w-full h-full bg-white rounded-xl`}>
+                    className={`z-2 absolute hover:cursor-default inset-0 flex flex-col items-center justify-center text-5xl font-bold text-green-500 border-2 border-green-300 w-full h-full bg-white rounded-xl`}>
                         ЗНАЮ
                 </animated.div>
 
-                {/* <animated.div
-                    style={cardsModeStore.cardAnimation.knownController.springs}
+                <animated.div
+                    style={cardsModeStore.cardAnimation.cancelController.springs}
                     onClick={e => e.preventDefault()}
-                    className={`z-99 absolute hover:cursor-default inset-0 flex flex-col items-center justify-center text-5xl font-bold text-green-500 border-2 border-green-300 w-full h-full bg-white rounded-xl`}>
-                        <>{front}{back}</>
-                </animated.div> */}
-
+                    className={`z-2 absolute inset-0 w-full h-full bg-white rounded-xl`}>
+                        <>
+                        {cardsModeStore.whatInAnswer == 'both' ?
+                            both :
+                            <>{front}{back}</>}
+                        </>
+                </animated.div>
             </animated.div>
+
             <CardImageModal
                 imgUrl={imgUrl}
                 isShowImageModal={isShowImageModal}

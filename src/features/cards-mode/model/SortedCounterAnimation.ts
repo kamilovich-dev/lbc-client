@@ -8,11 +8,10 @@ class SortedCounterAnimation {
 
   knownTimerId: NodeJS.Timer | undefined
   unknownTimerId: NodeJS.Timer | undefined
-  duration: number
+  duration: number = 500
 
-  constructor(duration: number) {
+  constructor() {
     makeAutoObservable(this)
-    this.duration = duration
   }
 
   plus1known = () => {

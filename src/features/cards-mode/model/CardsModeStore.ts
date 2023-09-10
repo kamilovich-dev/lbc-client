@@ -19,16 +19,18 @@ class CardsModeStore {
     autoplayOn: boolean = false
     cardsMixed: boolean = false
 
-    cardsSorted: boolean = true
+    cardsSorted: boolean = false
     knowledge: Array<boolean> = []
     onlyStarsOn: boolean = false
+
+    resultShown: boolean = false
 
     constructor( cards: TCard[] ) {
         makeAutoObservable(this)
         this.cards = [...cards]
         this.initialCards = [...cards]
         this.cardAnimation = new CardAnimation()
-        this.sortedCounterAnimation = new SortedCounterAnimation(this.cardAnimation.duration)
+        this.sortedCounterAnimation = new SortedCounterAnimation()
 
         autorun(() => {
             this.cardsWithStarCount = this.cards.reduce( (accumulator, currentValue) => accumulator + (currentValue.isFavorite ? 1 : 0), 0 )
@@ -140,16 +142,21 @@ class CardsModeStore {
     }
 
     getCountOfKnown = () => {
+        if (!this.cardsSorted) return this.cards.length
         return this.knowledge.filter(item => item == true).length
     }
 
     getCountOfUnknown = () => {
+        if (!this.cardsSorted) return 0
         return this.knowledge.filter(item => item == false).length
     }
 
     //only view
     goNextCard = () => {
-        if (this.currentIdx == this.cards.length - 1) return
+        if (this.currentIdx == this.cards.length - 1) {
+            this.resultShown = true
+            return
+        }
         this.currentIdx++
         this.cardFlipped = false
         this.helpShown = false
@@ -158,6 +165,7 @@ class CardsModeStore {
 
     goPrevCard = () => {
         if (this.currentIdx == 0) return
+        this.resultShown = false
         this.currentIdx--
         this.cardFlipped = false
         this.helpShown = false
@@ -166,7 +174,11 @@ class CardsModeStore {
 
     //sort
     markCardAsKnown = () => {
-        if (this.currentIdx == this.cards.length - 1) return
+        if (this.currentIdx == this.cards.length - 1) {
+            this.knowledge.push(true)
+            this.resultShown = true
+            return
+        }
         this.cardFlipped = false
         this.knowledge.push(true)
         this.currentIdx++
@@ -174,7 +186,11 @@ class CardsModeStore {
         this.sortedCounterAnimation.plus1known()
     }
     markCardAsUnknown = () => {
-        if (this.currentIdx == this.cards.length - 1) return
+        if (this.currentIdx == this.cards.length - 1) {
+            this.knowledge.push(false)
+            this.resultShown = true
+            return
+        }
         this.cardFlipped = false
         this.knowledge.push(false)
         this.currentIdx++
@@ -182,21 +198,33 @@ class CardsModeStore {
         this.sortedCounterAnimation.plus1unknown()
     }
     cancelCard = () => {
-        if (this.knowledge.length == 0 || this.currentIdx == 0) return
+        if (this.currentIdx == 0) return
+        this.resultShown = false
         this.cardFlipped = false
+        const lastKnowledge = this.knowledge.at(-1)
         this.knowledge.splice(-1)
         this.currentIdx--
         this.cardAnimation.cancel()
+        lastKnowledge == true ? this.sortedCounterAnimation.minus1known() : this.sortedCounterAnimation.minus1unknown()
+    }
+
+    goPrevFromResult = () => {
+        if (this.cardsSorted) {
+            this.knowledge.splice(-1)
+            this.resultShown = false
+            return
+        }
+        this.resultShown = false
     }
 
     restart = () => {
+        this.resultShown = false
         this.knowledge.splice(0)
         this.cardAnimation.reset()
         this.cardFlipped = false
         this.helpShown = false
         this.currentIdx = 0
     }
-
 }
 
 

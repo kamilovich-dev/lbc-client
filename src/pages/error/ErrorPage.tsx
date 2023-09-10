@@ -15,7 +15,7 @@ const ErrorPage = () => {
 
         return (
         <div id="error-page" className={styles.container}>
-            <img className={styles.image} src="./static/error.jpg" alt="error-image"/>
+            <img className={styles.image} src="/static/error.jpg" alt="error-image"/>
             <h1 className={styles.headText}>Oops! {error.status}</h1>
             <p className={styles.errorText}>{error.statusText}</p>
             {error.data?.message && (
@@ -28,7 +28,7 @@ const ErrorPage = () => {
     } else if (error instanceof Error) {
         return (
         <div id="error-page" className={styles.container}>
-            <img className={styles.image} src="./static/error.jpg" alt="error-image"/>
+            <img className={styles.image} src="/static/error.jpg" alt="error-image"/>
             <h1 className={styles.headText}>Oops! Unexpected Error</h1>
             <p className={styles.errorText}>Something went wrong.</p>
             <p>
