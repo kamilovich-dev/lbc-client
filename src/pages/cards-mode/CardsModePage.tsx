@@ -84,7 +84,7 @@ const _CardsModePage = observer(( { cardStore, cardsModeStore, module }: IProps 
 
     return (
         <>
-            <div className='flex flex-col max-w-4xl m-auto'>
+            <div className='flex flex-col max-w-5xl m-auto'>
 
                 <div className="flex gap-4 mb-4">
                     <div className="w-1/3  flex  items-center">
@@ -110,12 +110,13 @@ const _CardsModePage = observer(( { cardStore, cardsModeStore, module }: IProps 
                     </div>
                 </div>
 
-
                 {cardsModeStore.resultShown ?
-                    <Result
-                        cardsModeStore={cardsModeStore}
-                        countOfKnown={cardsModeStore.getCountOfKnown()}
-                        countOfUnknown={cardsModeStore.getCountOfUnknown()}/> :
+                    <div className='max-w-4xl m-auto'>
+                        <Result
+                            cardsModeStore={cardsModeStore}
+                            countOfKnown={cardsModeStore.getCountOfKnown()}
+                            countOfUnknown={cardsModeStore.getCountOfUnknown()}/>
+                    </div>:
                     <>
                         {cardsModeStore.cardsSorted ? (
                             <div className='flex mb-4'>
