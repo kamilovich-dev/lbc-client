@@ -18,9 +18,13 @@ interface IProps {
 const Result = observer(( { countOfKnown, countOfUnknown, cardsModeStore }: IProps ) => {
 
     const springs = useSpring({
-        from: { opacity: 0.8 },
-        to: { opacity: 0 },
-        config: { duration: 500 }
+        from: { opacity: 1, display: 'flex', transform: 'rotate(0deg) scale(1)' },
+        to: [{ transform: 'rotate(30deg) scale(1.2)' },
+             { transform: 'rotate(-30deg) scale(1.4)' },
+             { transform: 'rotate(30deg) scale(1.6)' },
+             { transform: 'rotate(360deg) scale(1)' },
+             { opacity: 0 },
+             { display: 'none' } ],
     })
 
     const data = [
@@ -41,11 +45,9 @@ const Result = observer(( { countOfKnown, countOfUnknown, cardsModeStore }: IPro
                 <div className='flex gap-2 items-center py-4 mb-8 relative'>
                     <div className='w-3/4 text-3xl font-bold text-slate-700'>Поздравляем! Вы повторили все карточки.</div>
                     <div className='w-1/4 flex justify-center'>
-                        <img className='h-28 [transform:scale(-1,1)] object-cover' src='/static/Confetti.png'></img>
+                        <img className='h-28 [transform:scale(-1,1)] object-cover' src='/static/confetti.png'></img>
                     </div>
-                    <animated.div style={springs} className='absolute top-0 left-0 h-[100vh] w-full'>
-                        <img src='/static/confetti_3.gif' className='w-full h-full object-cover'></img>
-                    </animated.div>
+
                 </div>
                 <div className='grid grid-cols-2 [grid-template-rows: 1fr 1fr 1fr] gap-y-4 mb-10 gap-x-4'>
                     <div className='text-xl font-semibold text-slate-600'>Ваши результаты</div>
@@ -128,7 +130,9 @@ const Result = observer(( { countOfKnown, countOfUnknown, cardsModeStore }: IPro
                         Вернуться к последнему вопросу
                     </div>
                 </div>
-
+                <animated.div style={springs} className='absolute top-0 left-0 h-full w-full flex items-center justify-center'>
+                    <img src='/static/cards-mode-congrats.gif' className='w-fit h-fit object-none rounded-xl drop-shadow-xl'></img>
+                </animated.div>
         </>
     )
 })

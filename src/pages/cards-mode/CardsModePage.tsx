@@ -25,6 +25,7 @@ import { Mix } from "features/cards-mode";
 import { ParametersModal } from "features/cards-mode";
 
 import { Result } from 'features/cards-mode';
+import { ProgressBar } from "features/cards-mode";
 
 
 const CardsModePage = () => {
@@ -84,7 +85,10 @@ const _CardsModePage = observer(( { cardStore, cardsModeStore, module }: IProps 
 
     return (
         <>
-            <div className='flex flex-col max-w-5xl m-auto'>
+            <div className='flex flex-col max-w-5xl'>
+                <div className="mb-2">
+                    <ProgressBar current={cardsModeStore.currentIdx} max={cardsModeStore.cards.length} resultShown={cardsModeStore.resultShown}/>
+                </div>
 
                 <div className="flex gap-4 mb-4">
                     <div className="w-1/3  flex  items-center">

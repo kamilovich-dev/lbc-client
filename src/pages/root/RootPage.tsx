@@ -15,7 +15,7 @@ const RootPage = ( ) => {
     return (
         <>
             <AppHeader />
-            <div className='bg-blue-50 flex-auto p-4 h-full'>
+            <div className='bg-blue-50 flex-auto p-0 h-full'>
                 <div className='w-3/5 m-auto'>
                     <Outlet/>
                 </div>
