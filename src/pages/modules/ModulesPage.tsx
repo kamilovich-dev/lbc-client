@@ -16,7 +16,7 @@ const _ModulesPage = observer(( { moduleStore }: Props ) => {
 
     return (
             <>
-                <div className='p-2'>
+                <div className='p-2 w-3/5 m-auto'>
                     <div className='flex gap-4 mb-4'>
                         <Button
                                 size='small'

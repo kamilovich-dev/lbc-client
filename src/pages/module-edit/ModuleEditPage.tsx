@@ -8,7 +8,7 @@ const ModuleEditPage = () => {
 
     return (
         <>
-            <div>
+            <div className='w-3/5 m-auto p-4'>
                 <ModuleEditForm moduleId={parseInt(moduleId)}/>
             </div>
         </>

@@ -77,6 +77,7 @@ const _ModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
 
     return(
         <>
+        <div className='w-3/5 m-auto p-4'>
             <div className='mb-4'>
                <ToModulesButton/>
             </div>
@@ -106,6 +107,8 @@ const _ModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
             <Alert severity="info" sx={{ width: '100%' }}>
                 Карточки не найдены!
             </Alert> }
+        </div>
+
         </>
     )
 })

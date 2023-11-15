@@ -85,11 +85,10 @@ const _CardsModePage = observer(( { cardStore, cardsModeStore, module }: IProps 
 
     return (
         <>
-            <div className='flex flex-col max-w-5xl'>
-                <div className="mb-2">
-                    <ProgressBar current={cardsModeStore.currentIdx} max={cardsModeStore.cards.length} resultShown={cardsModeStore.resultShown}/>
-                </div>
-
+            <div className="mb-2">
+                <ProgressBar current={cardsModeStore.currentIdx} max={cardsModeStore.cards.length} resultShown={cardsModeStore.resultShown}/>
+            </div>
+            <div className='flex flex-col max-w-5xl w-3/5 m-auto'>
                 <div className="flex gap-4 mb-4">
                     <div className="w-1/3  flex  items-center">
                         <ModesMenu/>

@@ -16,9 +16,7 @@ const RootPage = ( ) => {
         <>
             <AppHeader />
             <div className='bg-blue-50 flex-auto p-0 h-full'>
-                <div className='w-3/5 m-auto'>
-                    <Outlet/>
-                </div>
+                <Outlet/>
             </div>
         </>
     );

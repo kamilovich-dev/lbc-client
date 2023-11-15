@@ -181,6 +181,7 @@ const _ModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: IInnerP
                         Карточки не найдены!
                     </Alert>
                 )}
+
         </>
     );
 });

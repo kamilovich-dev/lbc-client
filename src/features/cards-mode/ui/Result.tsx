@@ -130,8 +130,10 @@ const Result = observer(( { countOfKnown, countOfUnknown, cardsModeStore }: IPro
                         Вернуться к последнему вопросу
                     </div>
                 </div>
-                <animated.div style={springs} className='absolute top-0 left-0 h-full w-full flex items-center justify-center'>
-                    <img src='/static/cards-mode-congrats.gif' className='w-fit h-fit object-none rounded-xl drop-shadow-xl'></img>
+                <animated.div className="w-[100vw] h-[100vh] overflow-hidden absolute top-0 left-0 select-none pointer-events-none" style={{ display: springs.display }}>
+                    <animated.div style={springs} className='top-0 left-0 h-full w-full flex items-center justify-center relative'>
+                        <img src='/static/cards-mode-congrats.gif' className='w-fit h-fit object-none rounded-xl drop-shadow-xl'></img>
+                    </animated.div>
                 </animated.div>
         </>
     )
