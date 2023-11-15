@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import SvgIcon from '@mui/material/SvgIcon';
+import BlockIcon from '@mui/icons-material/Block';
 import { ButtonFavoriteStar } from "shared/ui/buttons/ButtonFavoriteStar"
 import { ButtonEdit } from "shared/ui/buttons/ButtonEdit"
 import { CardImageModal } from "shared/ui/modals/CardImageModal"
@@ -69,7 +71,10 @@ const CardShowRow = ( {cardId, cardIdx, termin, definition, imgUrl, isFavorite, 
                 <div className='w-2/12'>
                     <div className='h-24 rounded-sm overflow-hidden w-full hover:cursor-zoom-in hover:ring-2 hover:ring-blue-100 active:ring-blue-200'
                         onClick={() => setIsShowImageModal(true)}>
-                        <img src={srcUrl} className='h-full w-full object-cover'></img>
+                        { srcUrl ?  <img src={srcUrl} className='h-full w-full object-cover'></img>
+                            : (<SvgIcon sx={{ width: '100%', height: '100%' }} className='text-gray-300'>
+                                <BlockIcon />
+                              </SvgIcon>)}
                     </div>
                 </div>
                 <div className='flex w-2/12 justify-end'>

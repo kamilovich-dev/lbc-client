@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { observer } from "mobx-react-lite"
+import SvgIcon from '@mui/material/SvgIcon';
+import BlockIcon from '@mui/icons-material/Block';
 import TextField from '@mui/material/TextField';
 
 import { CardsModeStore } from "features/cards-mode"
@@ -102,7 +104,10 @@ const FlipCard = observer(( { cardsModeStore, moduleId, cardStore, externalRef }
                     </div>
                 </div>
                 <div className='w-1/2 h-1/2 hover:cursor-zoom-in hover:ring-2 rounded-xl shadow-xl overflow-hidden shadow-black/40' onClick={(e) => { e.stopPropagation(); setIsShowImageModal(true)} }>
-                    <img src={imgUrl} className='h-full w-full object-cover'></img>
+                    { imgUrl ? <img src={imgUrl} className='h-full w-full object-cover'></img>
+                        : <SvgIcon sx={{ width: '100%', height: '100%' }} className='text-gray-300'>
+                            <BlockIcon />
+                        </SvgIcon> }
                 </div>
             </div>
         </div>

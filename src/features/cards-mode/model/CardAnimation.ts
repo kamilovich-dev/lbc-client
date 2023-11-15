@@ -93,9 +93,9 @@ class CardAnimation {
     })
   }
 
-  cancel = () => {
+  cancel = async () => {
     this.reset()
-    this.cancelController.start({
+    await this.cancelController.start({
       from: { transform: 'translateX(0px)', opacity: '1', visibility: 'visible' },
       to: [
         { transform: 'translateX(200px)', opacity: '0.3', visibility: 'visible'},

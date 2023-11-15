@@ -197,14 +197,15 @@ class CardsModeStore {
         this.cardAnimation.unknown()
         this.sortedCounterAnimation.plus1unknown()
     }
-    cancelCard = () => {
+    cancelCard = async () => {
         if (this.currentIdx == 0) return
+        await this.cardAnimation.cancel()
+
         this.resultShown = false
         this.cardFlipped = false
         const lastKnowledge = this.knowledge.at(-1)
         this.knowledge.splice(-1)
         this.currentIdx--
-        this.cardAnimation.cancel()
         lastKnowledge == true ? this.sortedCounterAnimation.minus1known() : this.sortedCounterAnimation.minus1unknown()
     }
 

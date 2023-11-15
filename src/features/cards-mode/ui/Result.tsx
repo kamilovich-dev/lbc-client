@@ -64,7 +64,6 @@ const Result = observer(( { countOfKnown, countOfUnknown, cardsModeStore }: IPro
                                         {data.map((entry, index) => (
                                             <Cell key={index} fill={colors[index]}/>
                                         ))}
-
                                 </Pie>
                             </PieChart>
                             <div className='absolute text-gray-400 font-semibold left-9 text-lg'>{
