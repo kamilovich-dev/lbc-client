@@ -28,6 +28,7 @@ import { ParametersModal } from "features/cards-mode";
 import { Result } from 'features/cards-mode';
 import { ProgressBar } from "features/cards-mode";
 
+import styles from './CardsModePage.module.css'
 
 const CardsModePage = () => {
     const { moduleId } = useParams()
@@ -52,6 +53,12 @@ const CardsModePage = () => {
         }
     }, [])
 
+    //Добавляем стиль для body - чтобы экран не шатало
+    useEffect( () => {
+        document.body.classList.add(styles.cardsModeOverflow)
+        return () => document.body.classList.remove(styles.cardsModeOverflow)
+    }, [] )
+
     if (!cardStore?.cards.length || !module) return (
         <>
             <div className="flex gap-4 ">
@@ -67,7 +74,7 @@ const CardsModePage = () => {
         </>
     )
 
-    const cardsModeStore = new CardsModeStore(cardStore.cards)
+    const cardsModeStore = new CardsModeStore(cardStore, module.id)
     const cardsModeHotkeyListener = new CardsModeHotkeyListener(cardsModeStore)
     hotkeysListenerRef.current = cardsModeHotkeyListener
 

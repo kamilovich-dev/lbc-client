@@ -11,23 +11,33 @@ class CardsModeHotkeyListener {
         document.addEventListener('keydown', this.keyboardsListener)
     }
 
-    keyboardsListener = (e: KeyboardEvent) => {
+    keyboardsListener = async (e: KeyboardEvent) => {
         switch (e.code) {
             case 'ArrowRight':
-                this.cardsModeStore?.goNextCard()
+                e.preventDefault()
+                if (this.cardsModeStore?.cardsSorted === false) this.cardsModeStore?.goNextCard()
                 break;
             case 'ArrowLeft':
-                this.cardsModeStore?.goPrevCard()
+                e.preventDefault()
+                if (this.cardsModeStore?.cardsSorted === false) this.cardsModeStore?.goPrevCard()
+                if (this.cardsModeStore?.cardsSorted === true)  this.cardsModeStore?.cancelCard()
                 break;
             case 'ArrowUp':
-                this.cardsModeStore?.markCardAsKnown()
+                e.preventDefault()
+                if (this.cardsModeStore?.cardsSorted === true) this.cardsModeStore?.markCardAsKnown()
                 break;
             case 'ArrowDown':
-                this.cardsModeStore?.markCardAsUnknown()
+                e.preventDefault()
+                if (this.cardsModeStore?.cardsSorted === true) this.cardsModeStore?.markCardAsUnknown()
                 break;
             case 'Space':
+                e.preventDefault()
                 this.cardsModeStore?.flipCard()
                 break;
+            case 'KeyS':
+                e.preventDefault()
+                this.cardsModeStore?.setAsFavorite()
+                break
             default:
                 return
         }

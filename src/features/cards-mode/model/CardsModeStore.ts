@@ -1,17 +1,21 @@
 import { makeAutoObservable, autorun } from "mobx"
 import { CardAnimation } from "./CardAnimation"
 import { SortedCounterAnimation } from "./SortedCounterAnimation"
+import { CardStore } from 'entities/module'
 
 class CardsModeStore {
+    moduleId: number | undefined
     initialCards: TCard[] = []
     cardsWithoutFilters: TCard[] = []
     cards: TCard[] = []
+    cardStore: CardStore | undefined
     currentIdx: number = 0
     autplayTimerId: NodeJS.Timeout | undefined
     cardsWithStarCount: number = 0
 
     cardAnimation: CardAnimation
     sortedCounterAnimation: SortedCounterAnimation
+    isCancellingAnimation: boolean = false
 
     cardFlipped: boolean = false
     helpShown: boolean = false
@@ -25,10 +29,12 @@ class CardsModeStore {
 
     resultShown: boolean = false
 
-    constructor( cards: TCard[] ) {
+    constructor( cardStore: CardStore, moduleId: number ) {
         makeAutoObservable(this)
-        this.cards = [...cards]
-        this.initialCards = [...cards]
+        this.cardStore = cardStore
+        this.moduleId = moduleId
+        this.cards = [...cardStore.cards]
+        this.initialCards = [...this.cards]
         this.cardAnimation = new CardAnimation()
         this.sortedCounterAnimation = new SortedCounterAnimation()
 
@@ -164,8 +170,11 @@ class CardsModeStore {
     }
 
     goPrevCard = () => {
+        if (this.resultShown === true) {
+            this.goPrevFromResult()
+            return
+        }
         if (this.currentIdx == 0) return
-        this.resultShown = false
         this.currentIdx--
         this.cardFlipped = false
         this.helpShown = false
@@ -175,6 +184,7 @@ class CardsModeStore {
     //sort
     markCardAsKnown = () => {
         if (this.currentIdx == this.cards.length - 1) {
+            if (this.knowledge.length === this.cards.length) return
             this.knowledge.push(true)
             this.resultShown = true
             return
@@ -187,6 +197,7 @@ class CardsModeStore {
     }
     markCardAsUnknown = () => {
         if (this.currentIdx == this.cards.length - 1) {
+            if (this.knowledge.length === this.cards.length) return
             this.knowledge.push(false)
             this.resultShown = true
             return
@@ -198,10 +209,15 @@ class CardsModeStore {
         this.sortedCounterAnimation.plus1unknown()
     }
     cancelCard = async () => {
-        if (this.currentIdx == 0) return
+        if (this.resultShown === true) {
+            this.goPrevFromResult()
+            return
+        }
+        if (this.currentIdx == 0 || this.isCancellingAnimation === true) return
+        this.isCancellingAnimation = true
         await this.cardAnimation.cancel()
+        this.isCancellingAnimation = false
 
-        this.resultShown = false
         this.cardFlipped = false
         const lastKnowledge = this.knowledge.at(-1)
         this.knowledge.splice(-1)
@@ -218,6 +234,19 @@ class CardsModeStore {
         this.resultShown = false
     }
 
+    setAsFavorite = () => {
+        const card = this.cards[this.currentIdx]
+        if (!this.moduleId) return
+        if (!card.id) return
+        if (!this.cardStore) return
+
+        const moduleId = this.moduleId
+        const cardId = card.id
+
+        this.cardStore.editCard( { moduleId, cardId, isSwitchFavorite: true} );
+        this.cards[this.currentIdx].isFavorite = this.cardStore?.getCardById(cardId)?.isFavorite
+    }
+
     restart = () => {
         this.resultShown = false
         this.knowledge.splice(0)
@@ -227,7 +256,6 @@ class CardsModeStore {
         this.currentIdx = 0
     }
 }
-
 
 export type TCard = {
     id: number,

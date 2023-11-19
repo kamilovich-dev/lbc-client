@@ -4,6 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Switch from '@mui/material/Switch';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import { Hotkeys } from "features/cards-mode";
 import { TAnswer } from "../model/CardsModeStore";
 
 import { CardsModeStore } from '../';
@@ -21,7 +22,7 @@ const ParametersModal = observer(( {showModal, setShowModal, cardsModeStore}: IP
                 open={showModal}
                 onClose={() => setShowModal(false)}
             >
-                <div className="rounded-2xl bg-white overflow-hidden">
+                <div className="rounded-2xl bg-white overflow-auto">
                     <div className='p-10 flex flex-col relative h-[600px] w-[800px] overflow-y-auto'>
                         <div className='mb-10'>
                             <h1 className='text-3xl font-semibold text-slate-900'>Параметры</h1>
@@ -61,6 +62,9 @@ const ParametersModal = observer(( {showModal, setShowModal, cardsModeStore}: IP
                                 <MenuItem value='both'>Термины и определения</MenuItem>
                             </Select>
                             </div>
+                        </div>
+                        <div className="flex flex-col gap-2 border-b-[1px] border-gray-100">
+                            <Hotkeys/>
                         </div>
                         <div className="flex gap-2 items-center py-4 group">
                             <h2 className='text-red-600 font-semibold text-lg group-hover:text-red-700 group-hover:cursor-pointer'

@@ -30,8 +30,6 @@ const FlipCard = observer(( { cardsModeStore, moduleId, cardStore, externalRef }
     const [isShowImageModal, setIsShowImageModal] = useState(false)
     const [isShowFastEditModal, setIsShowFastEditModal] = useState(false)
 
-
-
     const head = (
         <div className='p-2 flex gap-4 mb-4'>
             <div className='w-3/4'>
@@ -50,9 +48,7 @@ const FlipCard = observer(( { cardsModeStore, moduleId, cardStore, externalRef }
                 <ButtonFavoriteStar
                     isFavorite={card.isFavorite}
                     onClick={(e) => {e.stopPropagation();
-                        cardStore.editCard( {moduleId, cardId: card.id, isSwitchFavorite: true} );
-                        cardsModeStore.cards[cardsModeStore.currentIdx].isFavorite = cardStore.getCardById(card.id)?.isFavorite }
-                    }
+                        cardsModeStore.setAsFavorite()}}
                     />
             </div>
         </div>
@@ -152,14 +148,16 @@ const FlipCard = observer(( { cardsModeStore, moduleId, cardStore, externalRef }
                     </div>
                 </div>
                 <div className='w-1/2 h-1/2 hover:cursor-zoom-in hover:ring-2 rounded-xl shadow-xl overflow-hidden shadow-black/40' onClick={(e) => { e.stopPropagation(); setIsShowImageModal(true)} }>
-                    <img src={imgUrl} className='h-full w-full object-cover'></img>
+                    { imgUrl ?  <img src={imgUrl} className='h-full w-full object-cover'></img>
+                        : <SvgIcon sx={{ width: '100%', height: '100%' }} className='text-gray-300'>
+                            <BlockIcon />
+                        </SvgIcon>}
                 </div>
             </div>
         </div>
     )
     return (
         <>
-
             <animated.div className={`[transform-style:preserve-3d] h-full w-full ${cardsModeStore.whatInAnswer == 'both' ? '' : 'hover:cursor-pointer'}`}
                 style={ cardsModeStore.cardAnimation.controller.springs }
                 onClick={cardsModeStore.flipCard}
