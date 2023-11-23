@@ -27,6 +27,7 @@ import { ParametersModal } from "features/cards-mode";
 
 import { Result } from 'features/cards-mode';
 import { ProgressBar } from "features/cards-mode";
+import { TextString } from "shared/ui/texts/TextString";
 
 import styles from './CardsModePage.module.css'
 
@@ -99,11 +100,10 @@ const _CardsModePage = observer(( { cardStore, cardsModeStore, module }: IProps 
 
     return (
         <>
-            <div className="mb-2">
+            <div className="mb-4 pt-3">
                 <ProgressBar current={cardsModeStore.currentIdx} max={cardsModeStore.cards.length} resultShown={cardsModeStore.resultShown}/>
             </div>
-            <div className='flex flex-col max-w-5xl w-3/5 m-auto'>
-                <div className="flex gap-4 mb-2">
+            <div className="flex gap-4 mb-2 absolute top-0 w-full bg-white p-2">
                     <div className="w-1/3  flex  items-center">
                         <ModesMenu/>
                     </div>
@@ -111,9 +111,10 @@ const _CardsModePage = observer(( { cardStore, cardsModeStore, module }: IProps 
                         <div className="text-center text-lg font-semibold text-slate-700">
                             {cardsModeStore.currentIdx + 1} / {cardsModeStore.cards.length}
                         </div>
-                        <div className="text-center text-lg font-bold text-slate-700">
-                            { module.name }
-                        </div>
+                        <TextString
+                            text={module.name}
+                            customClassName="text-center text-lg font-bold text-slate-700"
+                        />
                     </div>
                     <div className="w-1/3  flex gap-4 justify-end items-center">
                         <div>
@@ -125,8 +126,8 @@ const _CardsModePage = observer(( { cardStore, cardsModeStore, module }: IProps 
                             <BackButton />
                         </div>
                     </div>
-                </div>
-
+            </div>
+            <div className='flex flex-col max-w-5xl w-3/5 m-auto p-4'>
                 {cardsModeStore.resultShown ?
                     <div className='max-w-4xl m-auto'>
                         <Result
@@ -149,7 +150,7 @@ const _CardsModePage = observer(( { cardStore, cardsModeStore, module }: IProps 
                                 </div>
                             </div>
                         ) : null}
-                        <div className="mb-3 h-[650px]">
+                        <div className="mb-3 h-[700px]">
                             <FlipCard
                                 moduleId={module.id}
                                 cardsModeStore={cardsModeStore}

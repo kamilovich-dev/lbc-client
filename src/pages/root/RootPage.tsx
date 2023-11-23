@@ -9,8 +9,8 @@ const RootPage = ( ) => {
     const sessionStore = useSessionStore();
 
     useEffect( () => {
-        sessionStore?.session.token ? navigate('/modules') : navigate('/login')
-    }, [] )
+        sessionStore?.session.token ? navigate('/modules') : navigate('/main')
+    }, [])
 
     return (
         <>

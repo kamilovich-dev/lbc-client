@@ -10,6 +10,7 @@ import { ModuleEditPage } from 'pages/module-edit/ModuleEditPage';
 import { ProfileHeader } from "widgets/profile-header/ProfileHeader";
 import { ModulePage } from "pages/module/ModulePage";
 import { CardsModePage } from "pages/cards-mode/CardsModePage";
+import { LandingPage } from "pages/landing/LandingPage";
 
 const AppRouterProvider = () => {
     const appRouter = createBrowserRouter([
@@ -28,6 +29,10 @@ const AppRouterProvider = () => {
                 {
                     path: '/registration-letter-sent',
                     element: <RegistrationLetterSentPage />
+                },
+                {
+                    element: <LandingPage/>,
+                    path: '/main'
                 },
                 {
                     path: "/",
@@ -53,7 +58,7 @@ const AppRouterProvider = () => {
                         {
                             element: <CardsModePage />,
                             path: ':moduleId/cards-mode'
-                        }
+                        },
                     ]
                 },
             ]

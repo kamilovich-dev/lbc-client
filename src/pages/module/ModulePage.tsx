@@ -9,6 +9,7 @@ import { ICardStore, IModuleStore, ModuleStore, CardStore } from 'entities/modul
 import { CardShowRow } from './ui/CardShowRow'
 
 import { ModesBlock } from 'features/navigation';
+import { TextString } from 'shared/ui/texts/TextString';
 
 
 interface IProps {
@@ -81,7 +82,11 @@ const _ModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
             <div className='mb-4'>
                <ToModulesButton/>
             </div>
-            <h1 className='font-bold text-xl text-slate-800 mb-5'>{module.name}</h1>
+            <TextString
+                customClassName='font-bold text-xl text-slate-800 mb-5'
+                maxLength={64}
+                text={module.name}
+            />
             <div className='flex items-center gap-2 mb-5'>
                 <ModesBlock />
             </div>

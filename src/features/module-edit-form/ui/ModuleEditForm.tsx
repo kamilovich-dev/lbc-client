@@ -88,6 +88,7 @@ const _ModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: IInnerP
             <div className={'py-2 w-2/6'}>
                 <TextField
                     fullWidth
+                    multiline
                     name='name'
                     label="Название"
                     variant="standard"
@@ -97,6 +98,7 @@ const _ModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: IInnerP
             <div className={'py-2 mb-5 w-2/6'}>
                     <TextField
                         fullWidth
+                        multiline
                         name='description'
                         label="Описание"
                         variant="standard"

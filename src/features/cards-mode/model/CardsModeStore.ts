@@ -83,14 +83,14 @@ class CardsModeStore {
                     if (this.currentIdx == this.cards.length - 1) clearInterval(this.autplayTimerId)
                     const ref = refs[refIdx]
                     if (ref && ref.current) ref.current?.click();
-                }, 1000 )
+                }, 3000 )
             } else {
                 this.autplayTimerId = setInterval( () => {
                     if (this.currentIdx == this.cards.length - 1 && refIdx == refs.length - 1) clearInterval(this.autplayTimerId)
                     const ref = refs[refIdx]
                     if (ref && ref.current) ref.current?.click();
                     refIdx = refIdx == refs.length - 1 ? 0 : refIdx + 1
-                }, 1000 )
+                }, 3000 )
             }
 
         }

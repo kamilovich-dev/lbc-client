@@ -34,57 +34,55 @@ const Hotkeys = () => {
                     </div>  }
                 </div>
             </div>
-            <animated.div style={springs}>
-                <div className='grid grid-cols-2 grid-rows-4 w-full'>
-                    <div className='flex  border-b-[1px] border-gray-100 p-2'>
-                        <div className='flex-grow text-gray-500'>
-                            Назад
-                        </div>
-                        <div className="border-gray-400 border-2 text-gray-400 w-7 flex justify-center rounded-md">
-                            ←
-                        </div>
+            <animated.div style={springs} className='grid grid-cols-2 grid-rows-4 w-full'>
+                <div className='flex  border-b-[1px] border-gray-100 p-2'>
+                    <div className='flex-grow text-gray-500'>
+                        Назад
                     </div>
-                    <div className='flex border-b-[1px] border-gray-100 p-2'>
-                        <div className='flex-grow text-gray-500'>
-                            Пометить ★
-                        </div>
-                        <div className="border-gray-400 border-2 text-gray-400 w-7 flex justify-center rounded-md">
-                            s
-                        </div>
+                    <div className="border-gray-400 border-2 text-gray-400 w-7 flex justify-center rounded-md">
+                        ←
                     </div>
-                    <div className='flex border-b-[1px] border-gray-100 p-2'>
-                        <div className='flex-grow text-gray-500'>
-                            Далее
-                        </div>
-                        <div className="border-gray-400 border-2 text-gray-400 w-7 flex justify-center rounded-md">
-                            →
-                        </div>
+                </div>
+                <div className='flex border-b-[1px] border-gray-100 p-2'>
+                    <div className='flex-grow text-gray-500'>
+                        Пометить ★
                     </div>
-                    <div className='flex  border-b-[1px] border-gray-100 p-2'>
-                        <div className='flex-grow text-gray-500'>
-                            Перевернуть
-                        </div>
-                        <div className="border-gray-400 border-2 text-gray-400 w-20 flex justify-center rounded-md">
-                            Пробел
-                        </div>
+                    <div className="border-gray-400 border-2 text-gray-400 w-7 flex justify-center rounded-md">
+                        s
                     </div>
-                    <div className='flex p-2 border-b-[1px] border-gray-100'>
-                        <div className='flex-grow text-gray-500 '>
-                            Еще изучаю
-                        </div>
-                        <div className="border-gray-400 border-2 text-gray-400 w-7 flex justify-center rounded-md">
-                            ↓
-                        </div>
+                </div>
+                <div className='flex border-b-[1px] border-gray-100 p-2'>
+                    <div className='flex-grow text-gray-500'>
+                        Далее
                     </div>
-                    <div>
+                    <div className="border-gray-400 border-2 text-gray-400 w-7 flex justify-center rounded-md">
+                        →
                     </div>
-                    <div className='flex p-2'>
-                        <div className='flex-grow text-gray-500'>
-                            Знаю
-                        </div>
-                        <div className="border-gray-400 border-2 text-gray-400 w-7 flex justify-center rounded-md">
-                            ↑
-                        </div>
+                </div>
+                <div className='flex  border-b-[1px] border-gray-100 p-2'>
+                    <div className='flex-grow text-gray-500'>
+                        Перевернуть
+                    </div>
+                    <div className="border-gray-400 border-2 text-gray-400 w-20 flex justify-center rounded-md">
+                        Пробел
+                    </div>
+                </div>
+                <div className='flex p-2 border-b-[1px] border-gray-100'>
+                    <div className='flex-grow text-gray-500 '>
+                        Еще изучаю
+                    </div>
+                    <div className="border-gray-400 border-2 text-gray-400 w-7 flex justify-center rounded-md">
+                        ↓
+                    </div>
+                </div>
+                <div>
+                </div>
+                <div className='flex p-2'>
+                    <div className='flex-grow text-gray-500'>
+                        Знаю
+                    </div>
+                    <div className="border-gray-400 border-2 text-gray-400 w-7 flex justify-center rounded-md">
+                        ↑
                     </div>
                 </div>
             </animated.div>

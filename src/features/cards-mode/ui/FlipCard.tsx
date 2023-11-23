@@ -65,7 +65,7 @@ const FlipCard = observer(( { cardsModeStore, moduleId, cardStore, externalRef }
                     <TextField
                         multiline
                         fullWidth
-                        inputProps={{style: { textAlign: 'center', fontSize: 30 }}}
+                        inputProps={{style: { textAlign: 'center', fontSize: 30, lineHeight: 1.1 }}}
                         InputProps={{ disableUnderline: true, readOnly: true}}
                         sx={{"& .MuiInputBase-input.Mui-disabled": {
                             WebkitTextFillColor: 'black'},
@@ -88,7 +88,7 @@ const FlipCard = observer(( { cardsModeStore, moduleId, cardStore, externalRef }
                         <TextField
                             multiline
                             fullWidth
-                            inputProps={{style: { textAlign: 'center', fontSize: 30 }}}
+                            inputProps={{style: { textAlign: 'center', fontSize: 30, lineHeight: 1.1 }}}
                             InputProps={{ disableUnderline: true, readOnly: true}}
                             sx={{"& .MuiInputBase-input.Mui-disabled": {
                                 WebkitTextFillColor: 'black'},
@@ -111,15 +111,15 @@ const FlipCard = observer(( { cardsModeStore, moduleId, cardStore, externalRef }
 
     const both = (
         <div className='absolute inset-0 flex flex-col'>
-            <div className='mb-6 h-1/2 flex flex-col flex-auto text-7xl text-slate-800 text-center w-full overflow-y-auto bg-white rounded-xl shadow-sm shadow-black/40'>
+            <div className='mb-6 h-1/2 flex flex-col flex-auto text-7xl text-slate-800 text-center w-full bg-white rounded-xl shadow-sm shadow-black/40'>
                 <div className='pr-2 pt-2'>
                     {head}
                 </div>
-                <div className='max-h-full  flex-auto flex items-center'>
+                <div className='max-h-full overflow-y-auto'>
                     <TextField
                         multiline
                         fullWidth
-                        inputProps={{style: { textAlign: 'center', fontSize: 30 }}}
+                        inputProps={{style: { textAlign: 'center', fontSize: 30, lineHeight: 1.1 }}}
                         InputProps={{ disableUnderline: true, readOnly: true}}
                         sx={{"& .MuiInputBase-input.Mui-disabled": {
                             WebkitTextFillColor: 'black'},
@@ -136,7 +136,7 @@ const FlipCard = observer(( { cardsModeStore, moduleId, cardStore, externalRef }
                         <TextField
                             multiline
                             fullWidth
-                            inputProps={{style: { textAlign: 'center', fontSize: 30 }}}
+                            inputProps={{style: { textAlign: 'center', fontSize: 30, lineHeight: 1.1 }}}
                             InputProps={{ disableUnderline: true, readOnly: true}}
                             sx={{"& .MuiInputBase-input.Mui-disabled": {
                                 WebkitTextFillColor: 'black'},
