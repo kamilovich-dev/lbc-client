@@ -5,9 +5,10 @@ import { OverlayScrollbarProvider } from './providers'
 const App = () => {
 
     return (
-        <OverlayScrollbarProvider>
+        <>
+            <OverlayScrollbarProvider/>
             <AppRouterProvider />
-        </OverlayScrollbarProvider>
+        </>
     )
 }
 

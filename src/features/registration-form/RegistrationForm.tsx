@@ -68,13 +68,11 @@ const RegistrationForm = () => {
                         </FormControl>
                     </div>
 
-                    <div className='mb-4'>
-                        <Button type="submit" variant="contained">Зарегестрироваться</Button>
-                    </div>
+                     <div className='flex gap-2'>
+                        <div className='flex-auto'><Button type="submit" variant="contained">Зарегестрироваться</Button></div>
+                        <div><Button variant="outlined" onClick={ () => navigate('/login') }>Авторизация</Button></div>
+                     </div>
 
-                    <div>
-                        <Button variant="outlined" onClick={ () => navigate('/login') }>Авторизация</Button>
-                    </div>
                 </form>
 
             </div>

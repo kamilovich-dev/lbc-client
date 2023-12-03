@@ -5,7 +5,7 @@ const LoginPage = () => {
     return (
         <>
             <AppHeader/>
-            <div className='bg-slate-100 flex justify-center items-center'>
+            <div className='bg-slate-100 flex justify-center items-center flex-auto'>
                 <LoginForm />
             </div>
         </>

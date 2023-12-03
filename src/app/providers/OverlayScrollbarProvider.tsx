@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import 'overlayscrollbars/overlayscrollbars.css';
 
 interface IProps {
-    children: JSX.Element
+    children?: JSX.Element
 }
 
 const OverlayScrollbarProvider = ( { children }: IProps ) => {
@@ -27,9 +27,8 @@ const OverlayScrollbarProvider = ( { children }: IProps ) => {
     }, [])
 
     return  (
-        <div>
-            {children}
-        </div>
+        <>
+        </>
     )
 }
 
