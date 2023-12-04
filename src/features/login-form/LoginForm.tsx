@@ -1,4 +1,5 @@
 import { InputLabel, Input, FormControl, Button, Alert } from '@mui/material';
+import UndoIcon from '@mui/icons-material/Undo';
 import Collapse from '@mui/material/Collapse';
 import TextField from '@mui/material/TextField';
 import { useFormik } from 'formik';
@@ -29,6 +30,11 @@ const LoginForm = () => {
     return (
         <>
             <div className='flex justify-center p-5'>
+                <button className='flex p-2 gap-2 absolute top-2 left-4 bg-[#4F81BD] hover:bg-sky-700 active:bg-sky-800 w-[100px] h-[30px] text-white text-sm py-[5px] font-semibold rounded-lg shadow-md'
+                    onClick={() => navigate(-1)}>
+                    <UndoIcon/>
+                    Назад
+                </button>
                 <form className='flex relative rounded-2xl shadow-xl bg-white h-[500px] w-[600px]'
                     onSubmit={formik.handleSubmit}>
                     <div className='left-[-80px] top-[45px] absolute -rotate-90 text-3xl font-bold text-gray-700 drop-shadow-md'>Picturize</div>
