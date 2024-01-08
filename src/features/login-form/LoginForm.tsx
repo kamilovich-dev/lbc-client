@@ -7,8 +7,12 @@ import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { useSessionStore } from 'entities/session';
 
+interface IProps {
+    appName: string | undefined
+}
 
-const LoginForm = () => {
+
+const LoginForm = ( { appName }: IProps ) => {
     const sessionStore = useSessionStore();
     const navigate = useNavigate();
 
@@ -37,7 +41,7 @@ const LoginForm = () => {
                 </button>
                 <form className='flex relative rounded-2xl shadow-xl bg-white h-[500px] w-[600px]'
                     onSubmit={formik.handleSubmit}>
-                    <div className='left-[-80px] top-[45px] absolute -rotate-90 text-3xl font-bold text-gray-700 drop-shadow-md'>Picturize</div>
+                    <div className='left-[-110px] top-[70px] absolute -rotate-90 text-3xl font-bold text-gray-700 drop-shadow-md'>{appName}</div>
                     <div className='w-full h-full'>
                         <div className='w-full h-full'>
                             <img src="/static/landing/login.png" className='w-full h-full'></img>
@@ -90,7 +94,7 @@ const LoginForm = () => {
                         </div>
                         <div className='flex-auto'>
                             <button className='bg-sky-600 hover:bg-sky-700 active:bg-sky-800 w-full text-white text-sm py-[5px] font-semibold rounded-lg shadow-md'
-                                onClick={formik.submitForm}>
+                                type='submit'>
                                 Войти</button>
                         </div>
                         <div>

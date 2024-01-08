@@ -79,9 +79,6 @@ const _ModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
     return(
         <>
         <div className='w-3/5 m-auto p-4'>
-            <div className='mb-4'>
-               <ToModulesButton/>
-            </div>
             <TextString
                 customClassName='font-bold text-xl text-slate-800 mb-5'
                 maxLength={64}

@@ -7,7 +7,11 @@ import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { useSessionStore } from 'entities/session';
 
-const RegistrationForm = () => {
+interface IProps {
+    appName: string | undefined
+}
+
+const RegistrationForm = ( { appName }: IProps) => {
     const sessionStore = useSessionStore();
     const navigate = useNavigate();
 
@@ -37,7 +41,7 @@ const RegistrationForm = () => {
                 </button>
                 <form className='flex relative rounded-2xl shadow-xl bg-white h-auto w-[400px]'
                     onSubmit={formik.handleSubmit}>
-                    <div className='left-[-82px] top-[45px] absolute -rotate-90 text-3xl font-bold text-gray-700 drop-shadow-md'>Picturize</div>
+                    <div className='left-[-110px] top-[70px] absolute -rotate-90 text-3xl font-bold text-gray-700 drop-shadow-md'>{appName}</div>
 
                     <div className='w-full flex flex-col pt-8 pl-8 pr-8 pb-8'>
                         <div className='mb-6 text-gray-700 text-3xl font-bold text-center'>Создать аккаунт</div>
@@ -86,7 +90,7 @@ const RegistrationForm = () => {
                         </div>
                         <div className=''>
                             <button className='bg-sky-600 hover:bg-sky-700 active:bg-sky-800 w-full text-white text-sm py-[5px] font-semibold rounded-lg shadow-md'
-                                onClick={formik.submitForm}>
+                                type='submit'>
                                 Создать
                             </button>
                         </div>

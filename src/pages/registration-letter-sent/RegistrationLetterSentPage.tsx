@@ -5,11 +5,13 @@ const RegistrationLetterSentPage = (  ) => {
     const { state } = useLocation()
     const { email } = state
 
+    const appName:string = import.meta.env.VITE_APPLICATION_NAME?.toUpperCase()
+
     return (
         <>
           <div className="bg-gray-100 h-screen w-screen">
                 <div className="flex flex-col w-[440px] m-auto p-2 pt-20 relative">
-                <div className='left-[-75px] top-[180px] absolute -rotate-90 text-3xl font-bold text-gray-700 drop-shadow-md'>Picturize</div>
+                <div className='left-[-105px] top-[205px] absolute -rotate-90 text-3xl font-bold text-gray-700 drop-shadow-md'>{appName}</div>
                 <div className="mb-2 flex justify-center">
                     <img className="w-[50px] h-[50px]" src="/static/landing/registration.png"></img>
                 </div>

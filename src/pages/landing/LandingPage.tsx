@@ -7,18 +7,18 @@ import { ImageBox } from './ui'
 const LandingPage = () => {
 
     const navigate = useNavigate()
-
+    const appName:string = import.meta.env.VITE_APPLICATION_NAME?.toUpperCase()
 
     return (
         <>
             <AppHeader/>
-                    <div className="bg-gray-50 p-4 pt-12">
+                    <div className="bg-gray-50 p-4 pt-14">
                         <div className="w-4/6 mx-auto">
-                            <div className="flex justify-center text-6xl font-bold mb-20 text-gray-600">
-                                LEARN BY CARD
+                            <div className="flex justify-center text-6xl font-bold mb-20 text-gray-600 drop-shadow-xl">
+                                {appName}
                             </div>
                             <div className="text-center mb-20 text-gray-500 text-3xl italic">
-                                УЧИ АНГЛИЙСКИЙ ПО КАРТОЧКАМ
+                                УЧИ АНГЛИЙСКИЙ ПО КАРТИНКАМ
                             </div>
                         </div>
                     </div>
