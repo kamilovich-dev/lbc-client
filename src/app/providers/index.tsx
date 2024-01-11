@@ -1,2 +1,2 @@
-export { AppRouterProvider } from './AppRouterProvider'
-export { OverlayScrollbarProvider } from './OverlayScrollbarProvider'
+export { withOverlayScrollbar } from './withOverlayScrollbar'
+export { withAuth } from './withAuth'

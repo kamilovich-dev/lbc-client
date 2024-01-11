@@ -1,18 +1,20 @@
-import { InputLabel, Input, FormControl, Button, Alert } from '@mui/material';
-import TextField from '@mui/material/TextField';
+import { FormControl, Alert } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
 import UndoIcon from '@mui/icons-material/Undo';
 import Collapse from '@mui/material/Collapse';
+import TextField from '@mui/material/TextField';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useNavigate } from 'react-router-dom';
-import { useSessionStore } from 'entities/session';
+
+import { SessionStoreContext } from 'entities/session';
 
 interface IProps {
     appName: string | undefined
 }
 
 const RegistrationForm = ( { appName }: IProps) => {
-    const sessionStore = useSessionStore();
+    const sessionStore = useContext(SessionStoreContext)
     const navigate = useNavigate();
 
     const formik = useFormik({

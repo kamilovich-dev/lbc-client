@@ -6,7 +6,7 @@ import { Client, userEndpoints, IClient } from "shared/api/lbc-server";
 class SessionStore implements ISessionStore {
 
     session: TSession = {
-        token: null,
+        isAuth: false
     }
     client: IClient
 
@@ -16,13 +16,12 @@ class SessionStore implements ISessionStore {
             login: action,
             logout: action,
         })
+        this.initSession()
         this.client = new Client()
-        this.initSession();
     }
 
     initSession = () => {
-        const token = sessionStorage.getItem('token')
-        if (token) this.session.token = token
+        this.session.isAuth = localStorage.getItem('token') ? true : false
     }
 
     register = async (navigate: NavigateFunction, email:string, password: string) => {
@@ -39,8 +38,8 @@ class SessionStore implements ISessionStore {
         await userEndpoints.login(this.client, { email, password })
             .then( response => {
                 if (response?.accessToken) {
-                    this.session.token = response.accessToken
-                    sessionStorage.setItem('token', response.accessToken)
+                    this.session.isAuth = true
+                    localStorage.setItem('token', response.accessToken)
                     navigate('/')
                 }
         } )
@@ -49,8 +48,8 @@ class SessionStore implements ISessionStore {
     logout = async (navigate: NavigateFunction) => {
         await userEndpoints.logout(this.client)
             .then( () => {
-                this.session.token = null
-                sessionStorage.removeItem('token')
+                this.session.isAuth = false
+                localStorage.removeItem('token')
                 navigate('/login')
         } )
     }

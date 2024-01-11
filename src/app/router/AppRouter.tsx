@@ -1,9 +1,9 @@
 import {createBrowserRouter, RouterProvider } from "react-router-dom";
-import { AppLayout } from "layouts/app/AppLayout";
+import { AppRoot } from "pages/root/AppRoot";
 import { LoginPage} from "pages/login/LoginPage";
 import { RegistrationPage } from "pages/registration/RegistrationPage";
 import { RegistrationLetterSentPage } from 'pages/registration-letter-sent/RegistrationLetterSentPage'
-import { RootPage } from 'pages/root/RootPage';
+import { ProtectedRoot } from 'pages/root/ProtectedRoot';
 import { ErrorPage } from 'pages/error/ErrorPage';
 import { ModulesPage } from 'pages/modules/ModulesPage';
 import { ModuleEditPage } from 'pages/module-edit/ModuleEditPage';
@@ -12,10 +12,11 @@ import { ModulePage } from "pages/module/ModulePage";
 import { CardsModePage } from "pages/cards-mode/CardsModePage";
 import { LandingPage } from "pages/landing/LandingPage";
 
-const AppRouterProvider = () => {
+export const AppRouter = () => {
+
     const appRouter = createBrowserRouter([
         {
-            element: <AppLayout />,
+            element: <AppRoot />,
             errorElement: <ErrorPage />,
             children: [
                 {
@@ -36,7 +37,7 @@ const AppRouterProvider = () => {
                 },
                 {
                     path: "/",
-                    element: <RootPage />,
+                    element: <ProtectedRoot />,
                     children: [
                         {
                             element: <ProfileHeader />,
@@ -65,11 +66,9 @@ const AppRouterProvider = () => {
         }
 
     ]);
+
     return <RouterProvider router={appRouter}/>
 }
-
-export { AppRouterProvider };
-
 
 
 

@@ -11,7 +11,7 @@ interface ISessionStore {
 }
 
 type TSession = {
-    token: string | null,
+    isAuth: boolean,
 }
 
 export type {

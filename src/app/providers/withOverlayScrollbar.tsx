@@ -3,20 +3,7 @@ import { useEffect } from 'react';
 
 import 'overlayscrollbars/overlayscrollbars.css';
 
-interface IProps {
-    children?: JSX.Element
-}
-
-const OverlayScrollbarProvider = ( { children }: IProps ) => {
-    const [initBodyOverlayScrollbars, getBodyOverlayScrollbarsInstance] = useOverlayScrollbars({
-        options: {
-            scrollbars: {
-                theme: 'os-theme-dark'
-            },
-        },
-        defer: true,
-    });
-
+export const withOverlayScrollbar = ( component: JSX.Element) => {
     useEffect(() => {
         initBodyOverlayScrollbars({
             target: document.body,
@@ -26,10 +13,14 @@ const OverlayScrollbarProvider = ( { children }: IProps ) => {
         });
     }, [])
 
-    return  (
-        <>
-        </>
-    )
-}
+    const [initBodyOverlayScrollbars, getBodyOverlayScrollbarsInstance] = useOverlayScrollbars({
+        options: {
+            scrollbars: {
+                theme: 'os-theme-dark'
+            },
+        },
+        defer: true,
+    });
 
-export { OverlayScrollbarProvider }
+    return <>{component}</>
+}

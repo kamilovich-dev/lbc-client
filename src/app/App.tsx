@@ -1,17 +1,16 @@
 import './App.css'
-import { AppRouterProvider } from './providers'
-import { OverlayScrollbarProvider } from './providers'
+import compose from 'compose-function'
+
+import { AppRouter } from 'app/router/AppRouter'
+import { withAuth } from './providers'
+import { withOverlayScrollbar } from './providers'
 
 const App = () => {
-
-    return (
-        <>
-            <OverlayScrollbarProvider/>
-            <AppRouterProvider />
-        </>
-    )
+    return <AppRouter/>
 }
 
-
-
-export { App }
+export default compose(
+    withOverlayScrollbar,
+    withAuth,
+    App
+)

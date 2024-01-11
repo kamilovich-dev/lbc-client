@@ -15,6 +15,7 @@
     "@react-spring/web": "^9.7.3",
     "antd": "^5.8.6",
     "axios": "^1.4.0",
+    "compose-function": "^3.0.3",
     "formik": "^2.4.3",
     "lodash": "^4.17.21",
     "mobx": "^6.9.1",
@@ -29,6 +30,7 @@
   },
   "devDependencies": {
     "@mui/types": "^7.2.4",
+    "@types/compose-function": "^0.0.33",
     "@types/lodash": "^4.14.197",
     "@types/react": "^18.2.15",
     "@types/react-beautiful-dnd": "^13.1.4",
