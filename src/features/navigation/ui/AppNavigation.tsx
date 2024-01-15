@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom"
+import { routePaths } from "shared/config"
 
 const AppNavigation = () => {
 
@@ -11,12 +12,12 @@ const AppNavigation = () => {
     const active_cn = `bg-[#4A6CBD] text-white pointer-events-none	`
 
     const links = [
-        { link: '/main',
-          isActive: pathname.match('/main'),
+        { link: routePaths.MAIN,
+          isActive: pathname.match(routePaths.MAIN),
           text: 'Главная'
         },
-        { link: '/modules',
-          isActive: pathname.match('/modules'),
+        { link: routePaths.MODULES,
+          isActive: pathname.match(routePaths.MODULES),
           text: 'Модули'
         },
     ]

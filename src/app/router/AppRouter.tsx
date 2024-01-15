@@ -1,4 +1,7 @@
 import {createBrowserRouter, RouterProvider } from "react-router-dom";
+
+import { routePaths } from "shared/config";
+
 import { AppRoot } from "pages/root/AppRoot";
 import { LoginPage} from "pages/login/LoginPage";
 import { RegistrationPage } from "pages/registration/RegistrationPage";
@@ -7,7 +10,6 @@ import { ProtectedRoot } from 'pages/root/ProtectedRoot';
 import { ErrorPage } from 'pages/error/ErrorPage';
 import { ModulesPage } from 'pages/modules/ModulesPage';
 import { ModuleEditPage } from 'pages/module-edit/ModuleEditPage';
-import { ProfileHeader } from "widgets/profile-header/ProfileHeader";
 import { ModulePage } from "pages/module/ModulePage";
 import { CardsModePage } from "pages/cards-mode/CardsModePage";
 import { LandingPage } from "pages/landing/LandingPage";
@@ -20,45 +22,40 @@ export const AppRouter = () => {
             errorElement: <ErrorPage />,
             children: [
                 {
-                    path: '/login',
+                    path: routePaths.LOGIN,
                     element: <LoginPage/>,
                 },
                 {
-                    path: '/register',
+                    path: routePaths.REGISTRATION,
                     element: <RegistrationPage />
                 },
                 {
-                    path: '/registration-letter-sent',
+                    path: routePaths.REGISTRATION_LETTER_SENT,
                     element: <RegistrationLetterSentPage />
                 },
                 {
-                    element: <LandingPage/>,
-                    path: '/main'
+                    path: routePaths.MAIN,
+                    element: <LandingPage/>
                 },
                 {
-                    path: "/",
+                    path: routePaths.PROTECTED_ROOT,
                     element: <ProtectedRoot />,
                     children: [
                         {
-                            element: <ProfileHeader />,
-                            children: [
-                                {
-                                    element: <ModulesPage />,
-                                    path: 'modules',
-                                }
-                            ]
+                            element: <ModulesPage />,
+                            path: routePaths.MODULES,
                         },
                         {
                             element: <ModulePage />,
-                            path: ':moduleId',
+                            path: routePaths.MODULE,
                         },
                         {
                             element: <ModuleEditPage />,
-                            path: ':moduleId/edit',
+                            path: routePaths.MODULE_EDIT,
                         },
                         {
                             element: <CardsModePage />,
-                            path: ':moduleId/cards-mode'
+                            path: routePaths.CARDS_MODE
                         },
                     ]
                 },

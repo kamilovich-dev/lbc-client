@@ -1,6 +1,6 @@
 import {createContext} from "react";
-import { ISessionStore } from 'entities/session/model/types';
+import { SessionStore } from 'entities/session';
 
-const SessionStoreContext = createContext<ISessionStore | null>(null);
+const SessionStoreContext = createContext<SessionStore | null>(null);
 
 export { SessionStoreContext }

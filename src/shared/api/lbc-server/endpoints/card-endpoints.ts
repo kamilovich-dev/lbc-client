@@ -1,47 +1,47 @@
-import { IClient } from '../model/Client'
+import { Client } from '../model/Client'
 
-export async function getCards(client: IClient, payload: TGetCardsPayload, searchParams?: TCardSearchParams ): Promise<TGetCardsResponse | undefined> {
+export async function getCards(client: Client, payload: TGetCardsPayload, searchParams?: TCardSearchParams ): Promise<TGetCardsResponse | undefined> {
     try {
       const urlSearchString = new URLSearchParams(searchParams).toString();
       const url = urlSearchString ? `/card?${urlSearchString}` : '/card'
       console.log(url)
       return (await client.axiosInstance.post<TGetCardsResponse>(url, payload)).data;
     } catch(error) {
-      console.log(error)
+      // console.log(error)
     }
 }
 
-export async function addCard(client: IClient, payload: TAddCardPayload ): Promise<TAddCardResponse | undefined> {
+export async function addCard(client: Client, payload: TAddCardPayload ): Promise<TAddCardResponse | undefined> {
     try {
       const url = '/card/create'
       return (await client.axiosInstance.post<TAddCardResponse>(url, payload)).data;
     } catch(error) {
-      console.log(error)
+      // console.log(error)
     }
 }
 
-export async function deleteCard(client: IClient, payload: TDeleteCardPayload): Promise<void | undefined> {
+export async function deleteCard(client: Client, payload: TDeleteCardPayload): Promise<void | undefined> {
     try {
       await client.axiosInstance.post<void>('/card/remove', payload)
     } catch(error) {
-      console.log(error)
+      // console.log(error)
     }
   }
 
-export async function editCard(client: IClient, payload: FormData ): Promise<TEditCardResponse | undefined> {
+export async function editCard(client: Client, payload: FormData ): Promise<TEditCardResponse | undefined> {
     try {
       const url = '/card/update'
       return (await client.axiosInstance.post<TEditCardResponse>(url, payload)).data;
     } catch(error) {
-      console.log(error)
+      // console.log(error)
     }
 }
 
-export async function switchOrder(client: IClient, payload: TSwitchOrderPayload): Promise<void | undefined> {
+export async function switchOrder(client: Client, payload: TSwitchOrderPayload): Promise<void | undefined> {
   try {
     await client.axiosInstance.post<void>('/card/switch_order', payload)
   } catch(error) {
-    console.log(error)
+    // console.log(error)
   }
 }
 

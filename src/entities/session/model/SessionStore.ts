@@ -1,13 +1,10 @@
 import { makeObservable, observable, action } from "mobx";
-import { ISessionStore, TSession } from './types';
 import type { NavigateFunction } from 'react-router-dom';
 import { Client, userEndpoints, IClient } from "shared/api/lbc-server";
 
-class SessionStore implements ISessionStore {
+class SessionStore {
 
-    session: TSession = {
-        isAuth: false
-    }
+    session = {  isAuth: false }
     client: IClient
 
     constructor() {
@@ -37,6 +34,8 @@ class SessionStore implements ISessionStore {
     login = async (navigate: NavigateFunction, email:string, password: string) => {
         await userEndpoints.login(this.client, { email, password })
             .then( response => {
+                console.log(response)
+
                 if (response?.accessToken) {
                     this.session.isAuth = true
                     localStorage.setItem('token', response.accessToken)

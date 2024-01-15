@@ -3,8 +3,6 @@ import { useParams } from "react-router-dom"
 import { observer } from 'mobx-react-lite'
 import Alert from '@mui/material/Alert';
 
-import { ToModulesButton } from 'features/navigation'
-
 import { ICardStore, IModuleStore, ModuleStore, CardStore } from 'entities/module'
 import { CardShowRow } from './ui/CardShowRow'
 

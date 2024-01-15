@@ -1,37 +1,37 @@
-import { IClient } from '../model/Client'
+import { Client } from '../model/Client'
 
-export async function getModules(client: IClient, searchParams?: TMduleSearchParams): Promise<TGetModulesResponse | undefined> {
+export async function getModules(client: Client, searchParams?: TMduleSearchParams): Promise<TGetModulesResponse | undefined> {
   try {
     const urlSearchString = new URLSearchParams(searchParams).toString();
     const url = urlSearchString ? `/module?${urlSearchString}` : '/module'
     console.log(url)
     return (await client.axiosInstance.get<TGetModulesResponse>(url)).data;
   } catch(error) {
-    console.log(error)
+    // console.log(error)
   }
 }
 
-export async function createModule(client: IClient, payload: TCreateModulePayload): Promise<TCreateModuleResponse | undefined> {
+export async function createModule(client: Client, payload: TCreateModulePayload): Promise<TCreateModuleResponse | undefined> {
   try {
     return (await client.axiosInstance.post<TCreateModuleResponse>('/module/create', payload)).data;
   } catch(error) {
-    console.log(error)
+    // console.log(error)
   }
 }
 
-export async function deleteModule(client: IClient, payload: TDeleteModulePayload): Promise<void | undefined> {
+export async function deleteModule(client: Client, payload: TDeleteModulePayload): Promise<void | undefined> {
   try {
     await client.axiosInstance.post<void>('/module/remove', payload)
   } catch(error) {
-    console.log(error)
+    // console.log(error)
   }
 }
 
-export async function editModule(client: IClient, payload: TEditModulePayload): Promise<TEditModuleResponse | undefined> {
+export async function editModule(client: Client, payload: TEditModulePayload): Promise<TEditModuleResponse | undefined> {
   try {
     return (await client.axiosInstance.post<TEditModuleResponse>('/module/update', payload)).data;
   } catch(error) {
-    console.log(error)
+    // console.log(error)
   }
 }
 

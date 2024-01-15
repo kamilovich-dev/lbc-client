@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import { routePaths } from "shared/config";
 
 const RegistrationLetterSentPage = (  ) => {
     const navigate = useNavigate()
@@ -32,7 +33,7 @@ const RegistrationLetterSentPage = (  ) => {
                     </div>
                     <div className="flex justify-center">
                         <button className='bg-[#4F81BD] hover:bg-sky-700 active:bg-sky-800 w-3/4 h-[40px] text-white text-sm py-[5px] font-semibold rounded-lg shadow-md'
-                                onClick={() => navigate('/main')}    >
+                                onClick={() => navigate(routePaths.MAIN)}    >
                                 Перейти на главную</button>
                     </div>
                 </div>
