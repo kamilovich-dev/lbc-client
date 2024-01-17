@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { SessionStoreContext } from 'entities/session';
 import { useContext } from 'react';
 
+import { routePaths } from 'shared/config';
+
 const AuthButton = observer(() => {
     const sessionStore: any = useContext(SessionStoreContext);
     const navigate = useNavigate();
@@ -18,7 +20,7 @@ const AuthButton = observer(() => {
                 </Button> :
                 <Button
                     variant='contained'
-                    onClick={() => navigate('/login')}>
+                    onClick={() => navigate(routePaths.LOGIN)}>
                     Авторизация
                 </Button>
             }

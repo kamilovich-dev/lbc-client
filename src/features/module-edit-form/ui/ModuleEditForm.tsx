@@ -9,32 +9,38 @@ import Alert from '@mui/material/Alert';
 import { observer, Observer } from 'mobx-react-lite';
 import { CardRow } from 'entities/module';
 import { ModuleStore, CardStore } from 'entities/module';
-import { IModuleStore, ICardStore } from 'entities/module';
 import { CardImage } from './CardImage';
 import { DragDropContext, Draggable, DragUpdate, Droppable, DropResult } from 'react-beautiful-dnd'
+
+import { SessionStoreContext } from 'entities/session';
+import { useContext } from 'react';
+
 
 interface IOuterProps {
     moduleId: number
 }
 
 interface IInnerProps {
-    moduleStore: IModuleStore,
-    cardStore: ICardStore,
+    moduleStore: ModuleStore,
+    cardStore: CardStore,
     moduleId: number,
 }
 
 const ModuleEditForm = ( { moduleId }: IOuterProps) => {
-    const moduleStore = new ModuleStore();
-    const cardStore = new CardStore();
+    const sessionStore = useContext(SessionStoreContext)
+    if (!sessionStore) return
 
-    return (<_ModuleEditForm
+    const moduleStore = new ModuleStore(sessionStore.client);
+    const cardStore = new CardStore(sessionStore.client);
+
+    return (<ObserverModuleEditForm
                 moduleId={moduleId}
                 moduleStore={moduleStore}
                 cardStore={cardStore}
             />)
 }
 
-const _ModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: IInnerProps ) => {
+const ObserverModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: IInnerProps ) => {
 
     useEffect( () => {
         cardStore.refreshCards(moduleId)

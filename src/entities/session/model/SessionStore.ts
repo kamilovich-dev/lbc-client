@@ -1,20 +1,17 @@
-import { makeObservable, observable, action } from "mobx";
+import { makeAutoObservable, observable, action } from "mobx";
 import type { NavigateFunction } from 'react-router-dom';
-import { Client, userEndpoints, IClient } from "shared/api/lbc-server";
+import { Client, userEndpoints } from "shared/api/lbc-server";
+import { routePaths } from "shared/config";
 
 class SessionStore {
 
     session = {  isAuth: false }
-    client: IClient
+    client: Client
 
     constructor() {
-        makeObservable(this, {
-            session: observable,
-            login: action,
-            logout: action,
-        })
+        makeAutoObservable(this);
         this.initSession()
-        this.client = new Client()
+        this.client = new Client(this.logout)
     }
 
     initSession = () => {
@@ -26,7 +23,7 @@ class SessionStore {
             .then( response => {
                 if (response?.user) {
                     const email = response.user.email
-                    navigate('/registration-letter-sent', { state: { email } })
+                    navigate(routePaths.REGISTRATION_LETTER_SENT, { state: { email } })
                 }
         } )
     }
@@ -34,23 +31,19 @@ class SessionStore {
     login = async (navigate: NavigateFunction, email:string, password: string) => {
         await userEndpoints.login(this.client, { email, password })
             .then( response => {
-                console.log(response)
-
                 if (response?.accessToken) {
                     this.session.isAuth = true
                     localStorage.setItem('token', response.accessToken)
-                    navigate('/')
+                    navigate(routePaths.MODULES)
                 }
         } )
     }
 
-    logout = async (navigate: NavigateFunction) => {
+    logout = async (navigate?: NavigateFunction) => {
+        this.session.isAuth = false
+        localStorage.removeItem('token')
+        if (navigate) navigate(routePaths.LOGIN)
         await userEndpoints.logout(this.client)
-            .then( () => {
-                this.session.isAuth = false
-                localStorage.removeItem('token')
-                navigate('/login')
-        } )
     }
 }
 

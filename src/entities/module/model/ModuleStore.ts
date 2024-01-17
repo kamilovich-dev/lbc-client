@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
-import { Client, IClient, moduleEndpoints } from 'shared/api/lbc-server'
+import { Client, moduleEndpoints } from 'shared/api/lbc-server'
 
-class ModuleStore implements IModuleStore {
+class ModuleStore {
     modules: TModule[] = [];
     filters: TModulesFilter = {
         by_alphabet: 'asc',
@@ -9,11 +9,11 @@ class ModuleStore implements IModuleStore {
     }
     DELAY_TIME: number = 1000
     delayTimer: NodeJS.Timer | undefined
-    client: IClient;
+    client: Client;
 
-    constructor() {
+    constructor(client: Client) {
         makeAutoObservable(this)
-        this.client = new Client()
+        this.client = client
     }
 
     addModule = () => {
@@ -80,20 +80,6 @@ class ModuleStore implements IModuleStore {
         }
     }
 
-}
-
-export interface IModuleStore {
-    modules: TModule[],
-    filters: TModulesFilter,
-    DELAY_TIME: number,
-    delayTimer: NodeJS.Timer | undefined,
-    client: IClient,
-    getModuleById: ( id: number) => TModule | undefined,
-    editModule: ( args: TEditModule ) => void,
-    addModule: () => void,
-    deleteModuleById: (id: number) => Promise<void>,
-    refreshModules: () => Promise<void>,
-    setFilter: (type: string, value: string) => void,
 }
 
 export type TModule = {

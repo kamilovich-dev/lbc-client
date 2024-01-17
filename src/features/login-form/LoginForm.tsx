@@ -1,4 +1,5 @@
 import { FormControl, Alert } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import UndoIcon from '@mui/icons-material/Undo';
@@ -6,16 +7,25 @@ import Collapse from '@mui/material/Collapse';
 import TextField from '@mui/material/TextField';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { observer } from 'mobx-react-lite';
 
-import { SessionStoreContext } from 'entities/session';
+import { SessionStore, SessionStoreContext } from 'entities/session';
 
-interface IProps {
+interface IOuterProps {
     appName: string | undefined
 }
 
+interface IInnerProps {
+    sessionStore: SessionStore | null,
+    appName: string | undefined
+}
 
-const LoginForm = ( { appName }: IProps ) => {
+const LoginForm = ( { ...props }: IOuterProps ) => {
     const sessionStore = useContext(SessionStoreContext)
+    return <ObserverLoginForm  { ...{...props, sessionStore} }/>
+}
+
+const ObserverLoginForm = observer(( {appName, sessionStore}: IInnerProps ) => {
     const navigate = useNavigate();
 
     const formik = useFormik({
@@ -95,9 +105,12 @@ const LoginForm = ( { appName }: IProps ) => {
                                 Забыли пароль?</span>
                         </div>
                         <div className='flex-auto'>
-                            <button className='bg-sky-600 hover:bg-sky-700 active:bg-sky-800 w-full text-white text-sm py-[5px] font-semibold rounded-lg shadow-md'
-                                type='submit'>
-                                Войти</button>
+                                <button className='bg-sky-600 hover:bg-sky-700 active:bg-sky-800 w-full text-white text-sm py-[5px] font-semibold rounded-lg shadow-md flex justify-center'
+                                    type='submit'>
+                                {sessionStore?.client.isLoading ?
+                                    <CircularProgress  sx={{color: 'white'}} size="20px"/>
+
+                                : <>Войти</> }</button>
                         </div>
                         <div>
                             <span className='text-xs text-gray-400'>Еще не зарегестрированы? </span>
@@ -107,9 +120,8 @@ const LoginForm = ( { appName }: IProps ) => {
                     </div>
                 </form>
             </div>
-
         </>
     );
-};
+});
 
 export { LoginForm };

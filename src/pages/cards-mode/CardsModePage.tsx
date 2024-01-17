@@ -29,9 +29,17 @@ import { Result } from 'features/cards-mode';
 import { ProgressBar } from "features/cards-mode";
 import { TextString } from "shared/ui/texts/TextString";
 
+import { SessionStoreContext } from 'entities/session';
+import { useContext } from 'react';
+
 import styles from './CardsModePage.module.css'
 
+
+
 const CardsModePage = () => {
+    const sessionStore = useContext(SessionStoreContext)
+    if (!sessionStore) return
+
     const { moduleId } = useParams()
     if (!moduleId) return;
 
@@ -40,8 +48,8 @@ const CardsModePage = () => {
     const hotkeysListenerRef = useRef<CardsModeHotkeyListener | undefined>()
 
     useEffect( () => {
-        const asyncModuleStore = new ModuleStore()
-        const asyncCardStore = new CardStore()
+        const asyncModuleStore = new ModuleStore(sessionStore.client)
+        const asyncCardStore = new CardStore(sessionStore.client)
 
         asyncModuleStore.refreshModules()
             .then(() => setModule(asyncModuleStore.getModuleById(parseInt(moduleId))) )
@@ -80,7 +88,7 @@ const CardsModePage = () => {
     hotkeysListenerRef.current = cardsModeHotkeyListener
 
     return (
-        <_CardsModePage cardsModeStore={cardsModeStore} module={module} cardStore={cardStore} />
+        <ObserverCardsModePage cardsModeStore={cardsModeStore} module={module} cardStore={cardStore} />
     )
 }
 
@@ -91,7 +99,7 @@ interface IProps {
 }
 
 
-const _CardsModePage = observer(( { cardStore, cardsModeStore, module }: IProps ) => {
+const ObserverCardsModePage = observer(( { cardStore, cardsModeStore, module }: IProps ) => {
 
     const cardRef = useRef(null)
     const nextRef = useRef(null)

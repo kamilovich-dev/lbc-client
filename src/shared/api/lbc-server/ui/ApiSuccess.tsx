@@ -16,7 +16,7 @@ function ApiSuccess( { message, status, duration } : IProps ) {
                 <Alert onClose={() => setShowSnackbar(false)} severity="success" sx={{ width: '100%' }}>
                     <div>
                         Запрос прошел успешно! <br/>
-                        {message}, {status}
+                        {message} {status}
                     </div>
                 </Alert>
             </Snackbar>

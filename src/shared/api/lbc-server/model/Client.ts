@@ -3,249 +3,74 @@ import { refreshToken } from '../endpoints/user-endpoints'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { ApiError } from "../ui/ApiError"
+import { makeObservable, observable } from "mobx"
 
 class Client {
 
   BASE_URL: string = import.meta.env.VITE_LBC_SERVER_API_URL
+  TIMEOUT = 2000
   MESSAGE_DURATION = 2000
   MESSAGE_NODE_ID = 'lbc-server-api-message'
-  axiosInstance: AxiosInstance
+  axiosInstance!: AxiosInstance
   isLoading = false
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   isRetry= false
 
-  constructor() {
+  logoutCallback: () => Promise<void>
 
+  constructor(logoutCallback: () => Promise<void>) {
+    makeObservable(this, {
+      isLoading: observable
+    })
+    this.logoutCallback = logoutCallback
+    this.initializeAxiosInstance()
+    this.initializeInterceptors()
+  }
+
+  initializeAxiosInstance = () => {
     this.axiosInstance = axios.create({
       baseURL: this.BASE_URL,
-      timeout: 2000,
+      timeout: this.TIMEOUT,
       validateStatus: function (status) {
         return (status >= 200 && status <= 299)
       },
       withCredentials: true,
     })
-    this.initializeInterceptors()
-
   }
 
-  initializeInterceptors() {
+  initializeInterceptors = () => {
 
-    this.axiosInstance.interceptors.request.use((config) => {
+    this.axiosInstance.interceptors.request.use(async (config) => {
       this.isLoading = true
+      // await new Promise( (resolve, reject) => setTimeout(resolve, 2000) )
       const token = localStorage.getItem('token')
       config.headers.Authorization = token ? `Bearer ${token}` : ''
       return config
     })
 
-    this.axiosInstance.interceptors.response.use(response => {
+    this.axiosInstance.interceptors.response.use(async response => {
+      const res = await new Promise((resolve, reject) => setTimeout(resolve, 1000))
       response.data = {isError: false, ...response.data}
       this.isLoading = false
       return response
     }, async error => {
+      const res = await new Promise((resolve, reject) => setTimeout(resolve, 1000))
+
       const originalRequest = error.config
       if (error.response?.status == 401 && originalRequest && !this.isRetry) {
         this.isRetry = true
         try {
             const response = await refreshToken(this)
-            if (response?.accessToken) localStorage.setItem('token', response.accessToken)
-            return this.axiosInstance.request(originalRequest)
+            if (response?.accessToken) {
+              localStorage.setItem('token', response.accessToken)
+              return this.axiosInstance.request(originalRequest)
+            }
         } catch(e) {
             console.log('Ошибка при обновлении токена' + e)
         }
       }
 
       if (error.response?.status == 401 && this.isRetry) {
-        localStorage.removeItem('token')
+        this.logoutCallback()
       }
 
       let message = ''
@@ -281,7 +106,7 @@ class Client {
 
       root.render(React.createElement(component, {
         message,
-        status,
+        undefined,
         duration: this.MESSAGE_DURATION
       }, null))
 

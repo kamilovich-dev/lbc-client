@@ -1,9 +1,9 @@
 import { makeAutoObservable } from 'mobx';
-import { cardEndpoints, Client, IClient } from 'shared/api/lbc-server';
+import { cardEndpoints, Client } from 'shared/api/lbc-server';
 
-class CardStore implements ICardStore {
+class CardStore {
     cards: TCard[] = [] ;
-    client: IClient;
+    client: Client;
     filters: TCardsFilter = {
         by_alphabet: '',
         by_search: ''
@@ -11,9 +11,9 @@ class CardStore implements ICardStore {
     DELAY_TIME: number = 1000
     delayTimer: NodeJS.Timer | undefined
 
-    constructor() {
+    constructor(client: Client) {
         makeAutoObservable(this)
-        this.client = new Client()
+        this.client = client
     }
 
     refreshCards = async ( moduleId: number ) => {
@@ -104,17 +104,6 @@ type TEditCard = {
     isSwitchFavorite?: boolean,
     image?: Blob | undefined
     isDeleteImg?: boolean
-}
-
-export interface ICardStore {
-    cards: TCard[],
-    client: IClient,
-    getCardById: (id: number) => TCard | undefined,
-    addCard: (moduleId: number) => Promise<void>,
-    deleteCardById: (moduleId:number,  cardId: number) => void,
-    editCard: (args: TEditCard) => void,
-    refreshCards: (moduleId: number) => Promise<void>
-    switchOrder: (args: TSwitchOrder) => Promise<void>
 }
 
 type TCardsFilter = {
