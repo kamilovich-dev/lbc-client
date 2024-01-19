@@ -8,6 +8,7 @@ import TextField from '@mui/material/TextField';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { observer } from 'mobx-react-lite';
+import { routePaths } from 'shared/config';
 
 import { SessionStore, SessionStoreContext } from 'entities/session';
 
@@ -39,7 +40,8 @@ const ObserverLoginForm = observer(( {appName, sessionStore}: IInnerProps ) => {
             .required('Обязательное поле')
         }),
         onSubmit: async values => {
-            await sessionStore?.login(navigate, values.email, values.password)
+            const result = await sessionStore?.login(values.email, values.password)
+            if (result?.user) navigate(routePaths.MODULES)
         },
     });
 

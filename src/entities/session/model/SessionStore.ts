@@ -1,48 +1,66 @@
-import { makeAutoObservable, observable, action } from "mobx";
-import type { NavigateFunction } from 'react-router-dom';
+import {  makeAutoObservable} from "mobx";
+import { TokenStorage } from "shared/api/lbc-server";
 import { Client, userEndpoints } from "shared/api/lbc-server";
-import { routePaths } from "shared/config";
+import { TLoginReturn, TRegisterReturn } from "shared/api/lbc-server/endpoints/types/user";
+
+type TSession = {
+    isAuth: boolean,
+}
 
 class SessionStore {
 
-    session = {  isAuth: false }
+    session: TSession = {
+        isAuth: false,
+    }
     client: Client
+
+    CHECK_TOKEN_INTERVAL = 3000
+    checkTokenlTimerId: NodeJS.Timer | undefined = undefined
 
     constructor() {
         makeAutoObservable(this);
         this.initSession()
-        this.client = new Client(this.logout)
+        this.client = new Client()
     }
 
     initSession = () => {
-        this.session.isAuth = localStorage.getItem('token') ? true : false
+        this.session.isAuth =  TokenStorage.getToken() ? true : false
+        if (this.session.isAuth) this.setTokenCheckTimer()
     }
 
-    register = async (navigate: NavigateFunction, email:string, password: string) => {
-        await userEndpoints.register(this.client, { email, password })
-            .then( response => {
-                if (response?.user) {
-                    const email = response.user.email
-                    navigate(routePaths.REGISTRATION_LETTER_SENT, { state: { email } })
-                }
-        } )
+    setTokenCheckTimer = () => {
+        this.checkTokenlTimerId = setInterval(this.checkToken, this.CHECK_TOKEN_INTERVAL)
     }
 
-    login = async (navigate: NavigateFunction, email:string, password: string) => {
-        await userEndpoints.login(this.client, { email, password })
+    checkToken = async () => {
+        console.log('checking token')
+        const token = TokenStorage.getToken()
+        if (!token && this.session.isAuth) {
+            await this.logout()
+            this.session.isAuth = false
+        }
+    }
+
+    register = async (email:string, password: string):Promise<TRegisterReturn> => {
+        return await userEndpoints.register(this.client, { email, password })
+    }
+
+    login = async (email:string, password: string): Promise<TLoginReturn> => {
+        return await userEndpoints.login(this.client, { email, password })
             .then( response => {
                 if (response?.accessToken) {
+                    TokenStorage.setToken(response.accessToken)
                     this.session.isAuth = true
-                    localStorage.setItem('token', response.accessToken)
-                    navigate(routePaths.MODULES)
+                    this.setTokenCheckTimer()
                 }
+                return response
         } )
     }
 
-    logout = async (navigate?: NavigateFunction) => {
+    logout = async () => {
+        clearInterval(this.checkTokenlTimerId)
+        TokenStorage.removeToken()
         this.session.isAuth = false
-        localStorage.removeItem('token')
-        if (navigate) navigate(routePaths.LOGIN)
         await userEndpoints.logout(this.client)
     }
 }

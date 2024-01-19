@@ -4,10 +4,7 @@ import { useCheckAuth } from 'entities/session'
 
 const ProtectedRoot = ( ) => {
     const isAuth = useCheckAuth()
-    if (!isAuth) {
-        alert('Не авторизован')
-        return
-    }
+    if (!isAuth) return
 
     return (
         <>

@@ -4,24 +4,21 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { ApiError } from "../ui/ApiError"
 import { makeObservable, observable } from "mobx"
+import { TokenStorage } from "./TokenStorage"
 
 class Client {
 
   BASE_URL: string = import.meta.env.VITE_LBC_SERVER_API_URL
-  TIMEOUT = 2000
-  MESSAGE_DURATION = 2000
+  TIMEOUT = 2000 /*Axios response timeout*/
+  MESSAGE_DURATION = 2000 /*Error message duration*/
+  RESPONSE_DELAY: number | undefined =  300 /*Set to number to simulate network delay*/
   MESSAGE_NODE_ID = 'lbc-server-api-message'
   axiosInstance!: AxiosInstance
-  isLoading = false
-  isRetry= false
+  isLoading = false /*If true - data is fetching*/
+  isRetry= false /*Boolean flag to try to refresh token*/
 
-  logoutCallback: () => Promise<void>
-
-  constructor(logoutCallback: () => Promise<void>) {
-    makeObservable(this, {
-      isLoading: observable
-    })
-    this.logoutCallback = logoutCallback
+  constructor() {
+    makeObservable(this, {isLoading: observable})
     this.initializeAxiosInstance()
     this.initializeInterceptors()
   }
@@ -41,27 +38,27 @@ class Client {
 
     this.axiosInstance.interceptors.request.use(async (config) => {
       this.isLoading = true
-      // await new Promise( (resolve, reject) => setTimeout(resolve, 2000) )
-      const token = localStorage.getItem('token')
+      const token = TokenStorage.getToken()
       config.headers.Authorization = token ? `Bearer ${token}` : ''
       return config
     })
 
     this.axiosInstance.interceptors.response.use(async response => {
-      const res = await new Promise((resolve, reject) => setTimeout(resolve, 1000))
+      this.isRetry = false
+      if (this.RESPONSE_DELAY) await new Promise(resolve => setTimeout(resolve, this.RESPONSE_DELAY))
       response.data = {isError: false, ...response.data}
       this.isLoading = false
       return response
     }, async error => {
-      const res = await new Promise((resolve, reject) => setTimeout(resolve, 1000))
-
+      if (this.RESPONSE_DELAY) await new Promise(resolve=> setTimeout(resolve, this.RESPONSE_DELAY))
       const originalRequest = error.config
+
       if (error.response?.status == 401 && originalRequest && !this.isRetry) {
         this.isRetry = true
         try {
             const response = await refreshToken(this)
             if (response?.accessToken) {
-              localStorage.setItem('token', response.accessToken)
+              TokenStorage.setToken(response.accessToken)
               return this.axiosInstance.request(originalRequest)
             }
         } catch(e) {
@@ -70,7 +67,7 @@ class Client {
       }
 
       if (error.response?.status == 401 && this.isRetry) {
-        this.logoutCallback()
+        TokenStorage.removeToken()
       }
 
       let message = ''

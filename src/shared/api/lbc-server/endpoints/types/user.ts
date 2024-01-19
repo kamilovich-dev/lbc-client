@@ -1,3 +1,5 @@
+import type { TError } from './error'
+
 /*Логин*/
 export type TLoginPayload = {
   email: string,
@@ -27,9 +29,3 @@ export type TUser = {
   isActivated: boolean,
 }
 export type TRefreshTokenReturn = (TRefreshTokenResponse & TError) | undefined
-
-
-export type TError = {
-  isError: boolean,
-  message?: string
-}

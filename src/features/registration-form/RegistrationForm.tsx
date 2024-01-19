@@ -6,6 +6,7 @@ import Collapse from '@mui/material/Collapse';
 import TextField from '@mui/material/TextField';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { routePaths } from 'shared/config';
 
 import { SessionStoreContext } from 'entities/session';
 
@@ -16,6 +17,8 @@ interface IProps {
 const RegistrationForm = ( { appName }: IProps) => {
     const sessionStore = useContext(SessionStoreContext)
     const navigate = useNavigate();
+
+    if (!sessionStore) return
 
     const formik = useFormik({
         initialValues: {
@@ -28,7 +31,8 @@ const RegistrationForm = ( { appName }: IProps) => {
             .required('Обязательное поле')
         }),
         onSubmit: async values => {
-            await sessionStore?.register(navigate, values.email, values.password)
+            const result = await sessionStore.register(values.email, values.password)
+            if (result?.user) navigate(routePaths.REGISTRATION_LETTER_SENT, { state: { email: result.user.email } })
         },
     });
 
