@@ -9,9 +9,10 @@ import { CardShowRow } from './ui/CardShowRow'
 import { ModesBlock } from 'features/navigation';
 import { TextString } from 'shared/ui/texts/TextString';
 
-import { SessionStoreContext } from 'entities/session';
-import { useContext } from 'react';
+import { useEditCardListener } from './model/useEditCardListener'
+import { ListSkeleton } from 'shared/ui/skeletons/ListSkeleton';
 
+import { useAbortController } from 'entities/module';
 
 interface IProps {
     moduleStore: ModuleStore
@@ -19,58 +20,26 @@ interface IProps {
 }
 
 const ModulePage = () => {
-    const sessionStore = useContext(SessionStoreContext)
-    if (!sessionStore) return
-
-    const moduleStore = new ModuleStore(sessionStore.client)
-    const cardStore = new CardStore(sessionStore.client);
+    const moduleStore = new ModuleStore()
+    const cardStore = new CardStore();
+    useAbortController({ storesWithClient: [moduleStore, cardStore] })
     return <ObservedModulePage moduleStore={moduleStore} cardStore={cardStore}/>
 }
 
 const ObservedModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
     const routeParams = useParams();
     const moduleId = routeParams.moduleId ? parseInt(routeParams.moduleId) : null
-    const [isEditModes, setEditModes] = useState<Array<boolean>>([])
+    const {isEditModes, handleSwitchEditMode}= useEditCardListener(cardStore)
 
     if (!moduleId) return
 
     useEffect( () => { //Инициалищация данных
         moduleStore.refreshModules()
-        cardStore.refreshCards(moduleId)
+            .then(() => cardStore.refreshCards(moduleId))
     }, [])
 
-    useEffect( () => { //Инициализация режимов редактирования карточек
-        const editModesArray = new Array(cardStore.cards.length)
-        setEditModes(editModesArray.fill(false))
-    }, [cardStore.cards.length])
-
-    useEffect(() => { //Глобальный слушатель для обработки кликов
-
-        const disableCardEdit = (e: any) => { //Отключение режима редактирования для всех карточек
-            const cards = cardStore.cards
-            for(let i = 0; i < cards.length; i++) {
-                const div = e.target.closest(`div[id="${cards[i].id}"]`)
-                if (e.target.id == cards[i].id || div) return
-            }
-            const editModesArray = new Array(cardStore.cards.length)
-            setEditModes(editModesArray.fill(false))
-        }
-
-        document.body.addEventListener('click', disableCardEdit)
-        return () => document.body.removeEventListener('click', disableCardEdit)
-    }, [cardStore.cards.length])
-
     const module = moduleStore.getModuleById(moduleId)
-    if (!module) return
-
     const cards = cardStore.cards
-    if (!cards) return
-
-    const handleSwitchEditMode = ( cardIdx: number ) => {
-        const newIsEditModes = [...isEditModes]
-        newIsEditModes[cardIdx] = !newIsEditModes[cardIdx]
-        setEditModes(newIsEditModes)
-    }
 
     const handleEditCard = (cardId: number, name: string, value: string) => {
         cardStore.editCard( { cardId, moduleId, name, value } )
@@ -83,15 +52,22 @@ const ObservedModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
     return(
         <>
         <div className='w-3/5 m-auto p-4'>
-            <TextString
-                customClassName='font-bold text-xl text-slate-800 mb-5'
-                maxLength={64}
-                text={module.name}
-            />
+            {moduleStore.client.isLoading || cardStore.client.isLoading ?
+            <>
+                <ListSkeleton/>
+            </> :
+            <>
+            <div className='mb-2'>
+                {       <TextString
+                        customClassName='font-bold text-xl text-slate-800 mb-5'
+                        maxLength={64}
+                        text={module?.name || ''}
+                    />
+                }
+            </div>
             <div className='flex items-center gap-2 mb-5'>
                 <ModesBlock />
             </div>
-
             <h2 className='font-semibold text-xl text-slate-800 mb-5'>Термины в модуле: {cards.length}</h2>
             { cards.length ? cards.map((card, idx) => (
                 <div className='mb-2' key={card.id} id={card.id.toString()}>
@@ -113,6 +89,7 @@ const ObservedModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
             <Alert severity="info" sx={{ width: '100%' }}>
                 Карточки не найдены!
             </Alert> }
+            </>}
         </div>
 
         </>

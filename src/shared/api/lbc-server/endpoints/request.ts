@@ -1,19 +1,21 @@
 import { AxiosError, AxiosInstance } from 'axios'
+import { Client } from '../model/Client'
 
 export async function request<T>(
-    axiosInstance: AxiosInstance,
+    client: Client,
     method: 'get' | 'post',
     url: string,
     payload?: any,
   ): Promise<T | undefined> {
+    const axiosInstance = client.axiosInstance
     try {
       if (method === 'get') {
-        const {data} = await axiosInstance.get<T>(url, payload)
-        return data
+        return axiosInstance.get<T>(url, {signal: client.abortController?.signal, ...payload})
+          .then(response => response?.data)
       }
       if (method === 'post') {
-        const {data} = await axiosInstance.post<T>(url, payload)
-        return data
+        return axiosInstance.post<T>(url,  {signal: client.abortController?.signal, ...payload})
+          .then(response => response?.data)
       }
     } catch(error) {
       if (error instanceof AxiosError) {

@@ -3,7 +3,7 @@ import { refreshToken } from '../endpoints/user-endpoints'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { ApiError } from "../ui/ApiError"
-import { makeObservable, observable } from "mobx"
+import { makeObservable, observable, autorun } from "mobx"
 import { TokenStorage } from "./TokenStorage"
 
 class Client {
@@ -11,17 +11,24 @@ class Client {
   BASE_URL: string = import.meta.env.VITE_LBC_SERVER_API_URL
   TIMEOUT = 2000 /*Axios response timeout*/
   MESSAGE_DURATION = 2000 /*Error message duration*/
-  RESPONSE_DELAY: number | undefined =  300 /*Set to number to simulate network delay*/
+
+  responseDelayTimerID: NodeJS.Timer | undefined = undefined
+  RESPONSE_DELAY: number | undefined = undefined /*Set to number to simulate network delay*/
+
   MESSAGE_NODE_ID = 'lbc-server-api-message'
   axiosInstance!: AxiosInstance
   isLoading = false /*If true - data is fetching*/
-  isRetry= false /*Boolean flag to try to refresh token*/
+  isTryToRefreshToken = false /*Boolean flag to try to refresh token*/
+  abortController: AbortController | undefined /*To abort request*/
 
   constructor() {
     makeObservable(this, {isLoading: observable})
     this.initializeAxiosInstance()
+    this.initializeAbortController()
     this.initializeInterceptors()
+    autorun(() => console.log(`${this.isLoading ? 'Loading server data' : 'Loaded server data'}`))
   }
+
 
   initializeAxiosInstance = () => {
     this.axiosInstance = axios.create({
@@ -32,6 +39,24 @@ class Client {
       },
       withCredentials: true,
     })
+
+  }
+
+  initializeAbortController = () => {
+    this.abortController = new AbortController()
+  }
+
+  setDelay = async () => {
+    if (this.RESPONSE_DELAY) {
+      clearTimeout(this.responseDelayTimerID)
+      await new Promise(resolve => {
+        this.responseDelayTimerID = setTimeout(resolve, this.RESPONSE_DELAY)
+      } )
+    }
+  }
+
+  abortRequest = () => {
+    this.abortController?.abort()
   }
 
   initializeInterceptors = () => {
@@ -44,17 +69,22 @@ class Client {
     })
 
     this.axiosInstance.interceptors.response.use(async response => {
-      this.isRetry = false
-      if (this.RESPONSE_DELAY) await new Promise(resolve => setTimeout(resolve, this.RESPONSE_DELAY))
+      await this.setDelay()
+      this.isTryToRefreshToken = false
+      console.log('got response', response.data)
       response.data = {isError: false, ...response.data}
       this.isLoading = false
       return response
     }, async error => {
-      if (this.RESPONSE_DELAY) await new Promise(resolve=> setTimeout(resolve, this.RESPONSE_DELAY))
-      const originalRequest = error.config
+      await this.setDelay()
 
-      if (error.response?.status == 401 && originalRequest && !this.isRetry) {
-        this.isRetry = true
+      if (axios.isCancel(error)) {
+        return
+      }
+
+      const originalRequest = error.config
+      if (error.response?.status == 401 && originalRequest && !this.isTryToRefreshToken) {
+        this.isTryToRefreshToken = true
         try {
             const response = await refreshToken(this)
             if (response?.accessToken) {
@@ -66,7 +96,7 @@ class Client {
         }
       }
 
-      if (error.response?.status == 401 && this.isRetry) {
+      if (error.response?.status == 401 && this.isTryToRefreshToken) {
         TokenStorage.removeToken()
       }
 

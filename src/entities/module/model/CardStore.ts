@@ -11,25 +11,22 @@ class CardStore {
     DELAY_TIME: number = 1000
     delayTimer: NodeJS.Timer | undefined
 
-    constructor(client: Client) {
+    constructor() {
         makeAutoObservable(this)
-        this.client = client
+        this.client = new Client()
     }
 
     refreshCards = async ( moduleId: number ) => {
-        const cards =  (await cardEndpoints.getCards(this.client, { moduleId } ,this.filters))?.cards
-        if (!cards) return
-        this.cards = cards
+        return cardEndpoints.getCards(this.client, { moduleId } ,this.filters)
+            .then (response => {
+                if (response?.cards) this.cards = response.cards
+            })
     }
 
-    getCardById = (id: number) => {
-        return this.cards.find(
-            card => card.id == id
-        )
-    }
+    getCardById = (id: number) => this.cards.find(card => card.id == id)
 
     addCard = async ( moduleId: number ) => {
-        await cardEndpoints.addCard(this.client, {
+        cardEndpoints.addCard(this.client, {
             moduleId: moduleId,
             term: 'Новый термин',
             definition: 'Новое определение',
@@ -40,7 +37,7 @@ class CardStore {
     }
 
     deleteCardById = async (moduleId: number, cardId: number) => {
-        await cardEndpoints.deleteCard(this.client, { cardId: cardId })
+        cardEndpoints.deleteCard(this.client, { cardId: cardId })
             .then(() => {
                 this.refreshCards(moduleId)
             })
@@ -78,15 +75,15 @@ class CardStore {
                 formData.append('img', image)
             }
 
-            await cardEndpoints.editCard(this.client,formData)
-            .then( () => this.refreshCards( moduleId ))
+            cardEndpoints.editCard(this.client,formData)
+                .then( () => this.refreshCards( moduleId ))
 
         }, isDeleteImg || image || isSwitchFavorite ? 0 : this.DELAY_TIME)
 
     }
 
     switchOrder = async ( { cardId1, cardId2 }: TSwitchOrder )  => {
-        await cardEndpoints.switchOrder( this.client,  {cardId1, cardId2} )
+        cardEndpoints.switchOrder( this.client,  {cardId1, cardId2} )
     }
 
 }

@@ -11,9 +11,9 @@ class ModuleStore {
     delayTimer: NodeJS.Timer | undefined
     client: Client;
 
-    constructor(client: Client) {
+    constructor() {
         makeAutoObservable(this)
-        this.client = client
+        this.client = new Client()
     }
 
     addModule = () => {
@@ -30,7 +30,7 @@ class ModuleStore {
     }
 
     deleteModuleById = async (id: number) => {
-        await moduleEndpoints.deleteModule( this.client, { moduleId: id } )
+        moduleEndpoints.deleteModule( this.client, { moduleId: id } )
             .then( () => this.refreshModules() )
     }
 
@@ -45,7 +45,7 @@ class ModuleStore {
         clearTimeout(this.delayTimer)
         this.delayTimer = setTimeout(async () => {
 
-            await moduleEndpoints.editModule(this.client, {
+            moduleEndpoints.editModule(this.client, {
                 moduleId: module.id,
                 name: module.name,
                 description: module.description
@@ -57,9 +57,10 @@ class ModuleStore {
     }
 
     refreshModules = async () => {
-        const modules = (await moduleEndpoints.getModules(this.client, this.filters))?.modules
-        if (!modules) return;
-        this.modules = modules
+        return moduleEndpoints.getModules(this.client, this.filters)
+            .then( response => {
+                if (response?.modules) this.modules = response.modules
+            } )
     }
 
     setFilter = ( type: string, value: string ) => {
