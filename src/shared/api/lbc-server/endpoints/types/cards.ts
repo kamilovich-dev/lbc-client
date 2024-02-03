@@ -42,6 +42,14 @@ export type TDeleteCardPayload = {
 export type TEditCardResponse = {
     card: TCard
 }
+export interface TEditCardPayload extends FormData {
+    cardId: number,
+    term?: string,
+    definition?: string,
+    isFavorite?: boolean,
+    img?: File | null,
+    isDeleteImg?: boolean,
+}
 export type TEditCardReturn = (TEditCardResponse & TError) | undefined
 
 /*Смена двух карточек местами*/

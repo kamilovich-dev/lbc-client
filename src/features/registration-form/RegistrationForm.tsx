@@ -39,24 +39,23 @@ const RegistrationForm = ( { appName }: IProps) => {
 
     return (
         <>
-        <div className='flex justify-center p-5'>
+        <div className='flex flex-col w-[400px] justify-center items-center p-4 md-max:pt-20 md-max:w-[320px]'>
                 <button className='flex p-2 gap-2 absolute top-2 left-4 bg-[#4F81BD] hover:bg-sky-700 active:bg-sky-800 w-[100px] h-[30px] text-white text-sm py-[5px] font-semibold rounded-lg shadow-md'
                     onClick={() => navigate(-1)}>
                     <UndoIcon/>
                     Назад
                 </button>
-                <form className='flex relative rounded-2xl shadow-xl bg-white h-auto w-[400px]'
+                <form className='flex flex-col relative rounded-2xl shadow-xl bg-white h-auto w-full '
                     onSubmit={formik.handleSubmit}>
-                    <div className='left-[-110px] top-[70px] absolute -rotate-90 text-3xl font-bold text-gray-700 drop-shadow-md'>{appName}</div>
-
+                    <div className='left-[-110px] top-[70px] absolute -rotate-90 text-3xl font-bold text-gray-700 drop-shadow-md md-max:text-sm md-max:left-0 md-max:rotate-0 md-max:top-[-22px]'>{appName}</div>
                     <div className='w-full flex flex-col pt-8 pl-8 pr-8 pb-8'>
-                        <div className='mb-6 text-gray-700 text-3xl font-bold text-center'>Создать аккаунт</div>
-                        <div className='flex items-center justify-center mb-8 '>
+                        <div className='mb-6 text-gray-700 text-3xl font-bold text-center md-max:text-sm md-max:mb-4'>Создать аккаунт</div>
+                        <div className='flex items-center justify-center mb-8 md-max:mb-4'>
                             <div className='w-[60px] h-[60px]'>
                                 <img src="/static/landing/registration.png" className='w-full h-full'></img>
                             </div>
                         </div>
-                        <div className='mb-8'>
+                        <div className='mb-8 md-max:mb-4'>
                             <FormControl variant="filled" sx={{width: '100%'}} >
                                 <TextField
                                     inputProps={{style: {fontSize: '12px'}}} // font size of input text
@@ -75,7 +74,7 @@ const RegistrationForm = ( { appName }: IProps) => {
                                     </Collapse>
                             </FormControl>
                         </div>
-                        <div className='mb-8 flex-auto'>
+                        <div className='mb-8 flex-auto md-max:mb-4'>
                             <FormControl variant="standard" sx={{width: '100%'}}>
                                 <TextField
                                     inputProps={{style: {fontSize: '12px'}}} // font size of input text
@@ -103,58 +102,6 @@ const RegistrationForm = ( { appName }: IProps) => {
                     </div>
                 </form>
             </div>
-{/*
-            <div className='flex justify-center p-5'>
-                <form className='flex flex-col p-10 border-2 rounded-md border-blue-100 shadow-sm'
-                    onSubmit={formik.handleSubmit}>
-                    <div className='mb-12 text-gray-500 text-lg font-bold'>Регистрация пользователя</div>
-                    <div className='mb-12 flex items-center'>
-                        <FormControl variant="standard" sx={{width: '250px'}} >
-                            <InputLabel shrink htmlFor="email">
-                                Email
-                            </InputLabel>
-                            <Input
-                                type='email'
-                                id="email"
-                                size='small'
-                                error={formik.touched.email && formik.errors.email ? true : false}
-                                {...formik.getFieldProps('email')}
-                            />
-                            {formik.touched.email && formik.errors.email ?
-                                 <Alert severity="error" sx={{height: '40px', padding: '0 5px 0px 5px'}}>
-                                    {formik.errors.email}
-                                </Alert> : null}
-                        </FormControl>
-                    </div>
-
-                    <div className='mb-12 flex items-center'>
-                        <FormControl variant="standard" sx={{width: '250px'}}>
-                            <InputLabel shrink htmlFor="password">
-                                Пароль
-                            </InputLabel>
-                            <Input
-                                type='text'
-                                id="password"
-                                size='small'
-                                error={formik.touched.password && formik.errors.password ? true : false}
-                                {...formik.getFieldProps('password')}
-                            />
-                            {formik.touched.password && formik.errors.password ?
-                                 <Alert severity="error" sx={{height: '40px', padding: '0 5px 0px 5px'}}>
-                                    { formik.errors.password}
-                                </Alert> : null}
-                        </FormControl>
-                    </div>
-
-                     <div className='flex gap-2'>
-                        <div className='flex-auto'><Button type="submit" variant="contained">Зарегестрироваться</Button></div>
-                        <div><Button variant="outlined" onClick={ () => navigate('/login') }>Авторизация</Button></div>
-                     </div>
-
-                </form>
-
-            </div> */}
-
         </>
     );
 };

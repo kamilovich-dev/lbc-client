@@ -70,7 +70,7 @@ const ObservedModulesPage = observer(( { moduleStore }: Props ) => {
 
 const ModulesPage = () => {
     const moduleStore = new ModuleStore();
-    useAbortController( { storesWithClient: [moduleStore] } )
+    useAbortController( [moduleStore] )
     return <ObservedModulesPage moduleStore={moduleStore} />
 }
 

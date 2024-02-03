@@ -1,4 +1,4 @@
-import { useContext, useEffect, useLayoutEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { SessionStoreContext } from 'entities/session';
 import { routePaths } from 'shared/config';
@@ -8,7 +8,7 @@ export const useCheckAuth = () => {
     const sessionStore = useContext(SessionStoreContext)
     if (!sessionStore) return
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (sessionStore.session.isAuth === false) navigate(routePaths.LOGIN)
     }, [sessionStore.session.isAuth])
 

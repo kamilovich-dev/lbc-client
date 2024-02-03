@@ -44,7 +44,7 @@ class CardsModeHotkeyListener {
     }
 
     removeKeyboardsListener = () => {
-        document.removeEventListener('keypress', this.keyboardsListener)
+        document.removeEventListener('keydown', this.keyboardsListener)
     }
 
 }

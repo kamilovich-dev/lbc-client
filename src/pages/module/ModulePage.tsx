@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { useParams } from "react-router-dom"
 import { observer } from 'mobx-react-lite'
 import Alert from '@mui/material/Alert';
@@ -10,9 +9,10 @@ import { ModesBlock } from 'features/navigation';
 import { TextString } from 'shared/ui/texts/TextString';
 
 import { useEditCardListener } from './model/useEditCardListener'
-import { ListSkeleton } from 'shared/ui/skeletons/ListSkeleton';
 
 import { useAbortController } from 'entities/module';
+import { useInitModule } from './model/useInitModule';
+import { SkeletonLoader } from './ui/SkeletonLoader';
 
 interface IProps {
     moduleStore: ModuleStore
@@ -20,43 +20,35 @@ interface IProps {
 }
 
 const ModulePage = () => {
-    const moduleStore = new ModuleStore()
-    const cardStore = new CardStore();
-    useAbortController({ storesWithClient: [moduleStore, cardStore] })
+    const routeParams = useParams();
+    const moduleId = routeParams.moduleId ? parseInt(routeParams.moduleId) : null
+    if (!moduleId) return
+
+    const {moduleStore, cardStore} = useInitModule(moduleId)
+
+    if (!moduleStore || !cardStore) return <SkeletonLoader/>
+
     return <ObservedModulePage moduleStore={moduleStore} cardStore={cardStore}/>
 }
 
 const ObservedModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
-    const routeParams = useParams();
-    const moduleId = routeParams.moduleId ? parseInt(routeParams.moduleId) : null
+    useAbortController([moduleStore, cardStore])
     const {isEditModes, handleSwitchEditMode}= useEditCardListener(cardStore)
 
-    if (!moduleId) return
-
-    useEffect( () => { //Инициалищация данных
-        moduleStore.refreshModules()
-            .then(() => cardStore.refreshCards(moduleId))
-    }, [])
-
-    const module = moduleStore.getModuleById(moduleId)
+    const module = moduleStore.getModuleById(cardStore.moduleId)
     const cards = cardStore.cards
 
     const handleEditCard = (cardId: number, name: string, value: string) => {
-        cardStore.editCard( { cardId, moduleId, name, value } )
+        cardStore.editCard( { cardId, name, value } )
     }
 
     const handleSwitchFavorite = (cardId: number) => {
-        cardStore.editCard( { cardId, moduleId, isSwitchFavorite: true } )
+        cardStore.editCard( { cardId, isSwitchFavorite: true } )
     }
 
     return(
         <>
-        <div className='w-3/5 m-auto p-4'>
-            {moduleStore.client.isLoading || cardStore.client.isLoading ?
-            <>
-                <ListSkeleton/>
-            </> :
-            <>
+        <div className='w-3/5 ml-auto mr-auto p-4'>
             <div className='mb-2'>
                 {       <TextString
                         customClassName='font-bold text-xl text-slate-800 mb-5'
@@ -89,7 +81,6 @@ const ObservedModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
             <Alert severity="info" sx={{ width: '100%' }}>
                 Карточки не найдены!
             </Alert> }
-            </>}
         </div>
 
         </>

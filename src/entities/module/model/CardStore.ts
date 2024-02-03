@@ -1,7 +1,9 @@
 import { makeAutoObservable } from 'mobx';
 import { cardEndpoints, Client } from 'shared/api/lbc-server';
+import { TEditCardPayload } from 'shared/api/lbc-server/endpoints/types/cards';
 
 class CardStore {
+    moduleId: number
     cards: TCard[] = [] ;
     client: Client;
     filters: TCardsFilter = {
@@ -11,13 +13,14 @@ class CardStore {
     DELAY_TIME: number = 1000
     delayTimer: NodeJS.Timer | undefined
 
-    constructor() {
+    constructor(moduleId: number) {
         makeAutoObservable(this)
         this.client = new Client()
+        this.moduleId = moduleId
     }
 
-    refreshCards = async ( moduleId: number ) => {
-        return cardEndpoints.getCards(this.client, { moduleId } ,this.filters)
+    refreshCards = async () => {
+        return cardEndpoints.getCards(this.client, { moduleId: this.moduleId } ,this.filters)
             .then (response => {
                 if (response?.cards) this.cards = response.cards
             })
@@ -25,26 +28,21 @@ class CardStore {
 
     getCardById = (id: number) => this.cards.find(card => card.id == id)
 
-    addCard = async ( moduleId: number ) => {
+    addCard = async () => {
         cardEndpoints.addCard(this.client, {
-            moduleId: moduleId,
+            moduleId: this.moduleId,
             term: 'Новый термин',
             definition: 'Новое определение',
             isFavorite: false
-        }).then( () => {
-            this.refreshCards(moduleId)
-        })
+        }).then( () => this.refreshCards())
     }
 
-    deleteCardById = async (moduleId: number, cardId: number) => {
+    deleteCardById = async (cardId: number) => {
         cardEndpoints.deleteCard(this.client, { cardId: cardId })
-            .then(() => {
-                this.refreshCards(moduleId)
-            })
+            .then(() => this.refreshCards())
     }
 
-    editCard = ( { moduleId, cardId, name, value, isSwitchFavorite, image, isDeleteImg } :  TEditCard) => {
-
+    editCard = ( { cardId, name, value, isSwitchFavorite, image, isDeleteImg } :  TEditCard) => {
         const card = this.cards.find(card => card.id == cardId)
         if (!card) return
 
@@ -75,8 +73,8 @@ class CardStore {
                 formData.append('img', image)
             }
 
-            cardEndpoints.editCard(this.client,formData)
-                .then( () => this.refreshCards( moduleId ))
+            cardEndpoints.editCard(this.client, formData as any)
+                .then( () => this.refreshCards())
 
         }, isDeleteImg || image || isSwitchFavorite ? 0 : this.DELAY_TIME)
 
@@ -94,7 +92,6 @@ type TSwitchOrder = {
 }
 
 type TEditCard = {
-    moduleId: number,
     cardId: number,
     name?: string,
     value?: string,

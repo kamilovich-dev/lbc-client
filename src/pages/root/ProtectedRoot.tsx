@@ -9,7 +9,7 @@ const ProtectedRoot = ( ) => {
     return (
         <>
             <AppHeader />
-            <div className='bg-blue-50 flex-auto p-0 h-full'>
+            <div className='bg-blue-50 flex-auto flex flex-col p-0'>
                 <Outlet/>
             </div>
         </>

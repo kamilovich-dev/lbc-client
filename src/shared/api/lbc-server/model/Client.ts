@@ -56,6 +56,7 @@ class Client {
   }
 
   abortRequest = () => {
+    console.log('request aborted')
     this.abortController?.abort()
   }
 

@@ -10,6 +10,7 @@ import type {
   TDeleteCardPayload,
   TEditCardReturn,
   TSwitchOrderPayload,
+  TEditCardPayload
 } from './types/cards'
 
 export async function getCards(client: Client, payload: TGetCardsPayload, searchParams?: TCardSearchParams ): Promise<TGetCardsReturn | undefined> {
@@ -26,7 +27,7 @@ export async function deleteCard(client: Client, payload: TDeleteCardPayload): P
   return request(client, 'post', '/card/remove', payload)
 }
 
-export async function editCard(client: Client, payload: FormData ): Promise<TEditCardReturn | undefined> {
+export async function editCard(client: Client, payload: TEditCardPayload ): Promise<TEditCardReturn | undefined> {
   return request(client, 'post', '/card/update', payload)
 }
 

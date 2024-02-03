@@ -47,24 +47,22 @@ const ObserverLoginForm = observer(( {appName, sessionStore}: IInnerProps ) => {
 
     return (
         <>
-            <div className='flex justify-center p-5'>
-                <button className='flex p-2 gap-2 absolute top-2 left-4 bg-[#4F81BD] hover:bg-sky-700 active:bg-sky-800 w-[100px] h-[30px] text-white text-sm py-[5px] font-semibold rounded-lg shadow-md'
+            <div className='flex justify-center p-4 md-max:pt-20 md-max:w-[320px]'>
+                <button className='flex p-2 gap-2 absolute top-2 left-4 bg-[#4F81BD] hover:bg-sky-700 active:bg-sky-800 w-[100px] h-[30px] text-white text-sm py-[5px] font-semibold rounded-lg shadow-md md-max:shadow-sm'
                     onClick={() => navigate(-1)}>
                     <UndoIcon/>
                     Назад
                 </button>
-                <form className='flex relative rounded-2xl shadow-xl bg-white h-[500px] w-[600px]'
+                <form className='flex relative rounded-2xl shadow-xl bg-white h-[500px] w-[600px] md-max:h-[auto] md-max:w-full md-max:flex-col'
                     onSubmit={formik.handleSubmit}>
-                    <div className='left-[-110px] top-[70px] absolute -rotate-90 text-3xl font-bold text-gray-700 drop-shadow-md'>{appName}</div>
-                    <div className='w-full h-full'>
-                        <div className='w-full h-full'>
-                            <img src="/static/landing/login.png" className='w-full h-full'></img>
-                        </div>
+                    <div className='left-[-110px] top-[70px] absolute -rotate-90 text-3xl font-bold text-gray-700 drop-shadow-md md-max:text-sm md-max:left-0 md-max:rotate-0 md-max:top-[-20px]'>{appName}</div>
+                    <div className='w-full h-full md-max:h-[80px] overflow-hidden md-max:rounded-t-xl bg-no-repeat bg-cover'>
+                        <img src="/static/landing/login.png" className='w-full h-full md-max:h-auto md-max:-top-40 relative'></img>
                     </div>
-                    <div className='w-full flex flex-col pt-8 pl-6 pr-6 pb-4'>
-                        <div className='mb-8 text-gray-700 text-2xl font-bold'>Пожалуйста, авторизуйтесь</div>
-                        <div className='mb-8 w-[30px] h-[3px] bg-gray-200'></div>
-                        <div className='mb-8'>
+                    <div className='w-full flex flex-col pt-8 pl-6 pr-6 pb-4 md-max:pt-4'>
+                        <div className='mb-8 text-gray-700 text-2xl font-bold md-max:text-sm md-max:mb-4'>Пожалуйста, авторизуйтесь</div>
+                        <div className='mb-8 w-[30px] h-[3px] bg-gray-200 md-max:mb-4'></div>
+                        <div className='mb-8 md-max:mb-4'>
                             <FormControl variant="filled" sx={{width: '100%'}} >
                                 <TextField
                                     inputProps={{style: {fontSize: '12px'}}} // font size of input text
@@ -102,7 +100,7 @@ const ObserverLoginForm = observer(( {appName, sessionStore}: IInnerProps ) => {
                                 </Collapse>
                             </FormControl>
                         </div>
-                        <div className='mb-8'>
+                        <div className='mb-8 md-max:mb-4'>
                             <span className='text-xs underline-offset-2 decoration-1 underline decoration-gray-400 text-gray-400 hover:cursor-pointer active:text-gray-600'>
                                 Забыли пароль?</span>
                         </div>

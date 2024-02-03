@@ -236,14 +236,12 @@ class CardsModeStore {
 
     setAsFavorite = () => {
         const card = this.cards[this.currentIdx]
-        if (!this.moduleId) return
         if (!card.id) return
         if (!this.cardStore) return
 
-        const moduleId = this.moduleId
         const cardId = card.id
 
-        this.cardStore.editCard( { moduleId, cardId, isSwitchFavorite: true} );
+        this.cardStore.editCard( { cardId, isSwitchFavorite: true} );
         this.cards[this.currentIdx].isFavorite = this.cardStore?.getCardById(cardId)?.isFavorite
     }
 

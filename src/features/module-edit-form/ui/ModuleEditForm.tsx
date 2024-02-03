@@ -12,10 +12,6 @@ import { ModuleStore, CardStore } from 'entities/module';
 import { CardImage } from './CardImage';
 import { DragDropContext, Draggable, DragUpdate, Droppable, DropResult } from 'react-beautiful-dnd'
 
-import { SessionStoreContext } from 'entities/session';
-import { useContext } from 'react';
-
-
 interface IOuterProps {
     moduleId: number
 }
@@ -27,11 +23,8 @@ interface IInnerProps {
 }
 
 const ModuleEditForm = ( { moduleId }: IOuterProps) => {
-    const sessionStore = useContext(SessionStoreContext)
-    if (!sessionStore) return
-
-    const moduleStore = new ModuleStore(sessionStore.client);
-    const cardStore = new CardStore(sessionStore.client);
+    const moduleStore = new ModuleStore();
+    const cardStore = new CardStore(moduleId);
 
     return (<ObserverModuleEditForm
                 moduleId={moduleId}
@@ -43,7 +36,7 @@ const ModuleEditForm = ( { moduleId }: IOuterProps) => {
 const ObserverModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: IInnerProps ) => {
 
     useEffect( () => {
-        cardStore.refreshCards(moduleId)
+        cardStore.refreshCards()
         moduleStore.refreshModules()
     }, [])
 
@@ -114,7 +107,7 @@ const ObserverModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: 
             <div className='mb-5'>
                 <Button
                     variant="contained"
-                    onClick={() => cardStore.addCard(module.id)}>+Добавить карточку</Button>
+                    onClick={() => cardStore.addCard()}>+Добавить карточку</Button>
             </div>
             {cards.length ? (
                     <DragDropContext
@@ -148,7 +141,6 @@ const ObserverModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: 
                                                                         variant="standard"
                                                                         value={card.term}
                                                                         onChange={(e) => cardStore.editCard({
-                                                                            moduleId,
                                                                             cardId: card.id,
                                                                             name: e.target.name,
                                                                             value: e.target.value
@@ -161,7 +153,6 @@ const ObserverModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: 
                                                                         variant="standard"
                                                                         value={card.definition}
                                                                         onChange={(e) => cardStore.editCard({
-                                                                            moduleId,
                                                                             cardId: card.id,
                                                                             name: e.target.name,
                                                                             value: e.target.value
@@ -170,7 +161,7 @@ const ObserverModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: 
                                                                         sx={{height: '25px', fontSize: '10pt'}}
                                                                         color='error'
                                                                         variant="contained"
-                                                                        onClick={() => cardStore.deleteCardById(module.id, card.id)}>Удалить</Button>}
+                                                                        onClick={() => cardStore.deleteCardById(card.id)}>Удалить</Button>}
                                                                     Image={<CardImage moduleId={moduleId} cardId={card.id} url={card.imgUrl} cardStore={cardStore}/>}
                                                                     />
                                                                 </div>
