@@ -1,13 +1,5 @@
-import { AxiosError, AxiosInstance } from 'axios'
+import { AxiosError } from 'axios'
 import { Client } from '../model/Client'
-
-const convertFormDataToDataObject = (payload: any) => {
-  let obj = {} as any
-  for (let [key, value] of payload.entries()) {
-    obj[key] = value
-  }
-  return obj
-}
 
 export async function request<T>(
     client: Client,

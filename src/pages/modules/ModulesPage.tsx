@@ -1,10 +1,11 @@
-import { useEffect  } from 'react'
+import { useEffect, useState  } from 'react'
 import { observer} from 'mobx-react-lite'
-import { Alert, Button, Select, MenuItem, TextField } from '@mui/material';
-import { ShowModules } from 'features/show-modules/ShowModules';
+import { Alert } from '@mui/material';
+import { ShowModules } from 'pages/modules/ui/ShowModules';
 import { ModuleStore } from 'entities/module';
-import { ListSkeleton } from 'shared/ui/skeletons/ListSkeleton';
 import { useAbortController } from 'entities/module';
+import { ModulesMenu } from './ui/ModulesMenu';
+import { CircularLoader } from "shared/ui/loaders/CircularLoader";
 
 interface Props {
     moduleStore: ModuleStore
@@ -12,55 +13,34 @@ interface Props {
 
 const ObservedModulesPage = observer(( { moduleStore }: Props ) => {
 
+    const [isLoaded, setIsLoaded] = useState(false)
+
     useEffect( () => {
         moduleStore.refreshModules()
+            .then(() => setIsLoaded(true))
     }, [] )
 
     return (
             <>
-                <div className='p-2 w-3/5 m-auto pt-4'>
-                    <div className='bg-blue-50 rounded-md p-4 min-h-screen'>
-                        {moduleStore.client.isLoading ?
+                <div className='p-2 md:w-3/5 m-auto pt-20 md-max:w-full'>
+                    <div className='bg-blue-50 rounded-md min-h-screen'>
+                        <ModulesMenu moduleStore={moduleStore}/>
+                        {moduleStore.client.isLoading && !isLoaded ?
                             <>
-                                <ListSkeleton/>
+                                <CircularLoader/>
                             </>
                             :
                             <>
-                            <div className='flex gap-4 mb-4'>
-                            <Button
-                                    size='small'
-                                    variant="contained"
-                                    onClick={moduleStore.addModule}>
-                                + ДОБАВИТЬ МОДУЛЬ</Button>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={moduleStore.filters.by_alphabet}
-                                label="Age"
-                                onChange={e => moduleStore.setFilter('byAlphabet', e.target.value)}
-                                size='small'
-                            >
-                                <MenuItem  value={'asc'}>По возрастанию</MenuItem>
-                                <MenuItem  value={'desc'}>По убыванию</MenuItem>
-                            </Select>
-                            <TextField
-                                onChange={e => moduleStore.setFilter('bySearch',e.target.value) }
-                                label="Поиск модулей"
-                                variant="outlined"
-                                value={moduleStore.filters.by_search}
-                                size='small'
-                            />
-                        </div>
-                        <div>
-                            {moduleStore.modules.length ?
-                                <ShowModules
-                                    moduleStore={moduleStore}
-                                    modules={moduleStore.modules} />
-                                            : <Alert severity="info" sx={{ width: '100%' }}>
-                                                Модули не найдены!
-                                            </Alert>
-                            }
-                        </div>
+                                <div className='pb-20'>
+                                    {moduleStore.modules.length ?
+                                        <ShowModules
+                                            moduleStore={moduleStore}
+                                            modules={moduleStore.modules} />
+                                                    : <Alert severity="info" sx={{ width: '100%' }}>
+                                                        Модули не найдены!
+                                                    </Alert>
+                                    }
+                                </div>
                             </>}
                     </div>
                 </div>

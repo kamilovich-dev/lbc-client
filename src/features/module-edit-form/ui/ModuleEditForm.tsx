@@ -3,14 +3,13 @@ import { useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import SvgIcon from '@mui/material/SvgIcon';
-import UndoIcon from '@mui/icons-material/Undo';
 import Alert from '@mui/material/Alert';
 import { observer, Observer } from 'mobx-react-lite';
 import { CardRow } from 'entities/module';
 import { ModuleStore, CardStore } from 'entities/module';
 import { CardImage } from './CardImage';
 import { DragDropContext, Draggable, DragUpdate, Droppable, DropResult } from 'react-beautiful-dnd'
+import { CircularLoader } from "shared/ui/loaders/CircularLoader";
 
 interface IOuterProps {
     moduleId: number
@@ -40,13 +39,10 @@ const ObserverModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: 
         moduleStore.refreshModules()
     }, [])
 
-    const navigate = useNavigate();
-
     const module = moduleStore.getModuleById(moduleId)
-    if (!module) return
-
     const cards = cardStore.cards;
-    if (!cards) return
+
+    if (!cards || !module) return <CircularLoader/>
 
     const handleDragEnd = (result: DropResult ) => {
         const { destination, source } = result
@@ -74,40 +70,50 @@ const ObserverModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: 
         })
     }
 
+    const createdAtString = module?.createdAt ? new Date(module.createdAt).toLocaleString() : ''
+    const updatedAtString = module?.updatedAt ? new Date(module.updatedAt).toLocaleString() : ''
+
     return (
         <>
-            <div className='mb-4'>
-                <Button variant='outlined' onClick={ () => navigate(-1) }>
-                    <SvgIcon className='mr-2'>
-                        <UndoIcon></UndoIcon>
-                    </SvgIcon>
-                    Вернуться
-                </Button>
-            </div>
-            <div className={'py-2 w-2/6'}>
+            <div className={'py-2 w-2/6 mb-2 md-max:w-full'}>
                 <TextField
                     fullWidth
+                    error={module.name ? false : true}
+                    helperText={module.name ? '' : 'Обязательное поле'}
                     multiline
                     name='name'
+                    InputLabelProps={{style: {fontSize: 14}}}
+                    inputProps={{style: {fontSize: 16}}}
                     label="Название"
                     variant="standard"
                     value={module.name}
                     onChange={(e) => moduleStore.editModule({id: moduleId, name: e.target.name, value: e.target.value})}/>
             </div>
-            <div className={'py-2 mb-5 w-2/6'}>
+            <div className={'py-2 mb-2 w-2/6 md-max:w-full'}>
                     <TextField
                         fullWidth
                         multiline
+                        InputLabelProps={{style: {fontSize: 14}}}
+                        inputProps={{style: {fontSize: 16}}}
                         name='description'
                         label="Описание"
                         variant="standard"
                         value={module.description}
                         onChange={(e) => moduleStore.editModule({id: moduleId, name: e.target.name, value: e.target.value})} />
             </div>
+            <div className='mb-4'>
+                    <div className='font-normal text-xs text-slate-400 mb-1'>
+                        Создан: {createdAtString}
+                    </div>
+                    <div className='font-normal text-xs text-slate-400'>
+                        Изменен: {updatedAtString}
+                    </div>
+            </div>
             <div className='mb-5'>
                 <Button
                     variant="contained"
-                    onClick={() => cardStore.addCard()}>+Добавить карточку</Button>
+                    sx={{fontSize: '10pt', fontWeight: 400, backgroundColor: '#60A5FA'}}
+                    onClick={() => cardStore.addCard()}>Добавить карточку</Button>
             </div>
             {cards.length ? (
                     <DragDropContext
@@ -139,6 +145,8 @@ const ObserverModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: 
                                                                         name='term'
                                                                         label="ТЕРМИН"
                                                                         variant="standard"
+                                                                        InputLabelProps={{style: {fontSize: 12}}}
+                                                                        inputProps={{style: {fontSize: 14}}}
                                                                         value={card.term}
                                                                         onChange={(e) => cardStore.editCard({
                                                                             cardId: card.id,
@@ -151,18 +159,22 @@ const ObserverModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: 
                                                                         name='definition'
                                                                         label="ОПРЕДЕЛЕНИЕ"
                                                                         variant="standard"
+                                                                        InputLabelProps={{style: {fontSize: 12}}}
+                                                                        inputProps={{style: {fontSize: 14}}}
                                                                         value={card.definition}
                                                                         onChange={(e) => cardStore.editCard({
                                                                             cardId: card.id,
                                                                             name: e.target.name,
                                                                             value: e.target.value
                                                                         })}/>}
-                                                                    DeleteCard={<Button
-                                                                        sx={{height: '25px', fontSize: '10pt'}}
-                                                                        color='error'
-                                                                        variant="contained"
-                                                                        onClick={() => cardStore.deleteCardById(card.id)}>Удалить</Button>}
-                                                                    Image={<CardImage moduleId={moduleId} cardId={card.id} url={card.imgUrl} cardStore={cardStore}/>}
+                                                                    DeleteCard={
+                                                                        <Button
+                                                                            sx={{height: '25px', fontSize: '10pt'}}
+                                                                            color='error'
+                                                                            variant="text"
+                                                                            onClick={() => cardStore.deleteCardById(card.id)}>Удалить</Button>
+                                                                        }
+                                                                    Image={<CardImage cardId={card.id} url={card.imgUrl} cardStore={cardStore}/>}
                                                                     />
                                                                 </div>
                                                         )}

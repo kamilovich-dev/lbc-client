@@ -2,24 +2,35 @@ import type {TError} from './error'
 
 /*Получение модулей*/
 export type TMduleSearchParams = {
-    by_search: string,
-    by_alphabet: string // 'asc' | 'desc'
-  }
+    by_search?: string,
+    by_alphabet?: 'desc' | 'asc',
+    by_updated_date?: 'desc' | 'asc'
+}
+
 export type TGetModulesResponse = {
     modules: TModule[]
 }
+
 export type TModule = {
     id: number,
     name: string,
     description: string,
-    cardsCount: number
+    isFavorite: boolean,
+    createdAt: string,
+    updatedAt: string,
+    options: {
+        cardsCount: number,
+        createdBy: string,
+        isOwner: boolean,
+        isBookmarked?: boolean,
+    }
 }
 export type TGetModuleReturn = (TGetModulesResponse & TError) | undefined
 
 /*Создание модуля*/
 export type TCreateModulePayload = {
     name: string,
-    description: string
+    description?: string
 }
 export type TCreateModuleResponse = {
     module: TModule
@@ -34,15 +45,13 @@ export type TDeleteModulePayload = {
 /*Изменение модуля*/
 export type TEditModulePayload = {
     moduleId: number,
-    name: string,
-    description: string
-  }
+    name: string | undefined,
+    description: string | undefined,
+    isPublished: boolean | undefined,
+}
+
 export type TEditModuleResponse = {
-    module: {
-      id: number,
-      name: string,
-      description: string,
-    }
+    module: Omit<TModule, 'options'>
 }
 export type TEditModuleReturn = (TEditModuleResponse & TError) | undefined
 

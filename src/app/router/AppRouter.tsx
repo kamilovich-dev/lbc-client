@@ -13,6 +13,9 @@ import { ModuleEditPage } from 'pages/module-edit/ModuleEditPage';
 import { ModulePage } from "pages/module/ModulePage";
 import { CardsModePage } from "pages/cards-mode/CardsModePage";
 import { LandingPage } from "pages/landing/LandingPage";
+import { ProfilePage } from "pages/profile/ProfilePage";
+import { ResetPasswordPage } from "pages/reset-password/ResetPasswordPage";
+import { ForgotPasswordPage } from "pages/forgot-password/ForgotPasswordPage";
 
 export const AppRouter = () => {
 
@@ -24,6 +27,14 @@ export const AppRouter = () => {
                 {
                     path: routePaths.LOGIN,
                     element: <LoginPage/>,
+                },
+                {
+                    path: routePaths.FORGOT_PASSWORD,
+                    element: <ForgotPasswordPage/>
+                },
+                {
+                    path: routePaths.RESET_PASSWORD,
+                    element: <ResetPasswordPage/>
                 },
                 {
                     path: routePaths.REGISTRATION,
@@ -38,7 +49,6 @@ export const AppRouter = () => {
                     element: <LandingPage/>
                 },
                 {
-                    path: routePaths.PROTECTED_ROOT,
                     element: <ProtectedRoot />,
                     children: [
                         {
@@ -57,6 +67,10 @@ export const AppRouter = () => {
                             element: <CardsModePage />,
                             path: routePaths.CARDS_MODE
                         },
+                        {
+                            element: <ProfilePage />,
+                            path: routePaths.PROFILE
+                        }
                     ]
                 },
             ]

@@ -1,4 +1,4 @@
-import { ICardStore } from 'entities/module'
+import { CardStore } from 'entities/module'
 import { useState } from 'react'
 import SvgIcon from '@mui/material/SvgIcon';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -7,13 +7,12 @@ import { observer } from 'mobx-react-lite';
 import { CardImageModal } from 'shared/ui/modals/CardImageModal'
 
 interface IProps {
-    moduleId: number,
     cardId: number,
     url?: string,
-    cardStore: ICardStore
+    cardStore: CardStore
 }
 
-const CardImage = observer(( { moduleId, cardId, url, cardStore }: IProps ) => {
+const CardImage = observer(( { cardId, url, cardStore }: IProps ) => {
 
   const imgUrl = url ? import.meta.env.VITE_LBC_SERVER_STATIC_URL + '/' + url : url
   const inputId = `file-input-${cardId}`
@@ -26,7 +25,7 @@ const CardImage = observer(( { moduleId, cardId, url, cardStore }: IProps ) => {
           setIsShowImageModal={setIsShowImageModal}
           imgUrl={imgUrl || ''}/>
 
-        <div className='relative h-16 w-full '>
+        <div className='relative h-full w-full '>
             { imgUrl ? (
                 <div className='h-full w-full hover:cursor-zoom-in hover:ring-2 hover:ring-blue-100 active:ring-blue-200'
                   onClick={() => setIsShowImageModal(true)}>
@@ -40,9 +39,6 @@ const CardImage = observer(( { moduleId, cardId, url, cardStore }: IProps ) => {
                       <AddPhotoAlternateIcon />
                     </SvgIcon>
                   </div>
-                  <div>
-                    Изображение
-                  </div>
                 </div>
               </label>
             ) }
@@ -51,7 +47,7 @@ const CardImage = observer(( { moduleId, cardId, url, cardStore }: IProps ) => {
           <input hidden type='file' id={inputId} onChange={
             e => {
               console.log('change')
-              cardStore?.editCard( { moduleId, cardId, image: e.target.files ? e.target.files[0] : undefined })
+              cardStore?.editCard( {cardId, image: e.target.files ? e.target.files[0] : undefined })
           }}>
           </input>
 
@@ -61,7 +57,7 @@ const CardImage = observer(( { moduleId, cardId, url, cardStore }: IProps ) => {
                 const input = document.getElementById(inputId)
                 //@ts-ignore
                 if (input) input.value = null
-                cardStore?.editCard( { moduleId, cardId, isDeleteImg: true })
+                cardStore?.editCard( { cardId, isDeleteImg: true })
               }}>
                 <DeleteIcon />
               </SvgIcon>

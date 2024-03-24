@@ -3,8 +3,9 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { routePaths } from 'shared/config';
 
-import { useNavigate, useParams, useLocation } from 'react-router-dom'
+import { useNavigate, useParams, useLocation, generatePath, matchPath } from 'react-router-dom'
 import { SvgIcon } from '@mui/material';
 import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
 import RepeatIcon from '@mui/icons-material/Repeat';
@@ -15,8 +16,9 @@ const ModesMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate()
-  const params = useParams()
   const location = useLocation()
+  const pathname = location.pathname
+  const params = useParams()
 
   const mainTextIdx = calculateMainTextIdx()
   if (mainTextIdx == -1) return
@@ -25,27 +27,27 @@ const ModesMenu = () => {
     {
         icon: <ViewCarouselIcon />,
         text: 'Карточки',
-        handleClick: () => navigate(`/${params.moduleId}/cards-mode`)
+        handleClick: () => navigate(generatePath(routePaths.CARDS_MODE, { moduleId: params.moduleId ?? '' }))
     },
     {
         icon: <RepeatIcon />,
         text: 'Заучивание',
-        handleClick: () => navigate(`/${params.moduleId}/cards-mode`)
+        handleClick: () => navigate(generatePath(routePaths.CARDS_MODE, { moduleId: params.moduleId ?? '' }))
     },
     {
         icon: <QuizIcon />,
         text: 'Тест',
-        handleClick: () => navigate(`/${params.moduleId}/cards-mode`)
+        handleClick: () => navigate(generatePath(routePaths.CARDS_MODE, { moduleId: params.moduleId ?? '' }))
     },
     {
         icon: <FactCheckIcon />,
         text: 'Подбор',
-        handleClick: () => navigate(`/${params.moduleId}/cards-mode`)
+        handleClick: () => navigate(generatePath(routePaths.CARDS_MODE, { moduleId: params.moduleId ?? '' }))
     }
   ]
 
   function calculateMainTextIdx() {
-    if (location.pathname.includes('cards-mode')) return 0
+    if (matchPath(routePaths.CARDS_MODE, pathname)) return 0
     return -1
   }
 
@@ -67,11 +69,13 @@ const ModesMenu = () => {
         variant='outlined'
         endIcon={<KeyboardArrowDownIcon/>}
       >
-        <div className='flex gap-2'>
+        <div className='flex gap-2 items-center'>
           <SvgIcon>
             {navigations[mainTextIdx].icon}
           </SvgIcon>
-          {navigations[mainTextIdx].text}
+          <div className='text-sm'>
+            {navigations[mainTextIdx].text}
+          </div>
         </div>
       </Button>
       <Menu
@@ -83,12 +87,14 @@ const ModesMenu = () => {
       >
         {navigations.map( (navigation, idx) => {
             if (mainTextIdx !== idx) return (
-              <MenuItem key={idx} onClick={navigation.handleClick}>
-                  <div className='flex justify-center gap-4'>
+              <MenuItem key={idx} onClick={navigation.handleClick} sx={{padding: '10px', width: 'auto'}}>
+                  <div className='flex justify-center gap-2 items-center'>
                       <SvgIcon className='text-blue-600'>
                         {navigation.icon}
                       </SvgIcon>
-                      {navigation.text}
+                      <div className='text-sm'>
+                        {navigation.text}
+                      </div>
                   </div>
               </MenuItem>
             )

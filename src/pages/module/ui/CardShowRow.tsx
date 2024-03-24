@@ -30,61 +30,68 @@ const CardShowRow = ( {cardId, cardIdx, termin, definition, imgUrl, isFavorite, 
                 imgUrl={srcUrl || ''}
                 isShowImageModal={isShowImageModal}
                 setIsShowImageModal={setIsShowImageModal}/>
-            <div className='bg-white flex items-start px-4 py-2 gap-4 rounded-lg'>
-                <div className='w-4/12'>
-                    <TextField
-                        multiline
-                        fullWidth
-                        disabled={isEditMode ? false : true}
-                        InputProps={{ disableUnderline: isEditMode ? false : true }}
-                        sx={{"& .MuiInputBase-input.Mui-disabled": {
-                            WebkitTextFillColor: 'black',
-                        }}}
-                        name='term'
-                        variant="standard"
-                        value={termin}
-                        onChange={(e) => handleEditCard(
-                            cardId,
-                            e.target.name,
-                            e.target.value)}
-                        />
-                </div>
-                <div className='self-stretch border-r-2 border-gray-100'></div>
-                <div className='w-4/12'>
+            <div className='bg-white flex rounded-lg shadow-md'>
+                <div className='flex items-start px-4 pr-1 py-1 gap-4 w-full '>
+                    <div className='w-5/12 flex flex-col  h-full'>
+                        <div className='flex-auto '>
+                            <TextField
+                                multiline
+                                fullWidth
+                                disabled={isEditMode ? false : true}
+                                inputProps={{style: {fontSize: 12}}}
+                                InputProps={{ disableUnderline: isEditMode ? false : true }}
+                                sx={{"& .MuiInputBase-input.Mui-disabled": {
+                                    WebkitTextFillColor: 'black',
+                                }}}
+                                name='term'
+                                variant="standard"
+                                value={termin}
+                                onChange={(e) => handleEditCard(
+                                    cardId,
+                                    e.target.name,
+                                    e.target.value)}
+                                />
+                        </div>
+                        {srcUrl ?
+                        <div className='py-2 '>
+                            <div className='h-24 w-24 rounded-md overflow-hidden hover:cursor-zoom-in hover:ring-2 hover:ring-blue-100 active:ring-blue-200'
+                                onClick={() => setIsShowImageModal(true)}>
+                                <img src={srcUrl} className='h-full w-full object-cover border-[1px] border-gray-100'></img>
+                            </div>
+                        </div> : null}
+
+                    </div>
+                    <div className='self-stretch border-r-2 border-gray-100'></div>
+                    <div className='w-5/12'>
                         <TextField
-                            multiline
-                            fullWidth
-                            disabled={isEditMode ? false : true}
-                            InputProps={{ disableUnderline: isEditMode ? false : true }}
-                            sx={{"& .MuiInputBase-input.Mui-disabled": {
-                                WebkitTextFillColor: 'black',
-                            }}}
-                            name='definition'
-                            variant="standard"
-                            value={definition}
-                            onChange={(e) => handleEditCard(
-                                cardId,
-                                e.target.name,
-                                e.target.value)}
-                            />
-                </div>
-                <div className='w-2/12'>
-                    <div className='h-24 rounded-sm overflow-hidden w-full hover:cursor-zoom-in hover:ring-2 hover:ring-blue-100 active:ring-blue-200'
-                        onClick={() => setIsShowImageModal(true)}>
-                        { srcUrl ?  <img src={srcUrl} className='h-full w-full object-cover'></img>
-                            : (<SvgIcon sx={{ width: '100%', height: '100%' }} className='text-gray-300'>
-                                <BlockIcon />
-                              </SvgIcon>)}
+                                multiline
+                                fullWidth
+                                disabled={isEditMode ? false : true}
+                                inputProps={{style: {fontSize: 12}}}
+                                InputProps={{ disableUnderline: isEditMode ? false : true }}
+                                sx={{"& .MuiInputBase-input.Mui-disabled": {
+                                    WebkitTextFillColor: 'black',
+                                }}}
+                                name='definition'
+                                variant="standard"
+                                value={definition}
+                                onChange={(e) => handleEditCard(
+                                    cardId,
+                                    e.target.name,
+                                    e.target.value)}
+                                />
+
+                    </div>
+                    <div className='flex w-2/12 justify-end'>
+                        <div className=''>
+                            <ButtonFavoriteStar isFavorite={isFavorite} onClick={() => handleSwitchFavorite(cardId)}/>
+                        </div>
+                        {/* <div>
+                            <ButtonEdit isEdit={isEditMode} onClick={() => handleSwitchEditMode(cardIdx)} />
+                        </div> */}
                     </div>
                 </div>
-                <div className='flex w-2/12 justify-end'>
-                    <div className='mr-1'>
-                        <ButtonFavoriteStar isFavorite={isFavorite} onClick={() => handleSwitchFavorite(cardId)}/>
-                    </div>
-                    <div>
-                        <ButtonEdit isEdit={isEditMode} onClick={() => handleSwitchEditMode(cardIdx)} />
-                    </div>
-                </div>
+
             </div>
         </>
 

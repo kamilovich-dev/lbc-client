@@ -60,8 +60,8 @@ class SessionStore {
     logout = async () => {
         clearInterval(this.checkTokenlTimerId)
         TokenStorage.removeToken()
-        this.session.isAuth = false
         await userEndpoints.logout(this.client)
+        this.session.isAuth = false
     }
 }
 

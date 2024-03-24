@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import { cardEndpoints, Client } from 'shared/api/lbc-server';
-import { TEditCardPayload } from 'shared/api/lbc-server/endpoints/types/cards';
+import { ApiSuccess } from 'shared/api/lbc-server/ui/ApiSuccess';
 
 class CardStore {
     moduleId: number
@@ -34,12 +34,18 @@ class CardStore {
             term: 'Новый термин',
             definition: 'Новое определение',
             isFavorite: false
-        }).then( () => this.refreshCards())
+        }).then( () => {
+            this.refreshCards()
+            this.client.renderMessage(ApiSuccess, 'Добавлено', 200)
+        })
     }
 
     deleteCardById = async (cardId: number) => {
         cardEndpoints.deleteCard(this.client, { cardId: cardId })
-            .then(() => this.refreshCards())
+            .then(() => {
+                this.refreshCards()
+                this.client.renderMessage(ApiSuccess, 'Удалено', 200)
+            })
     }
 
     editCard = ( { cardId, name, value, isSwitchFavorite, image, isDeleteImg } :  TEditCard) => {
@@ -56,10 +62,8 @@ class CardStore {
             }
         }
 
-
         clearTimeout(this.delayTimer)
         this.delayTimer = setTimeout(async () => {
-
             const formData = new FormData()
             formData.append('cardId', cardId.toString())
             formData.append('term', card.term || '')

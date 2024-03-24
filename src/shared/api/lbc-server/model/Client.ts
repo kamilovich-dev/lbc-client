@@ -3,6 +3,7 @@ import { refreshToken } from '../endpoints/user-endpoints'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { ApiError } from "../ui/ApiError"
+import { ApiSuccess } from "../ui/ApiSuccess"
 import { makeObservable, observable, autorun } from "mobx"
 import { TokenStorage } from "./TokenStorage"
 
@@ -65,6 +66,7 @@ class Client {
     this.axiosInstance.interceptors.request.use(async (config) => {
       this.isLoading = true
       const token = TokenStorage.getToken()
+      console.log('token=' + token)
       config.headers.Authorization = token ? `Bearer ${token}` : ''
       return config
     })

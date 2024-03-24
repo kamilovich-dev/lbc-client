@@ -1,38 +1,30 @@
 import { observer } from 'mobx-react-lite';
-import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import { TextString } from 'shared/ui/texts/TextString';
-import styles from './styles.module.css';
+import { TModule } from 'entities/module/model/ModuleStore';
 
 interface IProps {
-    moduleName: string,
-    cardsCount: number,
-    ButtonDelete: JSX.Element,
-    ButtonEdit: JSX.Element,
+    module: TModule,
+    ButtonStar: JSX.Element,
 }
 
-const ModuleRow = observer(( { moduleName, cardsCount, ButtonDelete, ButtonEdit }: IProps ) => {
+const ModuleRow = observer(( { module, ButtonStar }: IProps ) => {
+
+    const createdAtString = module.createdAt ? new Date(module.createdAt).toLocaleString() : ''
 
     return (
         <>
-            <Paper elevation={1} className={styles.row}>
-                <Stack spacing={2} direction="row">
-                    <div className='overflow-hidden'>
-                        <Typography
-                            variant="subtitle1">{cardsCount} терминов</Typography>
-                        <TextString
-                            customClassName='font-semibold text-xl text-slate-800 py-1'
-                            maxLength={64}
-                            text={moduleName}
-                        />
+            <div className='bg-white p-2 rounded-lg shadow-md hover:cursor-pointer flex gap-2 relative overflow-hidden w-full h-full group'>
+                    <div className='overflow-hidden flex-auto flex flex-col'>
+                        <div className='text-sm text-gray-400'>{module.cardsCount} терминов</div>
+                        <div className='font-semibold text-md text-slate-800 py-1 mb-2 flex-auto'>
+                            {module.name.length > 64 ? `${module.name.slice(64)}...` : module.name}
+                        </div>
+                        <div className='text-xs text-gray-300'>Создан: {createdAtString}</div>
                     </div>
-                    <div className={styles.rightSide}>
-                        {ButtonDelete}
-                        {ButtonEdit}
+                    <div className='flex items-center'>
+                        {ButtonStar}
                     </div>
-                </Stack>
-            </Paper>
+                    <div className='absolute left-0 bottom-0 h-[4px] bg-indigo-200 w-full invisible group-hover:visible'></div>
+            </div>
         </>
     );
 });

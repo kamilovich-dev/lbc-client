@@ -7,7 +7,6 @@ export type TLoginPayload = {
 }
 export type TLoginResponse ={
   accessToken: string,
-  refreshToken: string,
   user: TUser
 }
 export type TLoginReturn = (TLoginResponse & TError) | undefined
@@ -20,7 +19,6 @@ export type TRegisterReturn = (TRegisterResponse & TError) | undefined
 /*Обновление токена*/
 export type TRefreshTokenResponse = {
   accessToken: string,
-  refreshToken: string,
   user: TUser
 }
 export type TUser = {
@@ -29,3 +27,33 @@ export type TUser = {
   isActivated: boolean,
 }
 export type TRefreshTokenReturn = (TRefreshTokenResponse & TError) | undefined
+
+/*Обновление аватара*/
+export type TUpdateAvatarPayload = {
+  avatarUrl?: null,
+  avatarFile?: File
+}
+export type TUpdateAvatarReturn = ({
+  success: boolean,
+  message: string,
+} & TError) | undefined
+
+/*Восстановление пароля*/
+export type TPasswordForgotPayload = {
+  login?: string,
+  email?: string,
+}
+export type TPasswordForgotReturn = ({
+  success: boolean,
+  message: string,
+} & TError) | undefined
+
+/*Сброс пароля*/
+export type TPasswordResetPayload = {
+  email: string,
+  password: string,
+  token: string,
+}
+export type TPasswordResetReturn = ({
+  user: TUser
+} & TError) | undefined

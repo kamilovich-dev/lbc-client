@@ -15,9 +15,7 @@ export default {
       'sm-max': {'max': '640px'},
       ...defaultTheme.screens
     },
-    extend: {
-    },
+    extend: {},
   },
-  plugins: [require("daisyui")],
+  plugins: [],
 }
-

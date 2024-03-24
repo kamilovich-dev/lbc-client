@@ -45,14 +45,14 @@ class CardAnimation {
 
   next = () => {
     this.controller.start({
-      from: { transform: 'perspective(1200px) translateX(200px) rotateY(-20deg)', opacity: 0.7 },
+      from: { transform: 'perspective(1200px) translateX(200px) rotateY(-20deg)', opacity: 1 },
       to: { transform: 'perspective(1200px) translateX(0px) rotateY(0deg)', opacity: 1},
     })
   }
 
   prev = () => {
     this.controller.start({
-      from: { transform: 'perspective(1200px) translateX(-200px) rotateY(20deg)', opacity: 0.7 },
+      from: { transform: 'perspective(1200px) translateX(-200px) rotateY(20deg)', opacity: 1 },
       to: { transform: 'perspective(1200px) translateX(0px) rotateY(0deg)', opacity: 1},
     })
   }
@@ -99,6 +99,7 @@ class CardAnimation {
       from: { transform: 'translateX(0px)', opacity: '1', visibility: 'visible' },
       to: [
         { transform: 'translateX(200px)', opacity: '0.3', visibility: 'visible'},
+        // { transform: 'translateX(0px)', opacity: '0.3', visibility: 'visible'},
         { visibility: 'hidden'},
       ],
     })

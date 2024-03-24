@@ -5,7 +5,7 @@ export type TCard = {
     term: string,
     definition: string,
     isFavorite: boolean,
-    imgUrl: string,
+    imgUrl: string | null,
 }
 
 /*Получение карточке модуя*/
@@ -44,11 +44,11 @@ export type TEditCardResponse = {
 }
 export interface TEditCardPayload extends FormData {
     cardId: number,
-    term?: string,
-    definition?: string,
-    isFavorite?: boolean,
-    img?: File | null,
-    isDeleteImg?: boolean,
+    term: string | undefined,
+    definition: string | undefined,
+    isFavorite: boolean | undefined,
+    imgFile: File | undefined,
+    imgUrl: null | undefined,
 }
 export type TEditCardReturn = (TEditCardResponse & TError) | undefined
 

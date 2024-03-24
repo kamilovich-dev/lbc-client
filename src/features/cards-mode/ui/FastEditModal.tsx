@@ -1,28 +1,34 @@
 import { observer } from "mobx-react-lite"
-import { useState } from 'react'
-import { Modal, SvgIcon } from '@mui/material'
+import { useEffect, useState } from 'react'
+import { SvgIcon, Drawer } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
-import { ICardStore } from 'entities/module';
+import { CardStore } from 'entities/module';
 import { CardsModeStore, TCard } from '../';
 
 interface IProps {
     card: TCard
     moduleId: number,
-    cardStore: ICardStore,
+    cardStore: CardStore,
     cardsModeStore: CardsModeStore,
     showModal: boolean,
     setShowModal: (newState: boolean ) => void,
 }
 
-const FastEditModal = observer(( {card, moduleId, showModal, setShowModal, cardsModeStore, cardStore}: IProps ) => {
+const FastEditModal = observer(( {card, showModal, setShowModal, cardsModeStore, cardStore}: IProps ) => {
+
+    useEffect(() => {
+        setTerm(card.term ?? '')
+        setDefinition(card.definition ?? '')
+    }, [showModal])
+
 
     const handleSave = () => {
         if (term == '') return
-        cardStore.editCard({ moduleId, cardId: card.id, name: 'term', value: term } )
-        cardStore.editCard({ moduleId, cardId: card.id, name: 'definition', value: definition } )
+        cardStore.editCard({ cardId: card.id, name: 'term', value: term } )
+        cardStore.editCard({ cardId: card.id, name: 'definition', value: definition } )
         cardsModeStore.cards[cardsModeStore.currentIdx].term = term
         cardsModeStore.cards[cardsModeStore.currentIdx].definition = definition
         setShowModal(false)
@@ -32,19 +38,19 @@ const FastEditModal = observer(( {card, moduleId, showModal, setShowModal, cards
     const [definition, setDefinition] = useState(card.definition)
 
     return (
-            <Modal
-                className='flex justify-center items-center'
+            <Drawer
+                anchor="bottom"
                 open={showModal}
                 onClose={() => setShowModal(false)}
             >
-                <div className="rounded-2xl bg-white overflow-hidden">
-                    <div className='p-10 flex flex-col relative h-[600px] w-[800px] overflow-y-auto'>
+                <div className="rounded-2xl bg-white overflow-auto">
+                    <div className='p-4 flex flex-col relative overflow-y-auto'>
                         <div className='mb-10'>
-                            <h1 className='text-2xl font-semibold text-slate-600'>Редактировать</h1>
+                            <h1 className='text-lg font-semibold text-gray-600'>Редактировать</h1>
                         </div>
                         <div className="mb-20 flex-auto">
                             <TextField
-                                inputProps={{style: { fontSize: 20 }}}
+                                inputProps={{style: { fontSize: 16 }}}
                                 multiline
                                 fullWidth
                                 name='term'
@@ -54,7 +60,7 @@ const FastEditModal = observer(( {card, moduleId, showModal, setShowModal, cards
                         </div>
                         <div className="mb-10 flex-auto">
                             <TextField
-                                inputProps={{style: { fontSize: 20 }}}
+                                inputProps={{style: { fontSize: 16 }}}
                                 multiline
                                 fullWidth
                                 name='definition'
@@ -62,17 +68,15 @@ const FastEditModal = observer(( {card, moduleId, showModal, setShowModal, cards
                                 value={definition}
                                 onChange={(e) => setDefinition(e.target.value)}/>
                         </div>
-                        <div className="flex flex-row gap-6 p-4 justify-end">
-                            <Button variant='outlined' onClick={() => setShowModal(false)}>Отмена</Button>
-                            <Button variant='contained' onClick={handleSave} >Сохранить</Button>
+
+                        <div className="flex flex-row gap-6 p-4 justify-center">
+                            <Button sx={{backgroundColor: '#60A5FA', borderRadius: 3}} variant='contained' onClick={handleSave}>Сохранить</Button>
+                            <Button sx={{borderRadius: 3}} variant='outlined' onClick={handleSave}>Отмена</Button>
                         </div>
-                        <SvgIcon onClick={() => setShowModal(false)}  className='hover:cursor-pointer hover:text-red-200 active:text-red-400 absolute top-4 right-4 text-gray-500 opacity-90' sx={{height: '40px', width: '40px'}}>
-                            <CloseIcon/>
-                        </SvgIcon>
                     </div>
                 </div>
 
-            </Modal>
+            </Drawer>
     )
 })
 

@@ -1,5 +1,5 @@
 interface IProps {
-    text: string,
+    text: string | undefined,
     maxLength?: number,
     customClassName?: string
 }
@@ -7,15 +7,15 @@ interface IProps {
 const TextString = ( { text, maxLength = 32, customClassName }: IProps ) => {
 
     let isMaxLength = false
+    let processedText = text ?? ''
 
-    if (text && maxLength) {
-        if (text.length > maxLength) isMaxLength = true
-            else isMaxLength = false
+    if (processedText && maxLength) {
+        isMaxLength = processedText.length > maxLength ? true : false
     }
 
     return(
         <div className={customClassName}>
-            {isMaxLength ? `${text.slice(0, maxLength - 1)}...` : text}
+            {isMaxLength ? `${processedText.slice(0, maxLength - 1)}...` : text}
         </div>
     )
 }

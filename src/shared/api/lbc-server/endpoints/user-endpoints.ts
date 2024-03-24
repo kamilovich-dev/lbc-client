@@ -6,7 +6,16 @@ import type {
   TLoginReturn,
   TRegisterPayload,
   TRegisterReturn,
-  TRefreshTokenReturn
+  TRefreshTokenReturn,
+
+  TUpdateAvatarPayload,
+  TUpdateAvatarReturn,
+
+  TPasswordForgotPayload,
+  TPasswordForgotReturn,
+
+  TPasswordResetPayload,
+  TPasswordResetReturn
 } from './types/user'
 
 export async function login(client: Client, payload: TLoginPayload): Promise<TLoginReturn> {
@@ -22,6 +31,18 @@ export async function register(client: Client, payload: TRegisterPayload): Promi
 }
 
 export async function refreshToken(client: Client): Promise<TRefreshTokenReturn> {
-  return request(client, 'get', '/user/refresh_token')
+  return request(client, 'get', '/user/refresh-token')
 }
 
+/*Новые*/
+export async function updateAvatar(client: Client, payload: TUpdateAvatarPayload): Promise<TUpdateAvatarReturn> {
+  return request(client, 'post', '/user/update-avatar', payload)
+}
+
+export async function passwordForgot(client: Client, payload: TPasswordForgotPayload): Promise<TPasswordForgotReturn> {
+  return request(client, 'post', '/user/password-forgot', payload)
+}
+
+export async function passwordReset(client: Client, payload: TPasswordResetPayload): Promise<TPasswordResetReturn> {
+  return request(client, 'post', '/user/password-reset', payload)
+}

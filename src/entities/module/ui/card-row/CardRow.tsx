@@ -14,22 +14,24 @@ const CardRow = observer(( { cardIdx, DeleteCard, Term, Definition, Image }: IPr
         <>
             <div className='bg-white shadow-md p-3 rounded-md '>
                 <div className='flex border-b-2 border-gray-100 pb-2 items-center mb-3'>
-                    <div className='w-full font-bold font text-gray-400'>
+                    <div className='w-full font-semibold text-gray-400 text-sm'>
                         {cardIdx + 1}
                     </div>
                     <div>
                         {DeleteCard}
                     </div>
                 </div>
-                <div className='flex gap-20'>
-                    <div className='w-2/5'>
-                        {Term}
+                <div className='flex gap-20 md-max:gap-4 mb-2 h-full '>
+                    <div className='w-1/2 flex flex-col '>
+                        <div className='mb-2 flex-auto'>
+                            {Term}
+                        </div>
+                        <div className='h-24 rounded-md overflow-hidden'>
+                            {Image}
+                        </div>
                     </div>
-                    <div className='w-2/5'>
+                    <div className='w-1/2'>
                         {Definition}
-                    </div>
-                    <div className='w-1/5'>
-                        {Image}
                     </div>
                 </div>
             </div>

@@ -18,7 +18,7 @@ const CardImageModal = ( {imgUrl, isShowImageModal, setIsShowImageModal}: IProps
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <div className='max-h-full max-w-full h-fit w-fit relative'>
+                <div className='max-h-full max-w-full h-fit w-fit md:h-[600px] md:w-auto relative' onClick={() => setIsShowImageModal(false)}>
                 { imgUrl ? <img className='object-cover max-w-full max-h-full' src={imgUrl}></img> :
                     (<SvgIcon sx={{ width: '100%', height: '100%' }} className='text-gray-300'>
                         <BlockIcon />

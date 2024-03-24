@@ -101,7 +101,8 @@ const ObserverLoginForm = observer(( {appName, sessionStore}: IInnerProps ) => {
                             </FormControl>
                         </div>
                         <div className='mb-8 md-max:mb-4'>
-                            <span className='text-xs underline-offset-2 decoration-1 underline decoration-gray-400 text-gray-400 hover:cursor-pointer active:text-gray-600'>
+                            <span className='text-xs underline-offset-2 decoration-1 underline decoration-gray-400 text-gray-400 hover:cursor-pointer active:text-gray-600'
+                                onClick={() => navigate(routePaths.FORGOT_PASSWORD)}>
                                 Забыли пароль?</span>
                         </div>
                         <div className='flex-auto'>

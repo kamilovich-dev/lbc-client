@@ -16,7 +16,7 @@ const Hotkeys = () => {
         <>
             <div className="flex gap-2 items-center py-4">
                 <div className='w-full'>
-                    <h2 className='text-slate-700 font-semibold text-lg'>Сочетания клавиш</h2>
+                    <h2 className='text-slate-700 font-semibold text-lg md-max:text-base'>Сочетания клавиш</h2>
                 </div>
                 <div onClick={() => setIsShown(!isShown)} className="hover:cursor-pointer hover:text-blue-700 text-blue-400 text-lg font-semibold">
                     { isShown ?
@@ -26,7 +26,7 @@ const Hotkeys = () => {
                             <KeyboardArrowUpIcon></KeyboardArrowUpIcon>
                         </SvgIcon>
                     </div> :
-                    <div className="flex items-center">
+                    <div className="flex items-center md-max:text-base">
                         Просмотреть
                         <SvgIcon>
                             <KeyboardArrowDownIcon></KeyboardArrowDownIcon>

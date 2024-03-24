@@ -11,7 +11,7 @@ const Help = ( {handleClick, helpText, showHelp}: IProps) => {
 
     return (
         <>
-            <div className={'flex font-semibold w-fit gap-2 items-center rounded-full px-3 py-1 ' + (showHelp ? 'bg-gray-100' : '') } onClick={handleClick}>
+            <div className={'flex font-semibold w-fit gap-2 items-center rounded-full pl-2 pr-3 py-1 ' + (showHelp ? 'bg-gray-100' : '') } onClick={handleClick}>
                 <div>
                     <SvgIcon
                         fontSize='medium'
@@ -20,7 +20,7 @@ const Help = ( {handleClick, helpText, showHelp}: IProps) => {
                     </SvgIcon>
                 </div>
                 <div>
-                    <span >{ helpText }</span>
+                    <span className='text-sm text-gray-500'>{ helpText }</span>
                 </div>
             </div>
         </>
