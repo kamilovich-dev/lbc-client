@@ -1,6 +1,8 @@
 import { Client } from '../model/Client'
 import { request } from './request'
 
+import { TError } from './types/error'
+
 import type {
   TLoginPayload,
   TLoginReturn,
@@ -22,7 +24,7 @@ export async function login(client: Client, payload: TLoginPayload): Promise<TLo
   return request(client, 'post', '/user/login', payload)
 }
 
-export async function logout(client: Client): Promise<void> {
+export async function logout(client: Client): Promise<void | TError | undefined> {
   return request(client, 'post', '/user/logout', {})
 }
 

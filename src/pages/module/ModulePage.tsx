@@ -23,7 +23,7 @@ const ModulePage = () => {
     const moduleId = routeParams.moduleId ? parseInt(routeParams.moduleId) : null
     if (!moduleId) return
 
-    const {moduleStore, cardStore} = useInitModule(moduleId)
+    const { moduleStore, cardStore } = useInitModule(moduleId)
 
     if (!moduleStore || !cardStore) return <CircularLoader/>
 

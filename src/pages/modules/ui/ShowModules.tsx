@@ -1,54 +1,44 @@
 import { observer } from 'mobx-react-lite'
 import { ModuleRow } from 'entities/module';
-import { ButtonFavoriteStar } from 'shared/ui/buttons';
-import { TModule, ModuleStore } from 'entities/module';
+import { ModuleStore } from 'entities/module';
 import { useState } from 'react';
 
 import { GoToModuleDrawer } from './GoToModuleDrawer';
 import type { TDrawerData } from './GoToModuleDrawer';
+import { TModule } from 'shared/api/lbc-server/endpoints/types/modules';
 
 interface IProps {
-    modules: TModule[],
     moduleStore: ModuleStore
 }
 
-const ShowModules = observer(( { modules, moduleStore }: IProps ) => {
+const ShowModules = observer(( { moduleStore }: IProps ) => {
     const [drawerData, setDrawerData] = useState<TDrawerData>({
         isShowModal: false,
-        moduleId: -1
     })
 
-    const handleSwitchFavorite = ( e: React.SyntheticEvent, id: number, name: string, value: string) => {
-        e.stopPropagation()
-        moduleStore.editModule({
-            id, name, value
+    const handleModuleRowClick = (module: TModule) => {
+        setDrawerData({
+            isShowModal: true,
+            module
         })
     }
 
-    const handleModuleRowClick = (moduleId: number) => {
-        if (moduleId && moduleId !== -1) {
-            setDrawerData({
-                isShowModal: true,
-                moduleId
-            })
-        }
-    }
+    const logins = [...new Set(moduleStore.modules.map(item => item.options.createdBy))]
+    const myLogin = moduleStore.modules.find(item => item.options.isOwner === true)?.options.createdBy
 
     return (
         <>
-            <div className={`grid ${moduleStore.view.isListed ? 'grid-cols-1' : 'grid-cols-2'} gap-2`}>
-                { modules.map( module => (
-                    <div key={module.id} onClick={() => handleModuleRowClick(module.id)}>
-                        <ModuleRow
-                        module={module}
-                        ButtonStar={ <ButtonFavoriteStar
-                                        isFavorite={module.isFavorite}
-                                        onClick={(e) => handleSwitchFavorite(e, module.id, 'isFavorite', '')}/> }
-                                    />
-                    </div>
-
-                ))}
-            </div>
+            {logins.map( login => (
+                <div key={login} className={`mb-4 grid ${moduleStore.view.isListed ? 'grid-cols-1' : 'grid-cols-2'} gap-2`}>
+                    <div className={`text-gray-400 ${moduleStore.view.isListed ? '' : 'col-span-2'}`}>{myLogin === login ? 'Свои' : login}</div>
+                    {moduleStore.modules.filter(module => module.options.createdBy === login).map(module => (
+                        <div key={module.id} onClick={ () => handleModuleRowClick(module) }>
+                            <ModuleRow
+                            module={module}/>
+                        </div>
+                    ))}
+                </div>
+            ) )}
             <GoToModuleDrawer
                 drawerData={drawerData}
                 setDrawerData={setDrawerData}

@@ -10,11 +10,11 @@ export async function request<T>(
     const axiosInstance = client.axiosInstance
     try {
       if (method === 'get') {
-        return axiosInstance.get<T>(url, {signal: client.abortController?.signal} )
+        return await axiosInstance.get<T>(url, {signal: client.abortController?.signal} )
           .then(response => response?.data)
       }
       if (method === 'post') {
-        return axiosInstance.post<T>(url,  payload, {signal: client.abortController?.signal})
+        return await axiosInstance.post<T>(url,  payload, {signal: client.abortController?.signal})
           .then(response => response?.data)
       }
     } catch(error) {

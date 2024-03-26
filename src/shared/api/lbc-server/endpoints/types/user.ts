@@ -2,7 +2,8 @@ import type { TError } from './error'
 
 /*Логин*/
 export type TLoginPayload = {
-  email: string,
+  email?: string,
+  login?: string,
   password: string
 }
 export type TLoginResponse ={
@@ -24,6 +25,7 @@ export type TRefreshTokenResponse = {
 export type TUser = {
   id: number,
   email: string,
+  login: string,
   isActivated: boolean,
 }
 export type TRefreshTokenReturn = (TRefreshTokenResponse & TError) | undefined
@@ -55,5 +57,6 @@ export type TPasswordResetPayload = {
   token: string,
 }
 export type TPasswordResetReturn = ({
-  user: TUser
+  success: boolean,
+  message: string,
 } & TError) | undefined

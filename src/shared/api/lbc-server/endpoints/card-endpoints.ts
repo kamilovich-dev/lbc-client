@@ -1,6 +1,8 @@
 import { Client } from '../model/Client'
 import { request } from './request';
 
+import { TError } from './types/error'
+
 import type {
   TGetCardsPayload,
   TGetCardsReturn,
@@ -28,11 +30,11 @@ export async function editCard(client: Client, payload: TEditCardPayload ): Prom
   return request(client, 'post', '/card/update', payload)
 }
 
-export async function deleteCard(client: Client, payload: TDeleteCardPayload): Promise<void | undefined> {
+export async function deleteCard(client: Client, payload: TDeleteCardPayload): Promise<void | TError | undefined> {
   return request(client, 'post', '/card/remove', payload)
 }
 
-export async function switchOrder(client: Client, payload: TSwitchOrderPayload): Promise<void | undefined> {
+export async function switchOrder(client: Client, payload: TSwitchOrderPayload): Promise<void | TError | undefined> {
   return request(client, 'post', '/card/switch-order', payload)
 }
 

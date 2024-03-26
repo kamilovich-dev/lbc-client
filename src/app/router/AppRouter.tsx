@@ -3,9 +3,13 @@ import {createBrowserRouter, RouterProvider } from "react-router-dom";
 import { routePaths } from "shared/config";
 
 import { AppRoot } from "pages/root/AppRoot";
-import { LoginPage} from "pages/login/LoginPage";
-import { RegistrationPage } from "pages/registration/RegistrationPage";
-import { RegistrationLetterSentPage } from 'pages/registration-letter-sent/RegistrationLetterSentPage'
+
+import { LoginPage} from "pages/auth/LoginPage";
+import { RegistrationPage } from "pages/auth/RegistrationPage";
+import { RegistrationLetterSentPage } from 'pages/auth/RegistrationLetterSentPage'
+import { ResetPasswordPage } from "pages/auth/ResetPasswordPage";
+import { ForgotPasswordPage } from "pages/auth/ForgotPasswordPage";
+
 import { ProtectedRoot } from 'pages/root/ProtectedRoot';
 import { ErrorPage } from 'pages/error/ErrorPage';
 import { ModulesPage } from 'pages/modules/ModulesPage';
@@ -14,8 +18,7 @@ import { ModulePage } from "pages/module/ModulePage";
 import { CardsModePage } from "pages/cards-mode/CardsModePage";
 import { LandingPage } from "pages/landing/LandingPage";
 import { ProfilePage } from "pages/profile/ProfilePage";
-import { ResetPasswordPage } from "pages/reset-password/ResetPasswordPage";
-import { ForgotPasswordPage } from "pages/forgot-password/ForgotPasswordPage";
+
 
 export const AppRouter = () => {
 

@@ -15,7 +15,7 @@ export type TModule = {
     id: number,
     name: string,
     description: string,
-    isFavorite: boolean,
+    isPublished: boolean,
     createdAt: string,
     updatedAt: string,
     options: {

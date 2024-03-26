@@ -23,19 +23,20 @@ const RegistrationForm = ( { appName }: IProps) => {
     const formik = useFormik({
         initialValues: {
           email: '',
+          login: '',
           password: '',
         },
         validationSchema: Yup.object({
           email: Yup.string().email('Неверный email-адрес').required('Обязательное поле'),
+          login: Yup.string().required('Обязательное поле'),
           password: Yup.string()
             .required('Обязательное поле')
         }),
         onSubmit: async values => {
-            const result = await sessionStore.register(values.email, values.password)
+            const result = await sessionStore.register(values.email, values.login, values.password)
             if (result?.user) navigate(routePaths.REGISTRATION_LETTER_SENT, { state: { email: result.user.email } })
         },
     });
-
 
     return (
         <>
@@ -70,6 +71,25 @@ const RegistrationForm = ( { appName }: IProps) => {
                                         in={ (formik.touched.email && formik.errors.email) ? true : false}>
                                         <Alert severity="error" sx={{height: 'auto', padding: '0px 5px 0px 5px', fontSize: '12px'}}>
                                             {formik.errors.email}
+                                        </Alert>
+                                    </Collapse>
+                            </FormControl>
+                        </div>
+                        <div className='mb-8 md-max:mb-4'>
+                            <FormControl variant="filled" sx={{width: '100%'}} >
+                                <TextField
+                                    inputProps={{style: {fontSize: '12px'}}} // font size of input text
+                                    placeholder='Логин'
+                                    type='login'
+                                    id="login"
+                                    size='small'
+                                    error={formik.touched.login && formik.errors.login ? true : false}
+                                    {...formik.getFieldProps('login')}
+                                />
+                                    <Collapse
+                                        in={ (formik.touched.login && formik.errors.login) ? true : false}>
+                                        <Alert severity="error" sx={{height: 'auto', padding: '0px 5px 0px 5px', fontSize: '12px'}}>
+                                            {formik.errors.login}
                                         </Alert>
                                     </Collapse>
                             </FormControl>

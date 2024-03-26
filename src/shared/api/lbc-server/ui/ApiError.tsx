@@ -12,7 +12,8 @@ function ApiError( { message, status, duration } : IProps ) {
 
     return (
         <>
-            <Snackbar open={showSnackbar} autoHideDuration={duration} onClose={() => setShowSnackbar(false)}>
+            <Snackbar open={showSnackbar} autoHideDuration={duration} onClose={() => setShowSnackbar(false)}
+                anchorOrigin={ {vertical: 'top', horizontal: 'center'} }>
                 <Alert onClose={() => setShowSnackbar(false)} severity="error" sx={{ width: '100%' }}>
                     <div>
                         {message} {status}

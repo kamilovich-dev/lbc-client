@@ -26,22 +26,16 @@ const ObservedModulesPage = observer(( { moduleStore }: Props ) => {
                     <div className='bg-blue-50 rounded-md min-h-screen'>
                         <ModulesMenu moduleStore={moduleStore}/>
                         {moduleStore.client.isLoading && !isLoaded ?
-                            <>
-                                <CircularLoader/>
-                            </>
-                            :
-                            <>
-                                <div className='pb-20'>
-                                    {moduleStore.modules.length ?
-                                        <ShowModules
-                                            moduleStore={moduleStore}
-                                            modules={moduleStore.modules} />
-                                                    : <Alert severity="info" sx={{ width: '100%' }}>
-                                                        Модули не найдены!
-                                                    </Alert>
-                                    }
-                                </div>
-                            </>}
+                            <><CircularLoader/></> :
+                            <div className='pb-20'>
+                                {moduleStore.modules.length ?
+                                    <ShowModules
+                                        moduleStore={moduleStore}/>
+                                    : <Alert severity="info" sx={{ width: '100%' }}>
+                                        Модули не найдены!
+                                    </Alert>
+                                }
+                            </div>}
                     </div>
                 </div>
             </>

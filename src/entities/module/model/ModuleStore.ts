@@ -1,30 +1,31 @@
 import { autorun, makeAutoObservable } from 'mobx';
-import { Client, moduleEndpoints } from 'shared/api/lbc-server'
+import { Client, moduleEndpoints, bookmarkModuleEndpoints } from 'shared/api/lbc-server'
 import { ApiSuccess } from 'shared/api/lbc-server/ui/ApiSuccess';
+
+import type { TModule, TMduleSearchParams } from 'shared/api/lbc-server/endpoints/types/modules'
 
 class ModuleStore {
     modules: TModule[] = [];
-    filters: TModulesFilter = {
-        by_alphabet: 'asc', // 'asc' | 'desc'
-        by_search: '', // 'text'
-        by_favorite: '', // 'true' || ''
+    filters: TMduleSearchParams = {
+        by_alphabet: 'asc',
+        by_updated_date: undefined,
+        by_search: undefined,
+    }
+    view: TView = {
+        isListed: false, /*Отображение списком*/
+        isFiltered: false, /*Активирован фильтр*/
     }
     DELAY_TIME: number = 1000
     delayTimer: NodeJS.Timer | undefined
     client: Client;
 
-    view = {
-        isListed: false, /*Отображение списком*/
-        isFilter: false, /*Активирован фильтр*/
-    }
-
     constructor() {
         makeAutoObservable(this)
         this.client = new Client()
         autorun(() => {
-            if (this.filters.by_alphabet || this.filters.by_search || this.filters.by_favorite ) {
-                this.view.isFilter = true
-            } else this.view.isFilter = false
+            if (Object.values(this.filters).find(item => item !== undefined)) {
+                this.view.isFiltered = true
+            } else this.view.isFiltered = false
         })
     }
 
@@ -37,7 +38,7 @@ class ModuleStore {
             name,
             description
         })
-        this.client.renderMessage(ApiSuccess, 'Добавлено', 200)
+        if (result?.isError === false) this.client.renderMessage(ApiSuccess, 'Добавлено', 200)
         return result
     }
 
@@ -45,65 +46,76 @@ class ModuleStore {
         return this.modules.find(module => module.id == id)
     }
 
-    deleteModuleById = async (id: number) => {
-        moduleEndpoints.deleteModule( this.client, { moduleId: id } )
-            .then( () => {
-                this.refreshModules()
-                this.client.renderMessage(ApiSuccess, 'Удалено', 200)
+    deleteModuleById = async (moduleId: number) => {
+        moduleEndpoints.deleteModule( this.client, { moduleId } )
+            .then( (result) => {
+                if (result?.isError === false) {
+                    this.refreshModules()
+                    this.client.renderMessage(ApiSuccess, 'Модуль удален', 200)
+                }
+        })
+    }
+
+    deleteBookmarkByModuleId = async (moduleId: number) => {
+        bookmarkModuleEndpoints.deleteBookmark( this.client, { moduleId } )
+            .then( (result) => {
+                if (result?.isError === false) {
+                    this.refreshModules()
+                    this.client.renderMessage(ApiSuccess, 'Модуль исключен', 200)
+                }
         })
     }
 
     editModule = ( { id, name, value } : TEditModule ) => {
-
         const module = this.modules.find(module => module.id == id)
         if (!module) return
 
-        if (name == 'name') module.name = value || ''
-        if (name == 'description') module.description = value || ''
-        if (name == 'isFavorite') module.isFavorite = module.isFavorite ? !module.isFavorite : true
+        if (name == 'name') module.name = value
+        if (name == 'description') module.description = value
+        if (name == 'isPublished') module.isPublished = module.isPublished ? !module.isPublished : true
 
         clearTimeout(this.delayTimer)
         if (name == 'name' || name == 'description') {
             this.delayTimer = setTimeout(() => {
-                this.edit(module)
-                    .then( () => this.refreshModules())
+                this.edit(module).then( (result) => {
+                    if (result?.isError === false) this.refreshModules()
+                })
             }, this.DELAY_TIME)
         } else this.edit(module)
-
     }
 
     private edit= async (module: TModule) => {
         return moduleEndpoints.editModule(this.client, {
             moduleId: module.id,
             name: module.name,
-            isFavorite: module.isFavorite,
+            isPublished: module.isPublished,
             description: module.description
         })
     }
 
     refreshModules = async () => {
         return moduleEndpoints.getModules(this.client, this.filters)
-            .then( response => {
-                if (response?.modules) this.modules = response.modules
-            } )
+            .then( response => this.modules = response?.modules ?? [] )
     }
 
     setFilter = ( type: string, value: string ) => {
         switch(type) {
             case 'byAlphabet':
-                this.filters.by_alphabet = value;
-                this.refreshModules()
+                if (value === 'asc' || value === 'desc') {
+                    this.filters.by_alphabet = value;
+                    this.refreshModules()
+                }
                 break;
             case 'bySearch':
                 this.filters.by_search = value;
                 clearTimeout(this.delayTimer)
-                this.delayTimer = setTimeout(() => {
-                    this.refreshModules()
-                }, this.DELAY_TIME)
+                this.delayTimer = setTimeout(this.refreshModules, this.DELAY_TIME)
                 break;
-            case 'byFavorite':
-                this.filters.by_favorite = value
-                this.refreshModules()
+            case 'byUpdatedDate':
+                if (value === 'asc' || value === 'desc') {
+                    this.filters.by_updated_date = value
+                    this.refreshModules()
+                }
                 break
             default:
                 console.log(`cant set filter: type=${type}, value=${value}`);
@@ -112,20 +124,9 @@ class ModuleStore {
 
 }
 
-export type TModule = {
-    id: number,
-    name: string,
-    description: string,
-    isFavorite: boolean,
-    cardsCount: number,
-    createdAt: Date,
-    updatedAt: Date,
-}
-
-export interface TModulesFilter  {
-    by_search: string,
-    by_alphabet: string,
-    by_favorite: string
+type TView = {
+    isListed: boolean,
+    isFiltered: boolean,
 }
 
 type TEditModule = {

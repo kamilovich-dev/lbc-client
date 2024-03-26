@@ -1,6 +1,8 @@
 import { Client } from '../model/Client'
 import { request } from './request'
 
+import { TError } from './types/error'
+
 import type {
   TCreateModulePayload,
   TCreateModuleReturn,
@@ -18,12 +20,22 @@ export async function createModule(client: Client, payload: TCreateModulePayload
 }
 
 export async function getModules(client: Client, searchParams?: TMduleSearchParams): Promise<TGetModuleReturn | undefined> {
-  const urlSearchString = new URLSearchParams(searchParams).toString();
-  const url = urlSearchString ? `/module?${urlSearchString}` : '/module'
+  let url = '/module?'
+  if (searchParams) {
+    //@ts-ignore
+    const onlyParams = Object.keys(searchParams).filter( key => searchParams[key] !== undefined)
+      .reduce((acc, key) => {
+         //@ts-ignore
+        acc[key] = searchParams[key]
+        return acc
+      }, {})
+    const searchParamsObj = new URLSearchParams(onlyParams);
+    url += searchParamsObj.toString()
+  }
   return request(client, 'get', url)
 }
 
-export async function deleteModule(client: Client, payload: TDeleteModulePayload): Promise<void | undefined> {
+export async function deleteModule(client: Client, payload: TDeleteModulePayload): Promise<void | TError | undefined> {
   return request(client, 'post', '/module/remove', payload)
 }
 
@@ -33,8 +45,18 @@ export async function editModule(client: Client, payload: TEditModulePayload): P
 
 /*Новые*/
 export async function getPublicModules(client: Client, searchParams?: TMduleSearchParams): Promise<TGetModuleReturn | undefined> {
-  const urlSearchString = new URLSearchParams(searchParams).toString();
-  const url = urlSearchString ? `/module/public?${urlSearchString}` : '/module/public'
+  let url = '/module/public?'
+  if (searchParams) {
+    //@ts-ignore
+    const onlyParams = Object.keys(searchParams).filter( key => searchParams[key] !== undefined)
+      .reduce((acc, key) => {
+         //@ts-ignore
+        acc[key] = searchParams[key]
+        return acc
+      }, {})
+    const searchParamsObj = new URLSearchParams(onlyParams);
+    url += searchParamsObj.toString()
+  }
   return request(client, 'get', url)
 }
 

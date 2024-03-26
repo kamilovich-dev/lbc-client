@@ -1,4 +1,5 @@
 import { ModuleStore } from "entities/module"
+import { TModule } from "entities/module";
 import { useNavigate } from "react-router-dom"
 import Drawer from '@mui/material/Drawer';
 
@@ -10,7 +11,7 @@ interface IDrawerProps {
 
 export type TDrawerData = {
     isShowModal: boolean,
-    moduleId: number
+    module?: TModule
 }
 
 const GoToModuleDrawer = ( {drawerData, setDrawerData, moduleStore}: IDrawerProps) => {
@@ -20,8 +21,16 @@ const GoToModuleDrawer = ( {drawerData, setDrawerData, moduleStore}: IDrawerProp
         navigate(`/${moduleId}/edit`)
     }
 
-    const handleButtonDeleteClick = (moduleId: number) => {
+    const handleRemoveModule = (moduleId: number) => {
         moduleStore.deleteModuleById(moduleId)
+        setDrawerData({
+            ...drawerData,
+            isShowModal: false
+        })
+    }
+
+    const handleRemoveBookmark = (moduleId: number) => {
+        moduleStore.deleteBookmarkByModuleId(moduleId)
         setDrawerData({
             ...drawerData,
             isShowModal: false
@@ -43,19 +52,25 @@ const GoToModuleDrawer = ( {drawerData, setDrawerData, moduleStore}: IDrawerProp
                 anchor="bottom"
             >
                 <div className="bg-white p-4">
-                    <div className="flex items-center mb-2">
+                    {drawerData.module?.options.isOwner ?
+                        <div className="flex items-center mb-2">
                         <button className="text-md text-gray-500 flex-auto text-center"
-                            onClick={() => handleButtonDeleteClick(drawerData.moduleId)}>Удалить</button>
-                    </div>
+                            onClick={() => handleRemoveModule(drawerData.module?.id)}>Удалить</button>
+                        </div> :
+                        <div className="flex items-center mb-2">
+                            <button className="text-md text-gray-500 flex-auto text-center"
+                                onClick={() => handleRemoveBookmark(drawerData.module?.id)}>Исключить из сохраненных</button>
+                        </div>
+                    }
                     <div className="border-b-2 border-gray-200 w-full mb-4"></div>
                     <div className="flex items-center mb-2">
                         <button className="text-md text-gray-500 flex-auto text-center"
-                            onClick={() => handleButtonEditClick(drawerData.moduleId)}>Редактировать</button>
+                            onClick={() => handleButtonEditClick(drawerData.module?.id)}>Редактировать</button>
                     </div>
                     <div className="border-b-2 border-gray-200 w-full mb-4"></div>
                     <div className="flex items-center mb-2">
                         <button className="text-md text-blue-400 flex-auto text-center"
-                            onClick={() => handleTransitionClick(drawerData.moduleId)}>Перейти</button>
+                            onClick={() => handleTransitionClick(drawerData.module?.id)}>Перейти</button>
                     </div>
                 </div>
             </Drawer>
