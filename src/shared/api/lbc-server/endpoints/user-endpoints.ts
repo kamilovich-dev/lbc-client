@@ -4,6 +4,8 @@ import { request } from './request'
 import { TError } from './types/error'
 
 import type {
+  TGetUserReturn,
+
   TLoginPayload,
   TLoginReturn,
   TRegisterPayload,
@@ -47,4 +49,8 @@ export async function passwordForgot(client: Client, payload: TPasswordForgotPay
 
 export async function passwordReset(client: Client, payload: TPasswordResetPayload): Promise<TPasswordResetReturn> {
   return request(client, 'post', '/user/password-reset', payload)
+}
+
+export async function getUser(client: Client): Promise<TGetUserReturn> {
+  return request(client, 'get', '/user')
 }

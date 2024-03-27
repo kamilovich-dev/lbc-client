@@ -12,6 +12,7 @@ interface IProps {
     termin: string,
     definition: string,
     imgUrl: string | undefined,
+    isOwner: boolean | undefined,
     isFavorite: boolean,
     isEditMode: boolean,
     handleSwitchEditMode: (cardIdx: number) => void,
@@ -19,7 +20,7 @@ interface IProps {
     handleEditCard: ( cardId: number, name: string, value: string) => void
 }
 
-const CardShowRow = ( {cardId, cardIdx, termin, definition, imgUrl, isFavorite, isEditMode, handleSwitchFavorite, handleEditCard, handleSwitchEditMode} : IProps  ) => {
+const CardShowRow = ( {cardId, cardIdx, termin, definition, imgUrl, isFavorite, isOwner, isEditMode, handleSwitchFavorite, handleEditCard, handleSwitchEditMode} : IProps  ) => {
 
     const [isShowImageModal, setIsShowImageModal] = useState(false)
     const srcUrl = imgUrl ? import.meta.env.VITE_LBC_SERVER_STATIC_URL + '/' + imgUrl : imgUrl
@@ -83,9 +84,10 @@ const CardShowRow = ( {cardId, cardIdx, termin, definition, imgUrl, isFavorite, 
 
                     </div>
                     <div className='flex w-2/12 justify-end'>
+                        {isOwner ?
                         <div className=''>
                             <ButtonFavoriteStar isFavorite={isFavorite} onClick={() => handleSwitchFavorite(cardId)}/>
-                        </div>
+                        </div> : null}
                         {/* <div>
                             <ButtonEdit isEdit={isEditMode} onClick={() => handleSwitchEditMode(cardIdx)} />
                         </div> */}

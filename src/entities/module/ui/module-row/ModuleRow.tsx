@@ -1,7 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import { TModule } from 'shared/api/lbc-server/endpoints/types/modules';
 import PublicIcon from '@mui/icons-material/Public';
-import PublicOffIcon from '@mui/icons-material/PublicOff';
 
 interface IProps {
     module: TModule,
@@ -14,10 +13,8 @@ const ModuleRow = observer(( { module }: IProps ) => {
     return (
         <>
             <div className='bg-white p-2 rounded-lg shadow-md hover:cursor-pointer flex gap-2 overflow-hidden w-full h-full group relative'>
-                    <div className='text-[10px] text-gray-300 absolute right-2 top-3'>{module.isPublished ?
-                        <div className='text-blue-300 text-right'><PublicIcon sx={{ width: 20, height: 20}}/></div>
-                        :
-                        <div className='text-right'><PublicOffIcon sx={{ width: 20, height: 20}}/></div>}
+                    <div className='text-[10px] text-gray-300 absolute right-2 top-3'>
+                        <div className={`text-blue-300 text-right ${module.isPublished ? 'text-blue-300' : 'text-gray-300'}`}><PublicIcon sx={{ width: 20, height: 20}}/></div>
                     </div>
                     <div className='overflow-hidden flex-auto flex flex-col'>
                         <div className='text-sm text-gray-400'>{module.options.cardsCount} терминов</div>

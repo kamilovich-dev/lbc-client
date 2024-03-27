@@ -47,22 +47,34 @@ class ModuleStore {
     }
 
     deleteModuleById = async (moduleId: number) => {
-        moduleEndpoints.deleteModule( this.client, { moduleId } )
-            .then( (result) => {
+        return moduleEndpoints.deleteModule( this.client, { moduleId } )
+            .then( async result => {
                 if (result?.isError === false) {
                     this.refreshModules()
                     this.client.renderMessage(ApiSuccess, 'Модуль удален', 200)
+                }
+                return result
+        })
+    }
+
+    createBookmarkByModuleId = async (moduleId: number) => {
+        bookmarkModuleEndpoints.createModuleBookmark( this.client, { moduleId } )
+            .then( (result) => {
+                if (result?.isError === false) {
+                    this.refreshModules()
+                    this.client.renderMessage(ApiSuccess, 'Модуль сохранен', 200)
                 }
         })
     }
 
     deleteBookmarkByModuleId = async (moduleId: number) => {
-        bookmarkModuleEndpoints.deleteBookmark( this.client, { moduleId } )
-            .then( (result) => {
+        return bookmarkModuleEndpoints.deleteBookmark( this.client, { moduleId } )
+            .then( async result => {
                 if (result?.isError === false) {
                     this.refreshModules()
                     this.client.renderMessage(ApiSuccess, 'Модуль исключен', 200)
                 }
+                return result
         })
     }
 

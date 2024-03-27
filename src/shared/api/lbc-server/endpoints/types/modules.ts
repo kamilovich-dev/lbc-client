@@ -20,7 +20,8 @@ export type TModule = {
     updatedAt: string,
     options: {
         cardsCount: number,
-        createdBy: string,
+        createdByLogin: string,
+        createdByAvatarUrl: string | undefined,
         isOwner: boolean,
         isBookmarked?: boolean,
     }

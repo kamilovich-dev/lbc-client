@@ -1,5 +1,12 @@
 import type { TError } from './error'
 
+/*Получение данных пользователя*/
+export type TGetUserResponse = {
+  user?: TUser
+}
+
+export type TGetUserReturn = (TGetUserResponse & TError) | undefined
+
 /*Логин*/
 export type TLoginPayload = {
   email?: string,
@@ -27,6 +34,7 @@ export type TUser = {
   email: string,
   login: string,
   isActivated: boolean,
+  avatarUrl: string,
 }
 export type TRefreshTokenReturn = (TRefreshTokenResponse & TError) | undefined
 
