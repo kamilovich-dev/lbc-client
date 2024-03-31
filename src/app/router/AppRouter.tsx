@@ -18,6 +18,8 @@ import { ModulePage } from "pages/module/ModulePage";
 import { CardsModePage } from "pages/cards-mode/CardsModePage";
 import { LandingPage } from "pages/landing/LandingPage";
 import { ProfilePage } from "pages/profile/ProfilePage";
+import { FoldersPage } from "pages/folders/FoldersPage";
+import { FolderPage } from "pages/folder/FolderPage";
 
 
 export const AppRouter = () => {
@@ -71,8 +73,16 @@ export const AppRouter = () => {
                             path: routePaths.CARDS_MODE
                         },
                         {
+                            element: <FoldersPage/>,
+                            path: routePaths.FOLDERS,
+                        },
+                        {
+                            element: <FolderPage/>,
+                            path: routePaths.FOLDER,
+                        },
+                        {
                             element: <ProfilePage />,
-                            path: routePaths.PROFILE
+                            path: routePaths.PROFILE,
                         }
                     ]
                 },

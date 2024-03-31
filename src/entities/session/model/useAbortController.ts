@@ -1,8 +1,9 @@
 import { useEffect } from "react";
-import { CardStore, ModuleStore } from "..";
+import { CardStore, ModuleStore } from "entities/module";
+import { FolderStore } from "entities/folder";
 
 interface IProps {
-    storesWithClient: Array<CardStore | ModuleStore>
+    storesWithClient: Array<CardStore | ModuleStore | FolderStore>
 }
 
 /*Call abortRequest when component unmount*/

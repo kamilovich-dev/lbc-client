@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import { AppHeader } from "widgets/app-header/AppHeader"
 import { TextRow } from './ui'
 import { ImageBox } from './ui'
+import { routePaths } from "shared/config";
 
 const LandingPage = () => {
 
@@ -119,7 +120,7 @@ const LandingPage = () => {
                             <div className="flex items-center flex-col gap-4">
                                 <div className="text-4xl font-bold text-gray-700 md-max:text-2xl text-center">Не знаешь с чего начать?</div>
                                 <div className="text-xl text-gray-500 mb-20 w-1/2 text-center md-max:text-sm md-max:w-full md-max:mb-10">Зарегестрируйся и 10 000 слов из всемирного стандарта (Oxford dictionary) сразу станут доступны для тебя</div>
-                                <Button variant="contained" size="large" onClick={() => navigate('/login')}>
+                                <Button variant="contained" size="large" onClick={() => navigate(routePaths.LOGIN)}>
                                     Зарегестрироваться
                                 </Button>
                             </div>

@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import { observer, Observer } from 'mobx-react-lite';
-import { CardRow } from 'entities/module';
+import { EditCardItem } from 'entities/module';
 import { ModuleStore, CardStore } from 'entities/module';
 import { CardImage } from './CardImage';
 import { DragDropContext, Draggable, DragUpdate, Droppable, DropResult } from 'react-beautiful-dnd'
@@ -137,7 +137,7 @@ const ObserverModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: 
                                                                 {...provided.draggableProps}
                                                                 {...provided.dragHandleProps}
                                                                 >
-                                                                <CardRow
+                                                                <EditCardItem
                                                                     cardIdx={idx}
                                                                     Term={<TextField
                                                                         multiline

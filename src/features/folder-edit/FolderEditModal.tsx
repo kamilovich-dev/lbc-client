@@ -1,47 +1,42 @@
 import { observer } from "mobx-react-lite"
 import { useEffect, useState } from 'react'
-import { SvgIcon, Drawer } from '@mui/material'
-import CloseIcon from '@mui/icons-material/Close';
+import { Drawer } from '@mui/material'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
-import { CardStore } from 'entities/module';
-import { CardsModeStore, TCard } from '../';
+import { TFolder } from "shared/api/lbc-server/endpoints/types/folder";
+import { FolderStore } from "entities/folder";
 
 interface IProps {
-    card: TCard
-    moduleId: number,
-    cardStore: CardStore,
-    cardsModeStore: CardsModeStore,
-    showModal: boolean,
-    setShowModal: (newState: boolean ) => void,
+    folder: TFolder
+    folderStore: FolderStore,
+    isShowModal: boolean,
+    setIsShowModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const FastEditModal = observer(( {card, showModal, setShowModal, cardsModeStore, cardStore}: IProps ) => {
+export const FolderEditModal = observer(( {folder, folderStore, isShowModal, setIsShowModal}: IProps ) => {
 
     useEffect(() => {
-        setTerm(card.term ?? '')
-        setDefinition(card.definition ?? '')
-    }, [showModal])
+        setName(folder.name ?? '')
+        setDescription(folder.description ?? '')
+    }, [isShowModal])
 
+    const [name, setName] = useState(folder.name)
+    const [description, setDescription] = useState(folder.description)
 
     const handleSave = () => {
-        if (term == '') return
-        cardStore.editCard({ cardId: card.id, name: 'term', value: term } )
-        cardStore.editCard({ cardId: card.id, name: 'definition', value: definition } )
-        cardsModeStore.cards[cardsModeStore.currentIdx].term = term
-        cardsModeStore.cards[cardsModeStore.currentIdx].definition = definition
-        setShowModal(false)
+        folderStore.updateFolder({ folder, field: 'name', value: name  } )
+        .then(() => {
+            folderStore.updateFolder({ folder, field: 'description', value: description  } )
+            setIsShowModal(false)
+        })
     }
-
-    const [term, setTerm] = useState(card.term)
-    const [definition, setDefinition] = useState(card.definition)
 
     return (
             <Drawer
                 anchor="bottom"
-                open={showModal}
-                onClose={() => setShowModal(false)}
+                open={isShowModal}
+                onClose={() => setIsShowModal(false)}
             >
                 <div className="rounded-2xl bg-white overflow-auto">
                     <div className='p-4 flex flex-col relative overflow-y-auto'>
@@ -53,25 +48,25 @@ const FastEditModal = observer(( {card, showModal, setShowModal, cardsModeStore,
                                 inputProps={{style: { fontSize: 16 }}}
                                 multiline
                                 fullWidth
-                                name='term'
+                                name='name'
                                 variant="standard"
-                                value={term}
-                                onChange={(e) => setTerm(e.target.value)}/>
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}/>
                         </div>
                         <div className="mb-10 flex-auto">
                             <TextField
                                 inputProps={{style: { fontSize: 16 }}}
                                 multiline
                                 fullWidth
-                                name='definition'
+                                name='description'
                                 variant="standard"
-                                value={definition}
-                                onChange={(e) => setDefinition(e.target.value)}/>
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}/>
                         </div>
 
                         <div className="flex flex-row gap-6 p-4 justify-center">
                             <Button sx={{backgroundColor: '#60A5FA', borderRadius: 3}} variant='contained' onClick={handleSave}>Сохранить</Button>
-                            <Button sx={{borderRadius: 3}} variant='outlined' onClick={() => setShowModal(false)}>Отмена</Button>
+                            <Button sx={{borderRadius: 3}} variant='outlined' onClick={() => setIsShowModal(false)}>Отмена</Button>
                         </div>
                     </div>
                 </div>
@@ -79,5 +74,3 @@ const FastEditModal = observer(( {card, showModal, setShowModal, cardsModeStore,
             </Drawer>
     )
 })
-
-export { FastEditModal }

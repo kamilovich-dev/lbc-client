@@ -23,7 +23,7 @@ export async function getModules(client: Client, searchParams?: TMduleSearchPara
   let url = '/module?'
   if (searchParams) {
     //@ts-ignore
-    const onlyParams = Object.keys(searchParams).filter( key => searchParams[key] !== undefined)
+    const onlyParams = Object.keys(searchParams).filter( key => searchParams[key] !== '')
       .reduce((acc, key) => {
          //@ts-ignore
         acc[key] = searchParams[key]
@@ -48,7 +48,7 @@ export async function getPublicModules(client: Client, searchParams?: TMduleSear
   let url = '/module/public?'
   if (searchParams) {
     //@ts-ignore
-    const onlyParams = Object.keys(searchParams).filter( key => searchParams[key] !== undefined)
+    const onlyParams = Object.keys(searchParams).filter( key => searchParams[key] !== '')
       .reduce((acc, key) => {
          //@ts-ignore
         acc[key] = searchParams[key]

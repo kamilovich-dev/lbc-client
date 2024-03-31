@@ -4,8 +4,10 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { ApiError } from "../ui/ApiError"
 import { ApiSuccess } from "../ui/ApiSuccess"
-import { makeObservable, observable, autorun } from "mobx"
+import { makeObservable, observable, autorun, runInAction } from "mobx"
 import { TokenStorage } from "./TokenStorage"
+
+
 
 class Client {
 
@@ -64,7 +66,7 @@ class Client {
   initializeInterceptors = () => {
 
     this.axiosInstance.interceptors.request.use(async (config) => {
-      this.isLoading = true
+      runInAction(() => { this.isLoading = true})
       const token = TokenStorage.getToken()
       console.log('token=' + token)
       config.headers.Authorization = token ? `Bearer ${token}` : ''
@@ -76,7 +78,7 @@ class Client {
       this.isTryToRefreshToken = false
       console.log('got response', response.data)
       response.data = {isError: false, ...response.data}
-      this.isLoading = false
+      runInAction(() => { this.isLoading = false})
       return response
     }, async error => {
       await this.setDelay()
@@ -121,7 +123,7 @@ class Client {
         }
       }
 
-      this.isLoading = false
+      runInAction(() => { this.isLoading = false})
       throw error
     })
   }
@@ -129,14 +131,14 @@ class Client {
   renderMessage = (
       component: (args: any) => JSX.Element,
       message: string | undefined,
-      status: number | undefined ) => {
+      status?: number ) => {
 
       document.body.insertAdjacentHTML('afterbegin', `<div id=${this.MESSAGE_NODE_ID}><div>`)
       const root = ReactDOM.createRoot(document.getElementById(this.MESSAGE_NODE_ID)!)
 
       root.render(React.createElement(component, {
         message,
-        undefined,
+        status,
         duration: this.MESSAGE_DURATION
       }, null))
 

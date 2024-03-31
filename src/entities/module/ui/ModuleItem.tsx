@@ -6,7 +6,7 @@ interface IProps {
     module: TModule,
 }
 
-const ModuleRow = observer(( { module }: IProps ) => {
+const ModuleItem = observer(( { module }: IProps ) => {
 
     const updatedAt = module.updatedAt ? new Date(module.updatedAt).toLocaleString() : ''
 
@@ -29,4 +29,4 @@ const ModuleRow = observer(( { module }: IProps ) => {
     );
 });
 
-export { ModuleRow };
+export { ModuleItem };

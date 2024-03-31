@@ -11,7 +11,7 @@ import FolderIcon from '@mui/icons-material/Folder';
 import PersonIcon from '@mui/icons-material/Person';
 import { useMobile } from "shared/mobile/useMobile";
 import { SvgIcon } from "@mui/material";
-import { CreateModuleDrawer } from "entities/module";
+import { AddItemModal } from "features/add-item/AddItemModal";
 
 const AppNavigation = () => {
     const isMobile = useMobile()
@@ -27,7 +27,7 @@ type TNavigationDataElement = {
 const MobileNavigation = () => {
 
     const [isShowAddModuleModal, setIsShowAddModuleModal] = useState(false)
-    const moduleStore = new ModuleStore()
+
     const navigate = useNavigate()
     const location = useLocation()
     const pathname = location.pathname
@@ -94,9 +94,8 @@ const MobileNavigation = () => {
                             {item.isActive ? <div className={active_cn}></div> : undefined}
                         </div>)}
             </div>
-            <CreateModuleDrawer
+            <AddItemModal
                 isShowModal={isShowAddModuleModal}
-                moduleStore={moduleStore}
                 setIsShowModal={setIsShowAddModuleModal}/>
         </>
     )

@@ -1,11 +1,13 @@
 import { useEffect, useState  } from 'react'
 import { observer} from 'mobx-react-lite'
 import { Alert } from '@mui/material';
-import { ShowModules } from 'pages/modules/ui/ShowModules';
+import { ListModules } from 'pages/modules/ui/ListModules';
 import { ModuleStore } from 'entities/module';
-import { useAbortController } from 'entities/module';
-import { ModulesMenu } from './ui/ModulesMenu';
+import { useAbortController } from 'entities/session';
+import { ModuleListHeader } from './ui/ModuleListHeader';
 import { CircularLoader } from "shared/ui/loaders/CircularLoader";
+
+import { LibraryHeader } from 'features/navigation/library/LibraryHeader';
 
 interface Props {
     moduleStore: ModuleStore
@@ -22,14 +24,17 @@ const ObservedModulesPage = observer(( { moduleStore }: Props ) => {
 
     return (
             <>
-                <div className='p-2 md:w-3/5 m-auto pt-20 md-max:w-full'>
+                <div className='p-2 md:w-3/5 m-auto pt-16 md-max:w-full'>
                     <div className='bg-blue-50 rounded-md min-h-screen'>
-                        <ModulesMenu moduleStore={moduleStore}/>
+                        <div className='mb-2'>
+                            <LibraryHeader/>
+                        </div>
+                        <ModuleListHeader moduleStore={moduleStore}/>
                         {moduleStore.client.isLoading && !isLoaded ?
                             <><CircularLoader/></> :
                             <div className='pb-20'>
                                 {moduleStore.modules.length ?
-                                    <ShowModules
+                                    <ListModules
                                         moduleStore={moduleStore}/>
                                     : <Alert severity="info" sx={{ width: '100%' }}>
                                         Модули не найдены!
@@ -42,10 +47,8 @@ const ObservedModulesPage = observer(( { moduleStore }: Props ) => {
     );
 });
 
-const ModulesPage = () => {
+export const ModulesPage = () => {
     const moduleStore = new ModuleStore();
     useAbortController( [moduleStore] )
     return <ObservedModulesPage moduleStore={moduleStore} />
 }
-
-export { ModulesPage };

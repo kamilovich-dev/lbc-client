@@ -1,79 +1,79 @@
 import { useParams } from "react-router-dom"
-import { useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { observer } from 'mobx-react-lite'
 import Alert from '@mui/material/Alert';
 import { TextField } from "@mui/material";
 
-import { ModuleStore, CardStore } from 'entities/module'
-import { CardItem } from 'entities/module/ui/CardItem'
-
-import { ModesBlock } from 'features/navigation';
+import { ModuleItem } from "entities/module";
 
 import { useAbortController } from 'entities/session';
-import { useInitModule } from './model/useInitModule';
+import { useInitFolder } from './model/useInitFolder';
 import { CircularLoader } from "shared/ui/loaders/CircularLoader";
 
-import { ModuleActionsDrawer } from './ui/ModuleActionsDrawer';
+import { FolderActionsDrawer } from './ui/FolderActionsDrawer';
 
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import PublicIcon from '@mui/icons-material/Public';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 import { UserData } from "features/profile/UserData";
+import { FolderStore } from "entities/folder";
+import { FolderEditModal } from "features/folder-edit/FolderEditModal";
 
 interface IProps {
-    moduleStore: ModuleStore,
-    cardStore: CardStore,
+    folderStore: FolderStore,
+    folderId: number,
 }
 
-const ModulePage = () => {
+export const FolderPage = () => {
+
     const routeParams = useParams();
-    const moduleId = routeParams.moduleId ? parseInt(routeParams.moduleId) : null
-    if (!moduleId) return
+    const folderId = routeParams.folderId ? parseInt(routeParams.folderId) : null
+    if (!folderId) return
 
-    const { moduleStore, cardStore } = useInitModule(moduleId)
+    const { folderStore } = useInitFolder(folderId)
 
-    if (!moduleStore || !cardStore) return <CircularLoader/>
+    if (!folderStore) return <CircularLoader/>
 
-    return <ObservedModulePage moduleStore={moduleStore} cardStore={cardStore}/>
+    return <ObservedFolderPage folderStore={folderStore} folderId={folderId}/>
 }
 
-const ObservedModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
-    useAbortController([moduleStore, cardStore])
+const ObservedFolderPage = observer(( { folderStore, folderId }: IProps ) => {
 
-    const module = moduleStore.getModuleById(cardStore.moduleId)
-    const cards = cardStore.cards
+    useAbortController([folderStore])
 
-    const handleEditCard = (cardId: number, name: string, value: string) => {
-        cardStore.editCard( { cardId, name, value } )
-    }
+    const folder = folderStore.getFolderById(folderId)
+    if (!folder) return
 
-    const handleSwitchFavorite = (cardId: number) => {
-        cardStore.editCard( { cardId, isSwitchFavorite: true } )
-    }
+    const modules = folderStore.modules
 
-    const createdAtString = module?.createdAt ? new Date(module.createdAt).toLocaleString() : ''
-    const updatedAtString = module?.updatedAt ? new Date(module.updatedAt).toLocaleString() : ''
+    const createdAtString = folder?.createdAt ? new Date(folder.createdAt).toLocaleString() : ''
+    const updatedAtString = folder?.updatedAt ? new Date(folder.updatedAt).toLocaleString() : ''
 
-
-    const [isShowModal, setIsShowModal] = useState(false)
+    const [isShowActionsModal, setIsShowActionsModal] = useState(false)
+    const [isShowEditModal, setIsShowEditModal] = useState(false)
     const STATIC_URL = import.meta.env.VITE_LBC_SERVER_STATIC_URL
-    const avatarUrl = module?.options.createdByAvatarUrl
-    const login = module?.options.createdByLogin
+    const avatarUrl = folder?.options.createdByAvatarUrl
+    const login = folder?.options.createdByLogin
+
+    const handleEditClick = () => {
+        setIsShowActionsModal(false)
+        setIsShowEditModal(true)
+    }
 
     return(
         <>
         <div className='w-3/5 ml-auto mr-auto p-4 md-max:w-full md-max:p-2'>
             <div className="flex gap-2 py-1 mb-2">
                 <div className="flex gap-2 bg-gray-200 rounded-md px-2 py-1 items-center" >
-                    <div className={`flex items-center ${module?.options.isBookmarked ? 'text-blue-400' : 'text-gray-300'}`}>
+                    <div className={`flex items-center ${folder?.options.isBookmarked ? 'text-blue-400' : 'text-gray-300'}`}>
                         <BookmarkIcon sx={{width: 20, height: 20}}/>
                     </div>
-                    <div className={`flex items-center ${module?.isPublished ? 'text-blue-400' : 'text-gray-300'}`}>
+                    <div className={`flex items-center ${folder?.isPublished ? 'text-blue-400' : 'text-gray-300'}`}>
                         <PublicIcon sx={{width: 20, height: 20}}/>
                     </div>
                 </div>
-                <div className="flex flex-auto justify-end" onClick={() => setIsShowModal(true)}>
+                <div className="flex flex-auto justify-end" onClick={() => setIsShowActionsModal(true)}>
                     <div className={`flex items-center text-gray-400`}><SettingsIcon sx={{width: 30, height: 30}}/></div>
                 </div>
             </div>
@@ -92,7 +92,7 @@ const ObservedModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
                                 '& :hover': { cursor: 'pointer' }}}
                             name='term'
                             variant="standard"
-                            value={module?.name}
+                            value={folder?.name ?? ''}
                         />
                     </div>
             </div>
@@ -112,7 +112,7 @@ const ObservedModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
                                 '& :hover': { cursor: 'pointer' }}}
                             name='term'
                             variant="standard"
-                            value={module?.description}
+                            value={folder?.description ?? ''}
                         />
                     </div>
             </div>
@@ -126,9 +126,6 @@ const ObservedModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
                     </div>
             </div>
             <div className="h-[1px] bg-gray-200 w-full mb-4"></div>
-            <div className='grid grid-cols-2 gap-2 mb-4'>
-                <ModesBlock />
-            </div>
             <div className="flex gap-4 items-center mb-4">
                 <div>
                     <UserData
@@ -140,39 +137,37 @@ const ObservedModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
                     <span className="w-[1px] h-8 bg-gray-300"></span>
                 </div>
                 <div>
-                    <h2 className='font-semibold text-lg text-slate-800'>Термины в модуле: {cards.length}</h2>
+                    <h2 className='font-semibold text-lg text-slate-800'>Модулей в папке: {modules.length}</h2>
                 </div>
             </div>
 
             <div className="pb-20">
-                { cards.length ? cards.map((card, idx) => (
-                    <div className='mb-3' key={card.id} id={card.id.toString()}>
-                        <CardItem
-                            termin={card.term || ''}
-                            definition={card.definition || ''}
-                            imgUrl={card.imgUrl || ''}
-                            cardId={card.id}
-                            cardIdx={idx}
-                            isOwner={module?.options.isOwner}
-                            handleEditCard={handleEditCard}
-                            handleSwitchFavorite={handleSwitchFavorite}
-                            isFavorite={card.isFavorite || false}
+                { modules.length ? modules.map((module, idx) => (
+                    <div className='mb-3' key={module.id} id={module.id.toString()}>
+                        <ModuleItem
+                            module={module}
                         />
                     </div>
                 )) :
                 <Alert severity="info" sx={{ width: '100%' }}>
-                    Карточки не найдены!
+                    Модули не найдены!
                 </Alert> }
             </div>
         </div>
-        <ModuleActionsDrawer
-                module={module}
-                isShowModal={isShowModal}
-                setIsShowModal={setIsShowModal}
-                moduleStore={moduleStore}/>
+        <FolderActionsDrawer
+            folder={folder}
+            folderStore={folderStore}
+            isShowModal={isShowActionsModal}
+            setIsShowModal={setIsShowActionsModal}
+            handleEditClick={handleEditClick}/>
+
+        <FolderEditModal
+            folder={folder}
+            folderStore={folderStore}
+            isShowModal={isShowEditModal}
+            setIsShowModal={setIsShowEditModal}/>
         </>
     )
 })
 
-export { ModulePage }
 

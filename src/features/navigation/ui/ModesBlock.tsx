@@ -1,36 +1,39 @@
 import { SvgIcon} from '@mui/material'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, generatePath } from 'react-router-dom'
 
 import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
 import RepeatIcon from '@mui/icons-material/Repeat';
 import QuizIcon from '@mui/icons-material/Quiz';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 
+import { routePaths } from 'shared/config';
+
 const ModesBlock = ( ) => {
 
     const navigate = useNavigate()
     const params = useParams()
 
+
     const navigations = [
         {
             icon: <ViewCarouselIcon />,
             text: 'Карточки',
-            handleClick: () => navigate(`/${params.moduleId}/cards-mode`)
+            handleClick: () => navigate(generatePath(routePaths.CARDS_MODE, { moduleId: params.moduleId ?? '' }))
         },
         {
             icon: <RepeatIcon />,
             text: 'Заучивание',
-            handleClick: () => navigate(`/${params.moduleId}/cards-mode`)
+            handleClick: () => navigate(generatePath(routePaths.CARDS_MODE, { moduleId: params.moduleId ?? '' }))
         },
         {
             icon: <QuizIcon />,
             text: 'Тест',
-            handleClick: () => navigate(`/${params.moduleId}/cards-mode`)
+            handleClick: () => navigate(generatePath(routePaths.CARDS_MODE, { moduleId: params.moduleId ?? '' }))
         },
         {
             icon: <FactCheckIcon />,
             text: 'Подбор',
-            handleClick: () => navigate(`/${params.moduleId}/cards-mode`)
+            handleClick: () => navigate(generatePath(routePaths.CARDS_MODE, { moduleId: params.moduleId ?? '' }))
         }
     ]
 

@@ -3,8 +3,8 @@ import type {TError} from './error'
 /*Получение модулей*/
 export type TMduleSearchParams = {
     by_search?: string,
-    by_alphabet?: 'desc' | 'asc',
-    by_updated_date?: 'desc' | 'asc'
+    by_alphabet?: 'desc' | 'asc' | '',
+    by_updated_date?: 'desc' | 'asc' | '',
 }
 
 export type TGetModulesResponse = {

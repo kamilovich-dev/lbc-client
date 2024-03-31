@@ -1,10 +1,11 @@
 import type {TError} from './error'
+import { TModule } from './modules'
 
 /*Получение модулей*/
 export type TFolderSearchParams = {
     by_search?: string,
-    by_alphabet?: 'desc' | 'asc',
-    by_updated_date?: 'desc' | 'asc'
+    by_alphabet?: 'desc' | 'asc' | '',
+    by_updated_date?: 'desc' | 'asc' | ''
 }
 
 export type TGetFolderResponse= {
@@ -20,7 +21,8 @@ export type TFolder = {
     updatedAt: string,
     options: {
         modulesCount: number,
-        createdBy: string,
+        createdByLogin: string,
+        createdByAvatarUrl: string,
         isOwner: boolean,
         isBookmarked?: boolean,
     }
@@ -30,6 +32,7 @@ export type TGetFolderReturn = (TGetFolderResponse & TError) | undefined
 /*Создание папки*/
 export type TCreateFolderPayload = {
     name: string,
+    description: string,
 }
 export type TCreateFolderResponse = {
     folder: TFolder
@@ -38,10 +41,10 @@ export type TCreateFolderReturn = (TCreateFolderResponse & TError) | undefined
 
 /*Изменение папки*/
 export type TUpdateFolderPayload = {
-    moduleId: number,
-    name: string | undefined,
-    description: string | undefined,
-    isPublished: boolean | undefined,
+    folderId: number,
+    name?: string | undefined,
+    description?: string | undefined,
+    isPublished?: boolean | undefined,
 }
 
 export type TUpdateFolderResponse = {
@@ -66,6 +69,17 @@ export type TRemoveModulePayload = {
 export type TRemoveFolderPayload = {
     folderId: number
 }
+
+/*получение модулей папки*/
+export type TGetFolderModulesPayload = {
+    folderId: number
+}
+
+export type TGetFolderModulesResponse = {
+    modules: TModule[]
+}
+
+export type TGetFolderModulesReturn = (TGetFolderModulesResponse & TError) | undefined
 
 
 

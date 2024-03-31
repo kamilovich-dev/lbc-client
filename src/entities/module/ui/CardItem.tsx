@@ -1,8 +1,5 @@
 import { useState } from 'react'
-import SvgIcon from '@mui/material/SvgIcon';
-import BlockIcon from '@mui/icons-material/Block';
 import { ButtonFavoriteStar } from "shared/ui/buttons/ButtonFavoriteStar"
-import { ButtonEdit } from "shared/ui/buttons/ButtonEdit"
 import { CardImageModal } from "shared/ui/modals/CardImageModal"
 import TextField from '@mui/material/TextField';
 
@@ -14,13 +11,11 @@ interface IProps {
     imgUrl: string | undefined,
     isOwner: boolean | undefined,
     isFavorite: boolean,
-    isEditMode: boolean,
-    handleSwitchEditMode: (cardIdx: number) => void,
     handleSwitchFavorite: (cardId: number) => void
     handleEditCard: ( cardId: number, name: string, value: string) => void
 }
 
-const CardShowRow = ( {cardId, cardIdx, termin, definition, imgUrl, isFavorite, isOwner, isEditMode, handleSwitchFavorite, handleEditCard, handleSwitchEditMode} : IProps  ) => {
+export const CardItem = ( {cardId, cardIdx, termin, definition, imgUrl, isFavorite, isOwner, handleSwitchFavorite, handleEditCard} : IProps  ) => {
 
     const [isShowImageModal, setIsShowImageModal] = useState(false)
     const srcUrl = imgUrl ? import.meta.env.VITE_LBC_SERVER_STATIC_URL + '/' + imgUrl : imgUrl
@@ -38,9 +33,9 @@ const CardShowRow = ( {cardId, cardIdx, termin, definition, imgUrl, isFavorite, 
                             <TextField
                                 multiline
                                 fullWidth
-                                disabled={isEditMode ? false : true}
+                                disabled={true}
                                 inputProps={{style: {fontSize: 12}}}
-                                InputProps={{ disableUnderline: isEditMode ? false : true }}
+                                InputProps={{ disableUnderline: true }}
                                 sx={{"& .MuiInputBase-input.Mui-disabled": {
                                     WebkitTextFillColor: 'black',
                                 }}}
@@ -67,9 +62,9 @@ const CardShowRow = ( {cardId, cardIdx, termin, definition, imgUrl, isFavorite, 
                         <TextField
                                 multiline
                                 fullWidth
-                                disabled={isEditMode ? false : true}
+                                disabled={true}
                                 inputProps={{style: {fontSize: 12}}}
-                                InputProps={{ disableUnderline: isEditMode ? false : true }}
+                                InputProps={{ disableUnderline: true }}
                                 sx={{"& .MuiInputBase-input.Mui-disabled": {
                                     WebkitTextFillColor: 'black',
                                 }}}
@@ -81,16 +76,12 @@ const CardShowRow = ( {cardId, cardIdx, termin, definition, imgUrl, isFavorite, 
                                     e.target.name,
                                     e.target.value)}
                                 />
-
                     </div>
                     <div className='flex w-2/12 justify-end'>
                         {isOwner ?
                         <div className=''>
                             <ButtonFavoriteStar isFavorite={isFavorite} onClick={() => handleSwitchFavorite(cardId)}/>
                         </div> : null}
-                        {/* <div>
-                            <ButtonEdit isEdit={isEditMode} onClick={() => handleSwitchEditMode(cardIdx)} />
-                        </div> */}
                     </div>
                 </div>
 
@@ -99,5 +90,3 @@ const CardShowRow = ( {cardId, cardIdx, termin, definition, imgUrl, isFavorite, 
 
     )
 }
-
-export { CardShowRow }

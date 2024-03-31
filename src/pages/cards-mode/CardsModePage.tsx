@@ -33,7 +33,7 @@ import { CardsNotFound } from "./ui/CardsNotFound";
 import { useInitCardsMode } from "./model/useInitCardsMode";
 
 import { useHotkeysListener } from "./model/useHotkeysListener";
-import { useAbortController } from "entities/module";
+import { useAbortController } from 'entities/session';
 import { CircularLoader } from "../../shared/ui/loaders/CircularLoader";
 
 const CardsModePage = () => {

@@ -1,53 +1,52 @@
-import { ModuleStore } from "entities/module"
-import { TModule } from "shared/api/lbc-server/endpoints/types/modules";
 import { useNavigate, generatePath } from "react-router-dom"
 import { routePaths } from "shared/config";
 import Drawer from '@mui/material/Drawer';
+import { TFolder } from "shared/api/lbc-server/endpoints/types/folder";
+import { FolderStore } from "entities/folder";
 
 interface IDrawerProps {
-    module: TModule | undefined,
+    folder: TFolder | undefined,
+    folderStore: FolderStore
     isShowModal: boolean,
     setIsShowModal: React.Dispatch<React.SetStateAction<boolean>>
-    moduleStore: ModuleStore
+
+    handleEditClick: () => void
 }
 
-const ModuleActionsDrawer = ( {module, setIsShowModal, moduleStore, isShowModal}: IDrawerProps) => {
+export const FolderActionsDrawer = ( {folder, folderStore, isShowModal, setIsShowModal, handleEditClick}: IDrawerProps) => {
+
     const navigate = useNavigate();
 
-    if (!module) return
+    if (!folder) return
 
-    const handlePublicateClick = (module: TModule) => {
-        moduleStore.editModule( {id: module.id, name: 'isPublished', value: '' } )
+    const handlePublicateClick = (folder: TFolder) => {
+        folderStore.updateFolder( {folder, field: 'isPublished', value: '' } )
         setIsShowModal(false)
     }
 
-    const handleRemoveModuleBookmarkClick = (moduleId: number) => {
-        moduleStore.deleteBookmarkByModuleId( moduleId )
+    const handleRemoveFolderBookmarkClick = (folderId: number) => {
+        folderStore.deleteBookmarkByFolderId( folderId )
         .then(result => {
-            if (!result?.isError) navigate(routePaths.MODULES)
+            if (!result?.isError) navigate(routePaths.FOLDERS)
             setIsShowModal(false)
         })
     }
 
-    const handleCreateModuleBookmarkClick = (moduleId: number) => {
-        moduleStore.createBookmarkByModuleId( moduleId )
+    const handleCreateFolderBookmarkClick = (folderId: number) => {
+        folderStore.createBookmarkByFolderId( folderId )
         setIsShowModal(false)
     }
 
-    const handleEditClick = ( moduleId: number) => {
-        navigate(generatePath(routePaths.MODULE_EDIT, { moduleId: String(moduleId) ?? '' }))
-    }
-
-    const handleRemoveModuleClick = (moduleId: number) => {
-        moduleStore.deleteModuleById(moduleId)
+    const handleRemoveFolderClick = (folderId: number) => {
+        folderStore.removeFolder(folderId)
         .then(result => {
-            if (!result?.isError) navigate(routePaths.MODULES)
+            if (!result?.isError) navigate(routePaths.FOLDERS)
             setIsShowModal(false)
         })
     }
 
-    const handleAddToFolderClick = (module: TModule) => {
-        navigate(generatePath(routePaths.FOLDERS_ADD_MODULE, { moduleId: String(module.id) ?? '' }))
+    const handleModulesAddToFolderClick = ( folder: TFolder ) => {
+        navigate(generatePath(routePaths.MODULES_ADD_TO_FOLDER, { folderId: String(folder.id) ?? '' }))
     }
 
     return (
@@ -58,56 +57,56 @@ const ModuleActionsDrawer = ( {module, setIsShowModal, moduleStore, isShowModal}
                 anchor="bottom"
             >
                 <div className="bg-white p-4">
-                    {module.options.isOwner ?
+                    {folder.options.isOwner ?
                     <>
                         <div className="flex items-center mb-2">
                             <button className="text-md text-gray-500 flex-auto text-center"
-                                onClick={() => handlePublicateClick(module)}>{module.isPublished ? 'Сделать приватным' : 'Опубликовать'}</button>
+                                onClick={() => handlePublicateClick(folder)}>{folder.isPublished ? 'Сделать приватным' : 'Опубликовать'}</button>
                         </div>
                         <div className="border-b-2 border-gray-200 w-full mb-4"></div>
                     </> : null}
 
-                    {module.options.isOwner?
+                    {folder.options.isOwner?
                         null :
                     <>
-                        {module.options.isBookmarked ?
+                        {folder.options.isBookmarked ?
                         <>
                             <div className="flex items-center mb-2">
                                 <button className="text-md text-gray-500 flex-auto text-center"
-                                    onClick={() => handleRemoveModuleBookmarkClick(module.id)}>Исключить из сохраненных</button>
+                                    onClick={() => handleRemoveFolderBookmarkClick(folder.id)}>Исключить из сохраненных</button>
                             </div>
                         </>:
                         <>
                             <div className="flex items-center mb-2">
                                 <button className="text-md text-gray-500 flex-auto text-center"
-                                    onClick={() => handleCreateModuleBookmarkClick(module.id)}>Сохранить себе</button>
+                                    onClick={() => handleCreateFolderBookmarkClick(folder.id)}>Сохранить себе</button>
                             </div>
                         </>}
                     </>}
 
-                    {module.options.isOwner ?
+                    {folder.options.isOwner ?
                     <>
                         <div className="flex items-center mb-2">
                             <button className="text-md text-gray-500 flex-auto text-center"
-                                onClick={() => handleEditClick(module.id)}>Редактировать</button>
+                                onClick={handleEditClick}>Редактировать</button>
                         </div>
                         <div className="border-b-2 border-gray-200 w-full mb-4"></div>
                     </> : null}
 
-                    {module.options.isOwner ?
+                    {folder.options.isOwner ?
                         <>
                             <div className="flex items-center mb-2">
                             <button className="text-md text-red-500 flex-auto text-center"
-                                onClick={() => handleRemoveModuleClick(module.id)}>Удалить</button>
+                                onClick={() => handleRemoveFolderClick(folder.id)}>Удалить</button>
                             </div>
                             <div className="border-b-2 border-gray-200 w-full mb-4"></div>
                         </> : null}
 
-                    {module.options.isOwner ?
+                    {folder.options.isOwner ?
                         <>
                             <div className="flex items-center mb-2">
                             <button className="text-md text-gray-500 flex-auto text-center"
-                                onClick={() => handleAddToFolderClick(module)}>Добавить в папку</button>
+                                onClick={() => handleModulesAddToFolderClick(folder)}>Добавить модули</button>
                             </div>
                         </> : null}
                 </div>
@@ -115,5 +114,3 @@ const ModuleActionsDrawer = ( {module, setIsShowModal, moduleStore, isShowModal}
         </div>
     )
 }
-
-export {  ModuleActionsDrawer }

@@ -8,7 +8,7 @@ interface IProps {
     DeleteCard: JSX.Element,
 }
 
-const CardRow = observer(( { cardIdx, DeleteCard, Term, Definition, Image }: IProps ) => {
+const EditCardItem = observer(( { cardIdx, DeleteCard, Term, Definition, Image }: IProps ) => {
 
     return (
         <>
@@ -39,4 +39,4 @@ const CardRow = observer(( { cardIdx, DeleteCard, Term, Definition, Image }: IPr
     );
 });
 
-export { CardRow };
+export { EditCardItem };

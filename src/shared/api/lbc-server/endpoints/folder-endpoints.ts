@@ -18,13 +18,16 @@ import type {
 
   TFolderSearchParams,
   TGetFolderReturn,
+
+  TGetFolderModulesPayload,
+  TGetFolderModulesReturn
 } from './types/folder'
 
-export async function createFolder(client: Client, payload: TCreateFolderPayload): Promise<TCreateFolderReturn | undefined> {
+export async function createFolder(client: Client, payload: TCreateFolderPayload): Promise<TCreateFolderReturn> {
   return request(client, 'post', '/folder/create', payload)
 }
 
-export async function updateFolder(client: Client, payload: TUpdateFolderPayload): Promise<TUpdateFolderReturn | undefined> {
+export async function updateFolder(client: Client, payload: TUpdateFolderPayload): Promise<TUpdateFolderReturn > {
   return request(client, 'post', '/folder/update', payload)
 }
 
@@ -40,11 +43,11 @@ export async function removeFolder(client: Client, payload: TRemoveFolderPayload
   return request(client, 'post', '/folder/remove', payload)
 }
 
-export async function getFolders(client: Client, searchParams?: TFolderSearchParams): Promise<TGetFolderReturn | undefined> {
+export async function getFolders(client: Client, searchParams?: TFolderSearchParams): Promise<TGetFolderReturn> {
   let url = '/folder?'
   if (searchParams) {
     //@ts-ignore
-    const onlyParams = Object.keys(searchParams).filter( key => searchParams[key] !== undefined)
+    const onlyParams = Object.keys(searchParams).filter( key => searchParams[key] !== '')
       .reduce((acc, key) => {
          //@ts-ignore
         acc[key] = searchParams[key]
@@ -56,11 +59,11 @@ export async function getFolders(client: Client, searchParams?: TFolderSearchPar
   return request(client, 'get', url)
 }
 
-export async function getPublicFolders(client: Client, searchParams?: TFolderSearchParams): Promise<TGetFolderReturn | undefined> {
+export async function getPublicFolders(client: Client, searchParams?: TFolderSearchParams): Promise<TGetFolderReturn> {
   let url = '/folder/public?'
   if (searchParams) {
     //@ts-ignore
-    const onlyParams = Object.keys(searchParams).filter( key => searchParams[key] !== undefined)
+    const onlyParams = Object.keys(searchParams).filter( key => searchParams[key] !== '')
       .reduce((acc, key) => {
          //@ts-ignore
         acc[key] = searchParams[key]
@@ -70,6 +73,10 @@ export async function getPublicFolders(client: Client, searchParams?: TFolderSea
     url += searchParamsObj.toString()
   }
   return request(client, 'get', url)
+}
+
+export async function getFolderModules(client: Client, payload: TGetFolderModulesPayload): Promise<TGetFolderModulesReturn> {
+  return request(client, 'post', '/folder/modules', payload)
 }
 
 

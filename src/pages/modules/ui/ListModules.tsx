@@ -1,20 +1,22 @@
 import { observer } from 'mobx-react-lite'
-import { ModuleRow } from 'entities/module';
+import { ModuleItem } from 'entities/module';
 import { ModuleStore } from 'entities/module';
 
 
 import { TModule } from 'shared/api/lbc-server/endpoints/types/modules';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, generatePath } from 'react-router-dom';
+
+import { routePaths } from 'shared/config';
 
 interface IProps {
     moduleStore: ModuleStore
 }
 
-const ShowModules = observer(( { moduleStore }: IProps ) => {
+const ListModules = observer(( { moduleStore }: IProps ) => {
     const navigate = useNavigate()
 
     const handleModuleRowClick = (module: TModule) => {
-        navigate(`/${module.id}`)
+        navigate(generatePath(routePaths.MODULE, { moduleId: String(module.id) ?? '' }))
     }
 
     const logins = [...new Set(moduleStore.modules.map(item => item.options.createdByLogin))]
@@ -27,7 +29,7 @@ const ShowModules = observer(( { moduleStore }: IProps ) => {
                     <div className={`text-gray-400 ${moduleStore.view.isListed ? '' : 'col-span-2'}`}>{myLogin === login ? 'Свои' : login}</div>
                     {moduleStore.modules.filter(module => module.options.createdByLogin === login).map(module => (
                         <div key={module.id} onClick={ () => handleModuleRowClick(module) }>
-                            <ModuleRow
+                            <ModuleItem
                             module={module}/>
                         </div>
                     ))}
@@ -42,4 +44,4 @@ const ShowModules = observer(( { moduleStore }: IProps ) => {
 
 
 
-export { ShowModules };
+export { ListModules };
