@@ -35,9 +35,10 @@ const ModuleEditForm = ( { moduleId }: IOuterProps) => {
 const ObserverModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: IInnerProps ) => {
 
     useEffect( () => {
+        console.log('request')
         cardStore.refreshCards()
         moduleStore.refreshModules()
-    }, [])
+    }, [moduleId])
 
     const module = moduleStore.getModuleById(moduleId)
     const cards = cardStore.cards;

@@ -34,7 +34,9 @@ const ObbservedFolderPage = observer(( {folderStore}: IProps ) => {
                         <div className='pb-20'>
                             {folderStore.folders.length ?
                                 <ListFolders
-                                    folderStore={folderStore}/>
+                                    isHideBookmarkIcon={true}
+                                    folders={folderStore.folders}
+                                    view={folderStore.view}/>
                                 : <Alert severity="info" sx={{ width: '100%' }}>
                                     Папки не найдены!
                                 </Alert>

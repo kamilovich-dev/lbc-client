@@ -8,7 +8,7 @@ export type TFolderSearchParams = {
     by_updated_date?: 'desc' | 'asc' | ''
 }
 
-export type TGetFolderResponse= {
+export type TGetFoldersResponse= {
     folders: TFolder[]
 }
 
@@ -26,6 +26,15 @@ export type TFolder = {
         isOwner: boolean,
         isBookmarked?: boolean,
     }
+}
+export type TGetFoldersReturn = (TGetFoldersResponse & TError) | undefined
+
+/*Получение папки*/
+export type TGetFolderPayload = {
+    folderId: number
+}
+export type TGetFolderResponse = {
+    folder: TFolder
 }
 export type TGetFolderReturn = (TGetFolderResponse & TError) | undefined
 

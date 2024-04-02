@@ -26,7 +26,16 @@ export type TModule = {
         isBookmarked?: boolean,
     }
 }
-export type TGetModuleReturn = (TGetModulesResponse & TError) | undefined
+export type TGetModulesReturn = (TGetModulesResponse & TError) | undefined
+
+/*Получение модуля*/
+export type TGetModulePayload = {
+    moduleId: number
+}
+export type TGetModuleResponse = {
+    module: TModule
+}
+export type TGetModuleReturn = (TGetModuleResponse & TError) | undefined
 
 /*Создание модуля*/
 export type TCreateModulePayload = {

@@ -44,7 +44,6 @@ const ObservedAddItemModal = observer(( {isShowModal, moduleStore, folderStore, 
     const [name, setName] = useState<string | undefined>(DEFAULT_VALUES.name)
     const [description, setDescription] = useState<string | undefined>(DEFAULT_VALUES.description)
 
-
     const handleAddClick = async () => {
 
         if (whatToAdd === 'module') {

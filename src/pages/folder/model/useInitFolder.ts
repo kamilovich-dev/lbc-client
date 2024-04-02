@@ -1,25 +1,20 @@
 import { useState, useEffect } from "react"
 import { FolderStore } from "entities/folder"
 
-interface FolderInitData {
-    folderStore: FolderStore,
-}
-
-export const useInitFolder = (folderId: number) => {
+export const useInitFolder = (folderId: number | undefined) => {
 
     useEffect(() => {
         fetchData()
-    }, [])
+    }, [folderId])
 
-    const [moduleInitData, setModuleInitData] = useState<FolderInitData | undefined>(undefined)
+    const [folderStore, setFolderStore] = useState<FolderStore | undefined>(undefined)
 
     const fetchData = async () => {
+        if (!folderId) return
         const folderStore = new FolderStore()
-        await Promise.all([folderStore.refreshFolders(), folderStore.refreshModulesByFolderId(folderId)])
-        setModuleInitData({
-            folderStore,
-        })
+        await Promise.all([folderStore.refreshFoldersByFolderId(folderId), folderStore.refreshModulesByFolderId(folderId)])
+        setFolderStore(folderStore)
     }
 
-    return {...moduleInitData}
+    return folderStore
 }

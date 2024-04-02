@@ -39,9 +39,9 @@ const MobileNavigation = () => {
     const navigationData: TNavigationDataElement[] = [
         {
             action: () => {
-
+                navigate(routePaths.GLOBAL_SEARCH)
             },
-            isActive: false,
+            isActive:  matchPath(routePaths.GLOBAL_SEARCH, pathname) ? true : false,
             iconComponent: <SearchIcon/>
         },
         {

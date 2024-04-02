@@ -152,17 +152,17 @@ export class FolderStore {
         })
     }
 
-    getFolderById = (folderId: number) => {
-        return this.folders.find(folder => folder.id === folderId)
+    refreshFoldersByFolderId = async (folderId: number) => {
+        return folderEndpoints.getFolder(this.client, { folderId })
+            .then( async response => {
+                if (response?.isError === false) {
+                    runInAction(() => this.folders = [response?.folder])
+                }
+            })
     }
 
-    refreshublicFolders = async () => {
-        return folderEndpoints.getPublicFolders(this.client, this.filters)
-        .then(result => {
-            if (result?.isError === false) {
-                runInAction(() => this.folders = result.folders)
-            }
-        })
+    getFolderById = (folderId: number) => {
+        return this.folders.find(folder => folder.id === folderId)
     }
 
     refreshModulesByFolderId = async (folderId: number) => {

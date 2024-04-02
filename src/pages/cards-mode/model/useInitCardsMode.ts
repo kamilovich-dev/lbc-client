@@ -19,7 +19,7 @@ export const useInitCardsMode = (moduleId: number) => {
     const fetchData = async () => {
         const moduleStore = new ModuleStore()
         const cardStore = new CardStore(moduleId)
-        await Promise.all([moduleStore.refreshModules(), cardStore.refreshCards()])
+        await Promise.all([moduleStore.refreshModulesByModuleId(moduleId), cardStore.refreshCards()])
 
         const cardsModeStore = new CardsModeStore(cardStore, moduleId)
         setcardsModeInitData({

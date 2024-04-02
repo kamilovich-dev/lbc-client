@@ -35,7 +35,9 @@ const ObservedModulesPage = observer(( { moduleStore }: Props ) => {
                             <div className='pb-20'>
                                 {moduleStore.modules.length ?
                                     <ListModules
-                                        moduleStore={moduleStore}/>
+                                        isHideBookmarkIcon={true}
+                                        modules={moduleStore.modules}
+                                        view={moduleStore.view}/>
                                     : <Alert severity="info" sx={{ width: '100%' }}>
                                         Модули не найдены!
                                     </Alert>

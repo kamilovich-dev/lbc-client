@@ -17,7 +17,7 @@ export const useInitModule = (moduleId: number) => {
     const fetchData = async () => {
         const moduleStore = new ModuleStore()
         const cardStore = new CardStore(moduleId)
-        await Promise.all([moduleStore.refreshModules(), cardStore.refreshCards()])
+        await Promise.all([moduleStore.refreshModulesByModuleId(moduleId), cardStore.refreshCards()])
         setModuleInitData({
             moduleStore,
             cardStore,

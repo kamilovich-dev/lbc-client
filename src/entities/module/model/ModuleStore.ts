@@ -115,6 +115,15 @@ class ModuleStore {
             })
     }
 
+    refreshModulesByModuleId = async (moduleId: number) => {
+        return moduleEndpoints.getModule(this.client, { moduleId })
+            .then( async response => {
+                if (response?.isError === false) {
+                    runInAction(() => this.modules = [response?.module])
+                }
+            })
+    }
+
     resetFilters = () => {
         this.filters.by_search = ''
         this.filters.by_alphabet = ''

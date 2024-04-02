@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom"
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { observer } from 'mobx-react-lite'
 import Alert from '@mui/material/Alert';
 import { TextField } from "@mui/material";
@@ -26,13 +26,13 @@ interface IProps {
 }
 
 export const FolderPage = () => {
-
     const routeParams = useParams();
-    const folderId = routeParams.folderId ? parseInt(routeParams.folderId) : null
+    const folderId = routeParams.folderId ? parseInt(routeParams.folderId) : undefined
+
+    const folderStore= useInitFolder(folderId)
+    useAbortController( [folderStore] )
+
     if (!folderId) return
-
-    const { folderStore } = useInitFolder(folderId)
-
     if (!folderStore) return <CircularLoader/>
 
     return <ObservedFolderPage folderStore={folderStore} folderId={folderId}/>
@@ -40,18 +40,17 @@ export const FolderPage = () => {
 
 const ObservedFolderPage = observer(( { folderStore, folderId }: IProps ) => {
 
-    useAbortController([folderStore])
+    const [isShowActionsModal, setIsShowActionsModal] = useState(false)
+    const [isShowEditModal, setIsShowEditModal] = useState(false)
 
     const folder = folderStore.getFolderById(folderId)
-    if (!folder) return
+    if (!folder) return <></>
 
     const modules = folderStore.modules
 
     const createdAtString = folder?.createdAt ? new Date(folder.createdAt).toLocaleString() : ''
     const updatedAtString = folder?.updatedAt ? new Date(folder.updatedAt).toLocaleString() : ''
 
-    const [isShowActionsModal, setIsShowActionsModal] = useState(false)
-    const [isShowEditModal, setIsShowEditModal] = useState(false)
     const STATIC_URL = import.meta.env.VITE_LBC_SERVER_STATIC_URL
     const avatarUrl = folder?.options.createdByAvatarUrl
     const login = folder?.options.createdByLogin
@@ -145,6 +144,7 @@ const ObservedFolderPage = observer(( { folderStore, folderId }: IProps ) => {
                 { modules.length ? modules.map((module, idx) => (
                     <div className='mb-3' key={module.id} id={module.id.toString()}>
                         <ModuleItem
+                            isHideBookmarkIcon={true}
                             module={module}
                         />
                     </div>

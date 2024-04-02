@@ -8,18 +8,21 @@ import type {
   TCreateModuleReturn,
 
   TMduleSearchParams,
-  TGetModuleReturn,
+  TGetModulesReturn,
 
   TDeleteModulePayload,
   TEditModulePayload,
-  TEditModuleReturn
+  TEditModuleReturn,
+
+  TGetModulePayload,
+  TGetModuleReturn
 } from './types/modules'
 
 export async function createModule(client: Client, payload: TCreateModulePayload): Promise<TCreateModuleReturn | undefined> {
   return request(client, 'post', '/module/create', payload)
 }
 
-export async function getModules(client: Client, searchParams?: TMduleSearchParams): Promise<TGetModuleReturn | undefined> {
+export async function getModules(client: Client, searchParams?: TMduleSearchParams): Promise<TGetModulesReturn | undefined> {
   let url = '/module?'
   if (searchParams) {
     //@ts-ignore
@@ -43,27 +46,6 @@ export async function editModule(client: Client, payload: TEditModulePayload): P
   return request(client, 'post', '/module/update', payload)
 }
 
-/*Новые*/
-export async function getPublicModules(client: Client, searchParams?: TMduleSearchParams): Promise<TGetModuleReturn | undefined> {
-  let url = '/module/public?'
-  if (searchParams) {
-    //@ts-ignore
-    const onlyParams = Object.keys(searchParams).filter( key => searchParams[key] !== '')
-      .reduce((acc, key) => {
-         //@ts-ignore
-        acc[key] = searchParams[key]
-        return acc
-      }, {})
-    const searchParamsObj = new URLSearchParams(onlyParams);
-    url += searchParamsObj.toString()
-  }
-  return request(client, 'get', url)
+export async function getModule(client: Client, payload: TGetModulePayload): Promise<TGetModuleReturn | undefined> {
+  return request(client, 'post', '/module', payload)
 }
-
-
-
-
-
-
-
-
