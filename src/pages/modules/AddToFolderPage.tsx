@@ -16,15 +16,16 @@ export const AddToFolderPage = (  ) => {
     if (!folderStore || !moduleStore) return
     if (folderStore.client.isLoading || moduleStore.client.isLoading) return <CircularLoader/>
 
-    return <ObserverAddToFolderPage folderStore={folderStore} moduleStore={moduleStore}/>
+    return <ObserverAddToFolderPage folderStore={folderStore} moduleStore={moduleStore} folderId={folderId}/>
 }
 
 interface IProps {
     folderStore: FolderStore,
     moduleStore: ModuleStore,
+    folderId: number,
 }
 
-const ObserverAddToFolderPage = observer(({folderStore, moduleStore}: IProps) => {
+const ObserverAddToFolderPage = observer(({folderStore, moduleStore, folderId}: IProps) => {
 
     const [selectedIds, setSelectedIds] = useState<number[]>([])
     const navigate = useNavigate()
@@ -46,9 +47,12 @@ const ObserverAddToFolderPage = observer(({folderStore, moduleStore}: IProps) =>
     }
 
     const handleAccept = async () => {
-        const promises = selectedIds.map(id => {
-
-        })
+        folderStore.addModule(folderId, selectedIds)
+            .then(result => {
+                if (result?.isError === false) {
+                    navigate(-1)
+                }
+            })
     }
 
     const handleCancel = () => {
@@ -57,7 +61,7 @@ const ObserverAddToFolderPage = observer(({folderStore, moduleStore}: IProps) =>
 
     return (
         <>
-            <div className="p-2 relative">
+            <div className="p-2 relative w-full">
                 <div className=" text-gray-500 font-semibold mb-2">Выберите модули:</div>
                 <div className=" gap-2 grid grid-cols-2 mb-2 pb-20">
                     { moduleStore.modules.map(module => (
@@ -67,7 +71,7 @@ const ObserverAddToFolderPage = observer(({folderStore, moduleStore}: IProps) =>
                         </div>
                     )) }
                 </div>
-                <div className="p-4 fixed bottom-14 bg-white rounded-lg w-full ">
+                <div className="p-3 w-full left-1/2 translate-x-[-50%] fixed bottom-14 bg-white border-[1px] rounded-lg">
                     <div className="text-gray-500 font-semibold mb-2">
                         Выбрано модулей: {selectedIds.length}
                     </div>

@@ -12,8 +12,6 @@ import type {
 
   TAddModulePayload,
 
-  TRemoveModulePayload,
-
   TRemoveFolderPayload,
 
   TFolderSearchParams,
@@ -36,10 +34,6 @@ export async function updateFolder(client: Client, payload: TUpdateFolderPayload
 
 export async function addModule(client: Client, payload: TAddModulePayload): Promise<void | TError | undefined> {
   return request(client, 'post', '/folder/add-module', payload)
-}
-
-export async function removeModule(client: Client, payload: TRemoveModulePayload): Promise<void | TError | undefined> {
-  return request(client, 'post', '/folder/remove-module', payload)
 }
 
 export async function removeFolder(client: Client, payload: TRemoveFolderPayload): Promise<void | TError | undefined> {

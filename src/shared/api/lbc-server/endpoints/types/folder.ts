@@ -62,16 +62,10 @@ export type TUpdateFolderResponse = {
 export type TUpdateFolderReturn = (TUpdateFolderResponse & TError) | undefined
 
 
-/*Добавление модуля*/
+/*Добавление модулей*/
 export type TAddModulePayload = {
-    moduleId: number,
     folderId: number
-}
-
-/*Удаление модуля*/
-export type TRemoveModulePayload = {
-    moduleId: number,
-    folderId: number
+    moduleIds: number[],
 }
 
 /*Удаление папки*/
