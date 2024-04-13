@@ -43,7 +43,6 @@ export const FolderItem = ( {folder, isHidePublicIcon, isHideBookmarkIcon} : IPr
                             </div>
                             <div className='text-xs text-gray-300'>Изменен: {updatedAt}</div>
                         </div>
-                        <div className='absolute left-0 bottom-0 h-[4px] bg-indigo-200 w-full invisible group-hover:visible'></div>
                     </div>
             </div>
         </>

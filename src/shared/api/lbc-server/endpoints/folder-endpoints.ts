@@ -11,11 +11,15 @@ import type {
   TUpdateFolderReturn,
 
   TAddModulePayload,
+  TAddModulesPayload,
 
   TRemoveFolderPayload,
 
   TFolderSearchParams,
   TGetFoldersReturn,
+
+  TGetFoldersByModulePayload,
+  TGetFoldersByModuleReturn,
 
   TGetFolderModulesPayload,
   TGetFolderModulesReturn,
@@ -30,6 +34,10 @@ export async function createFolder(client: Client, payload: TCreateFolderPayload
 
 export async function updateFolder(client: Client, payload: TUpdateFolderPayload): Promise<TUpdateFolderReturn > {
   return request(client, 'post', '/folder/update', payload)
+}
+
+export async function addModules(client: Client, payload: TAddModulesPayload): Promise<void | TError | undefined> {
+  return request(client, 'post', '/folder/add-modules', payload)
 }
 
 export async function addModule(client: Client, payload: TAddModulePayload): Promise<void | TError | undefined> {
@@ -54,6 +62,10 @@ export async function getFolders(client: Client, searchParams?: TFolderSearchPar
     url += searchParamsObj.toString()
   }
   return request(client, 'get', url)
+}
+
+export async function getFoldersByModule(client: Client, payload: TGetFoldersByModulePayload): Promise<TGetFoldersByModuleReturn> {
+  return request(client, 'post', '/folder/by-module', payload)
 }
 
 export async function getFolderModules(client: Client, payload: TGetFolderModulesPayload): Promise<TGetFolderModulesReturn> {

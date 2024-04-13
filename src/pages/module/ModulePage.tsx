@@ -73,7 +73,8 @@ const ObservedModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
                         <PublicIcon sx={{width: 20, height: 20}}/>
                     </div>
                 </div>
-                <div className="flex flex-auto justify-end" onClick={() => setIsShowModal(true)}>
+                <div className={`flex-auto text-center text-lg border-[1px] rounded-lg`}>Модуль</div>
+                <div className="flex  justify-end" onClick={() => setIsShowModal(true)}>
                     <div className={`flex items-center text-gray-400`}><SettingsIcon sx={{width: 30, height: 30}}/></div>
                 </div>
             </div>

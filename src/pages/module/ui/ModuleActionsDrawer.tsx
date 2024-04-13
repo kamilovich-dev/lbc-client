@@ -76,12 +76,14 @@ const ModuleActionsDrawer = ( {module, setIsShowModal, moduleStore, isShowModal}
                                 <button className="text-md text-gray-500 flex-auto text-center"
                                     onClick={() => handleRemoveModuleBookmarkClick(module.id)}>Исключить из сохраненных</button>
                             </div>
+                            <div className="border-b-2 border-gray-200 w-full mb-4"></div>
                         </>:
                         <>
                             <div className="flex items-center mb-2">
                                 <button className="text-md text-gray-500 flex-auto text-center"
                                     onClick={() => handleCreateModuleBookmarkClick(module.id)}>Сохранить себе</button>
                             </div>
+                            <div className="border-b-2 border-gray-200 w-full mb-4"></div>
                         </>}
                     </>}
 
@@ -103,13 +105,10 @@ const ModuleActionsDrawer = ( {module, setIsShowModal, moduleStore, isShowModal}
                             <div className="border-b-2 border-gray-200 w-full mb-4"></div>
                         </> : null}
 
-                    {module.options.isOwner ?
-                        <>
-                            <div className="flex items-center mb-2">
-                            <button className="text-md text-gray-500 flex-auto text-center"
-                                onClick={() => handleAddToFolderClick(module)}>Добавить в папку</button>
-                            </div>
-                        </> : null}
+                    <div className="flex items-center mb-2">
+                        <button className="text-md text-gray-500 flex-auto text-center"
+                            onClick={() => handleAddToFolderClick(module)}>Добавить в папку</button>
+                    </div>
                 </div>
             </Drawer>
         </div>

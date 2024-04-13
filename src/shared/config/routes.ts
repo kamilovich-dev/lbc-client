@@ -20,6 +20,7 @@ export enum routePaths {
     MODULES_ADD_TO_FOLDER = '/modules/add-to-folder/:folderId',
 
     PROFILE = '/profile',
+    PROFILE_EDIT = '/profile/edit',
 
     GLOBAL_SEARCH = '/global-search'
 }

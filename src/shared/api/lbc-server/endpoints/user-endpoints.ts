@@ -39,8 +39,8 @@ export async function refreshToken(client: Client): Promise<TRefreshTokenReturn>
 }
 
 /*Новые*/
-export async function updateAvatar(client: Client, payload: TUpdateAvatarPayload): Promise<TUpdateAvatarReturn> {
-  return request(client, 'post', '/user/update-avatar', payload)
+export async function updateAvatar(client: Client, formDataPayload: TUpdateAvatarPayload): Promise<TUpdateAvatarReturn> {
+  return request(client, 'post', '/user/update-avatar', formDataPayload)
 }
 
 export async function passwordForgot(client: Client, payload: TPasswordForgotPayload): Promise<TPasswordForgotReturn> {

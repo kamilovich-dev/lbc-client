@@ -88,13 +88,24 @@ export class FolderStore {
         })
     }
 
-    addModule = async (folderId: number, moduleIds: number[]) => {
-        return folderEndpoints.addModule(this.client, {
+    addModules = async (folderId: number, moduleIds: number[]) => {
+        return folderEndpoints.addModules(this.client, {
             folderId, moduleIds
         }).then(result => {
             if (result?.isError === false) {
                 this.client.renderMessage(ApiSuccess, 'Успешно')
                 this.refreshModulesByFolderId(folderId)
+            }
+            return result
+        })
+    }
+
+    addModule = async (folderIds: number[], moduleId: number) => {
+        return folderEndpoints.addModule(this.client, {
+            folderIds, moduleId
+        }).then(result => {
+            if (result?.isError === false) {
+                this.client.renderMessage(ApiSuccess, 'Успешно')
             }
             return result
         })
@@ -149,6 +160,15 @@ export class FolderStore {
                     runInAction(() => this.folders = [response?.folder])
                 }
             })
+    }
+
+    /*Необходимо получить папки, в которых есть данный моудль*/
+    getFoldersByModuleId = async (moduleId: number) => {
+        return folderEndpoints.getFoldersByModule(this.client, { moduleId })
+    }
+
+    getOnlyOwnFolders = () => {
+        return this.folders.filter(folder => folder.options.isOwner === true)
     }
 
     getFolderById = (folderId: number) => {

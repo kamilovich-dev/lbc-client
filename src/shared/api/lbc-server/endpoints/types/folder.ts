@@ -63,9 +63,15 @@ export type TUpdateFolderReturn = (TUpdateFolderResponse & TError) | undefined
 
 
 /*Добавление модулей*/
-export type TAddModulePayload = {
+export type TAddModulesPayload = {
     folderId: number
     moduleIds: number[],
+}
+
+/*Добавление модуля*/
+export type TAddModulePayload = {
+    folderIds: number[],
+    moduleId: number,
 }
 
 /*Удаление папки*/
@@ -81,6 +87,18 @@ export type TGetFolderModulesPayload = {
 export type TGetFolderModulesResponse = {
     modules: TModule[]
 }
+
+/*Получение папок по модулю*/
+export type TGetFoldersByModulePayload = {
+    moduleId: number
+}
+
+export type TGetFoldersByModuleResponse = {
+    folders: TFolder[]
+}
+
+export type TGetFoldersByModuleReturn = (TGetFoldersByModuleResponse & TError) | undefined
+
 
 export type TGetFolderModulesReturn = (TGetFolderModulesResponse & TError) | undefined
 

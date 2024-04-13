@@ -1,8 +1,6 @@
 import type { TError } from './error'
 
 /*Получение персональных данных*/
-export type TGetPersonalDataPayload = {
-}
 export type TGetPersonalDataResponse ={
   personalData: TPersonalData
 }
@@ -16,10 +14,10 @@ export type TUpdatePersonalDataResponse ={
 
 export type TUpdatePersonalDataReturn = (TUpdatePersonalDataResponse & TError) | undefined
 
-type TPersonalData = {
+export type TPersonalData = {
     userId: number,
     firstName: string | undefined,
     lastName: string | undefined,
     fatherName: string | undefined,
-    birthDate: string | null | undefined, //2011-10-05
+    birthDate: string | undefined, //2011-10-05
 }

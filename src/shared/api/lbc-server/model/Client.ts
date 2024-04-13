@@ -3,16 +3,13 @@ import { refreshToken } from '../endpoints/user-endpoints'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { ApiError } from "../ui/ApiError"
-import { ApiSuccess } from "../ui/ApiSuccess"
 import { makeObservable, observable, autorun, runInAction } from "mobx"
 import { TokenStorage } from "./TokenStorage"
-
-
 
 class Client {
 
   BASE_URL: string = import.meta.env.VITE_LBC_SERVER_API_URL
-  TIMEOUT = 2000 /*Axios response timeout*/
+  TIMEOUT = 10000 /*Axios response timeout*/
   MESSAGE_DURATION = 2000 /*Error message duration*/
 
   responseDelayTimerID: NodeJS.Timer | undefined = undefined

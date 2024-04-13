@@ -22,6 +22,8 @@ import { FoldersPage } from "pages/folders/FoldersPage";
 import { FolderPage } from "pages/folder/FolderPage";
 import { GlobalSearchPage } from "pages/global-search/GlobalSearchPage";
 import { AddToFolderPage } from "pages/modules/AddToFolderPage";
+import { AddModulePage } from "pages/folders/AddModulePage"
+import { ProfileEditPage } from "pages/profile/ProfieEditPage";
 
 export const AppRouter = () => {
 
@@ -92,6 +94,14 @@ export const AppRouter = () => {
                         {
                             element: <AddToFolderPage/>,
                             path: routePaths.MODULES_ADD_TO_FOLDER
+                        },
+                        {
+                            element: <AddModulePage/>,
+                            path: routePaths.FOLDERS_ADD_MODULE
+                        },
+                        {
+                            element: <ProfileEditPage/>,
+                            path: routePaths.PROFILE_EDIT
                         }
                     ]
                 },

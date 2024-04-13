@@ -3,36 +3,38 @@ import { observer } from "mobx-react-lite"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { CircularLoader } from "shared/ui/loaders/CircularLoader"
+import { FolderItem } from "entities/folder"
 import { ModuleItem, ModuleStore } from "entities/module"
-import { useInitAddToFolder } from "./model/useInitAddToFolder"
+import { useInitAddModule } from "./model/useInitAddModule"
+import { TFolder } from "shared/api/lbc-server/endpoints/types/folder"
 
-export const AddToFolderPage = (  ) => {
+export const AddModulePage = (  ) => {
 
     const routeParams = useParams();
-    const folderId = routeParams.folderId ? parseInt(routeParams.folderId) : undefined
-    const { folderStore, moduleStore } = useInitAddToFolder(folderId)
+    const moduleId = routeParams.moduleId ? parseInt(routeParams.moduleId) : undefined
+    const { folderStore, foldersByModule } = useInitAddModule(moduleId)
 
-    if (!folderId) return
-    if (!folderStore || !moduleStore) return
-    if (folderStore.client.isLoading || moduleStore.client.isLoading) return <CircularLoader/>
+    if (!moduleId) return
+    if (!folderStore || !foldersByModule) return
+    if (folderStore.client.isLoading) return <CircularLoader/>
 
-    return <ObserverAddToFolderPage folderStore={folderStore} moduleStore={moduleStore} folderId={folderId}/>
+    return <ObserverAddModulePage folderStore={folderStore} foldersByModule={foldersByModule} moduleId={moduleId}/>
 }
 
 interface IProps {
     folderStore: FolderStore,
-    moduleStore: ModuleStore,
-    folderId: number,
+    foldersByModule: TFolder[],
+    moduleId: number,
 }
 
-const ObserverAddToFolderPage = observer(({folderStore, moduleStore, folderId}: IProps) => {
+const ObserverAddModulePage = observer(({folderStore, foldersByModule, moduleId}: IProps) => {
 
     const [selectedIds, setSelectedIds] = useState<number[]>([])
     const navigate = useNavigate()
 
     useEffect(() => {
-        const moduleIds = folderStore.modules.map(module => module.id)
-        setSelectedIds(moduleIds)
+        const folderIds = foldersByModule.map(folder => folder.id)
+        setSelectedIds(folderIds)
     }, [])
 
     const handleClick = (moduleId: number) => {
@@ -47,7 +49,7 @@ const ObserverAddToFolderPage = observer(({folderStore, moduleStore, folderId}: 
     }
 
     const handleAccept = async () => {
-        folderStore.addModules(folderId, selectedIds)
+        folderStore.addModule(selectedIds, moduleId)
             .then(result => {
                 if (result?.isError === false) {
                     navigate(-1)
@@ -62,18 +64,18 @@ const ObserverAddToFolderPage = observer(({folderStore, moduleStore, folderId}: 
     return (
         <>
             <div className="p-2 relative w-full">
-                <div className=" text-gray-500 font-semibold mb-2">Выберите модули:</div>
+                <div className=" text-gray-500 font-semibold mb-2">Выберите папки:</div>
                 <div className=" gap-2 grid grid-cols-2 mb-2 pb-20">
-                    { moduleStore.modules.map(module => (
-                        <div key={module.id} onClick={() => handleClick(module.id)}
-                            className={`border-2 ${selectedIds.find(id => id === module.id) ? 'border-blue-400' : ''}` }>
-                            <ModuleItem module={module} isHidePublicIcon={true} isHideBookmarkIcon={true}/>
+                    { folderStore.getOnlyOwnFolders().map(folder => (
+                        <div key={folder.id} onClick={() => handleClick(folder.id)}
+                            className={`border-2  ${selectedIds.find(id => id === folder.id) ? 'border-blue-400' : 'border-transparent'}` }>
+                                 <FolderItem folder={folder} isHidePublicIcon={true} isHideBookmarkIcon={true}/>
                         </div>
                     )) }
                 </div>
                 <div className="p-3 w-full left-1/2 translate-x-[-50%] fixed bottom-14 bg-white border-[1px] rounded-lg">
                     <div className="text-gray-500 font-semibold mb-2">
-                        Выбрано модулей: {selectedIds.length}
+                        Выбрано папок: {selectedIds.length}
                     </div>
                     <div className="flex justify-start gap-4">
                         <button

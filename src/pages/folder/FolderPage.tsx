@@ -20,6 +20,11 @@ import { UserData } from "features/profile/UserData";
 import { FolderStore } from "entities/folder";
 import { FolderEditModal } from "features/folder-edit/FolderEditModal";
 
+import { TModule } from "shared/api/lbc-server/endpoints/types/modules";
+
+import { useNavigate, generatePath } from "react-router-dom";
+import { routePaths } from "shared/config";
+
 interface IProps {
     folderStore: FolderStore,
     folderId: number,
@@ -42,6 +47,7 @@ const ObservedFolderPage = observer(( { folderStore, folderId }: IProps ) => {
 
     const [isShowActionsModal, setIsShowActionsModal] = useState(false)
     const [isShowEditModal, setIsShowEditModal] = useState(false)
+    const navigate = useNavigate()
 
     const folder = folderStore.getFolderById(folderId)
     if (!folder) return <></>
@@ -60,6 +66,10 @@ const ObservedFolderPage = observer(( { folderStore, folderId }: IProps ) => {
         setIsShowEditModal(true)
     }
 
+    const handleModuleRowClick = (module: TModule) => {
+        navigate(generatePath(routePaths.MODULE, { moduleId: String(module.id) ?? '' }))
+    }
+
     return(
         <>
         <div className='w-3/5 ml-auto mr-auto p-4 md-max:w-full md-max:p-2'>
@@ -72,7 +82,8 @@ const ObservedFolderPage = observer(( { folderStore, folderId }: IProps ) => {
                         <PublicIcon sx={{width: 20, height: 20}}/>
                     </div>
                 </div>
-                <div className="flex flex-auto justify-end" onClick={() => setIsShowActionsModal(true)}>
+                <div className={`flex-auto text-center text-lg border-[1px] rounded-lg`}>Папка</div>
+                <div className="flex justify-end" onClick={() => setIsShowActionsModal(true)}>
                     <div className={`flex items-center text-gray-400`}><SettingsIcon sx={{width: 30, height: 30}}/></div>
                 </div>
             </div>
@@ -142,7 +153,7 @@ const ObservedFolderPage = observer(( { folderStore, folderId }: IProps ) => {
 
             <div className="pb-20">
                 { modules.length ? modules.map((module, idx) => (
-                    <div className='mb-3' key={module.id} id={module.id.toString()}>
+                    <div className='mb-3' key={module.id} id={module.id.toString()} onClick={e => handleModuleRowClick(module)}>
                         <ModuleItem
                             isHideBookmarkIcon={true}
                             module={module}

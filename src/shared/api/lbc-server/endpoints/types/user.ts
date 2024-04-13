@@ -40,7 +40,7 @@ export type TRefreshTokenReturn = (TRefreshTokenResponse & TError) | undefined
 
 /*Обновление аватара*/
 export type TUpdateAvatarPayload = {
-  avatarUrl?: null,
+  avatarUrl?: '',
   avatarFile?: File
 }
 export type TUpdateAvatarReturn = ({

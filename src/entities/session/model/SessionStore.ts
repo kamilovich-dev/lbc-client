@@ -1,20 +1,17 @@
 import {  makeAutoObservable} from "mobx";
 import { TokenStorage } from "shared/api/lbc-server";
 import { Client, userEndpoints } from "shared/api/lbc-server";
-import type { TUser } from "shared/api/lbc-server/endpoints/types/user";
 
 import { TLoginReturn, TRegisterReturn, TPasswordForgotReturn, TPasswordResetReturn, TUpdateAvatarReturn } from "shared/api/lbc-server/endpoints/types/user";
 
 type TSession = {
     isAuth: boolean,
-    user: TUser | undefined
 }
 
 class SessionStore {
 
     session: TSession = {
         isAuth: false,
-        user: undefined,
     }
     client: Client
 
@@ -30,18 +27,8 @@ class SessionStore {
     private initSession = () => {
         this.session.isAuth =  TokenStorage.getToken() ? true : false
         if (this.session.isAuth) {
-            this.getUserData()
             this.setTokenCheckTimer()
         }
-    }
-
-    private getUserData = async () => {
-        userEndpoints.getUser(this.client)
-            .then(response => {
-                if (response?.user) {
-                    this.session.user = response.user
-                }
-            })
     }
 
     private setTokenCheckTimer = () => {
@@ -65,7 +52,6 @@ class SessionStore {
                 if (response?.accessToken) {
                     TokenStorage.setToken(response.accessToken)
                     this.session.isAuth = true
-                    this.session.user = response.user
                     this.setTokenCheckTimer()
                 }
                 return response
@@ -77,7 +63,6 @@ class SessionStore {
         TokenStorage.removeToken()
         await userEndpoints.logout(this.client)
         this.session.isAuth = false
-        this.session.user = undefined
     }
 
     forgot = async(email?: string, login?: string): Promise<TPasswordForgotReturn> => {
