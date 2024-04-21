@@ -6,7 +6,6 @@ import { ModuleStore } from 'entities/module';
 import React, { useState } from "react";
 
 import type { TMduleSearchParams } from 'shared/api/lbc-server/endpoints/types/modules'
-import { useNavigate } from 'react-router-dom';
 
 interface IModuleFilterLocal extends Omit<TMduleSearchParams, 'by_search'> {}
 
@@ -16,7 +15,6 @@ interface IProps {
     setIsShowModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-type TShow = 'modules' | 'folders'
 
 export const ModuleListSettings = observer(( {moduleStore, isShowModal, setIsShowModal}: IProps ) => {
 

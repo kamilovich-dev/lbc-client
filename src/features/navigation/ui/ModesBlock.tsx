@@ -13,7 +13,6 @@ const ModesBlock = ( ) => {
     const navigate = useNavigate()
     const params = useParams()
 
-
     const navigations = [
         {
             icon: <ViewCarouselIcon />,
@@ -33,7 +32,7 @@ const ModesBlock = ( ) => {
         {
             icon: <FactCheckIcon />,
             text: 'Подбор',
-            handleClick: () => navigate(generatePath(routePaths.CARDS_MODE, { moduleId: params.moduleId ?? '' }))
+            handleClick: () => navigate(generatePath(routePaths.SELECTION_MODE, { moduleId: params.moduleId ?? '' }))
         }
     ]
 

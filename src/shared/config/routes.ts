@@ -10,7 +10,11 @@ export enum routePaths {
     MODULES = '/modules',
     MODULE = '/modules/:moduleId',
     MODULE_EDIT = '/modules/:moduleId/edit',
+
     CARDS_MODE = '/modules/:moduleId/cards-mode',
+    SELECTION_MODE = '/modules/:moduleId/selection-mode',
+    MEMORY_MODE = '/modules/:moduleId/memory-mode',
+    TEST_MODE = '/modules/:moduleId/test-mode',
 
     FOLDERS = '/folders',
     FOLDER = '/folders/:folderId',

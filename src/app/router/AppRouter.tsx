@@ -24,6 +24,7 @@ import { GlobalSearchPage } from "pages/global-search/GlobalSearchPage";
 import { AddToFolderPage } from "pages/modules/AddToFolderPage";
 import { AddModulePage } from "pages/folders/AddModulePage"
 import { ProfileEditPage } from "pages/profile/ProfieEditPage";
+import { SelectionModePage } from "pages/modes/selection-mode/SelectionModePage";
 
 export const AppRouter = () => {
 
@@ -102,6 +103,10 @@ export const AppRouter = () => {
                         {
                             element: <ProfileEditPage/>,
                             path: routePaths.PROFILE_EDIT
+                        },
+                        {
+                            element: <SelectionModePage/>,
+                            path: routePaths.SELECTION_MODE
                         }
                     ]
                 },
