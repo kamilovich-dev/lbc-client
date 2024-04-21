@@ -55,9 +55,9 @@ export type TDeleteModulePayload = {
 /*Изменение модуля*/
 export type TEditModulePayload = {
     moduleId: number,
-    name: string | undefined,
-    description: string | undefined,
-    isPublished: boolean | undefined,
+    name?: string,
+    description?: string,
+    isPublished?: boolean,
 }
 
 export type TEditModuleResponse = {

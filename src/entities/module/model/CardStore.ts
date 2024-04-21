@@ -1,17 +1,14 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx';
 import { cardEndpoints, Client } from 'shared/api/lbc-server';
 import { ApiSuccess } from 'shared/api/lbc-server/ui/ApiSuccess';
+import type { TCard, TEditCardPayload } from 'shared/api/lbc-server/endpoints/types/cards';
 
 class CardStore {
     moduleId: number
     cards: TCard[] = [] ;
     client: Client;
-    filters: TCardsFilter = {
-        by_alphabet: '',
-        by_search: ''
-    }
-    DELAY_TIME: number = 1000
-    delayTimer: NodeJS.Timer | undefined
+    DEBOUNCE_DELAY: number = 1000
+    DEBOUNCE_TIMER_ID: NodeJS.Timer | undefined
 
     constructor(moduleId: number) {
         makeAutoObservable(this)
@@ -19,10 +16,19 @@ class CardStore {
         this.moduleId = moduleId
     }
 
+    private debouncedCall = async<T> (callback: () => Promise<T>) => {
+        clearTimeout(this.DEBOUNCE_TIMER_ID)
+        return new Promise<T>( resolve => {
+            this.DEBOUNCE_TIMER_ID = setTimeout( () => resolve(callback()), this.DEBOUNCE_DELAY)
+        })
+    }
+
     refreshCards = async () => {
-        return cardEndpoints.getCards(this.client, { moduleId: this.moduleId } ,this.filters)
+        return cardEndpoints.getCards(this.client, { moduleId: this.moduleId })
             .then (response => {
-                if (response?.cards) this.cards = response.cards
+                if (response?.isError === false) {
+                    runInAction(() => this.cards = response.cards)
+                }
             })
     }
 
@@ -34,58 +40,83 @@ class CardStore {
             term: 'Новый термин',
             definition: 'Новое определение',
             isFavorite: false
-        }).then( () => {
-            this.refreshCards()
-            this.client.renderMessage(ApiSuccess, 'Добавлено', 200)
+        }).then( response => {
+            if (response?.isError === false) {
+                this.client.renderMessage(ApiSuccess, 'Добавлено')
+                this.refreshCards()
+            }
         })
     }
 
     deleteCardById = async (cardId: number) => {
-        cardEndpoints.deleteCard(this.client, { cardId: cardId })
-            .then(() => {
-                this.refreshCards()
-                this.client.renderMessage(ApiSuccess, 'Удалено', 200)
+        cardEndpoints.deleteCard(this.client, { cardId })
+            .then(response => {
+                if (response?.isError === false) {
+                    this.client.renderMessage(ApiSuccess, 'Удалено')
+                    this.refreshCards()
+                }
             })
     }
 
-    editCard = ( { cardId, name, value, isSwitchFavorite, image, isDeleteImg } :  TEditCard) => {
-        const card = this.cards.find(card => card.id == cardId)
+    updateCard = async (  { cardId, term, definition }: TUpdateCard  ) => {
+
+        const card = this.getCardById(cardId)
         if (!card) return
 
-        if (name == 'term') card.term = value || ''
-        if (name == 'definition') card.definition = value || ''
-        if (isSwitchFavorite) {
-            if (card.isFavorite == true || card.isFavorite == false) {
-                card.isFavorite = !card.isFavorite
-            } else {
-                card.isFavorite = true
+        card.term = term
+        card.definition = definition ?? ''
+
+        const formdata = new FormData()
+        formdata.append('cardId', String(cardId))
+        formdata.append('term', term)
+        formdata.append('definition', definition ?? '')
+
+        this.debouncedCall(() => cardEndpoints.editCard(this.client, formdata as any) )
+            .then(response => {
+                if (response?.isError === false) {
+                    this.refreshCards()
+                }
+            })
+    }
+
+    updateCardImage = async (  { cardId, img}: TUpdateCardImage ) => {
+        const formdata = new FormData()
+
+        formdata.append('cardId', String(cardId))
+
+        if (img) formdata.append('imgFile', img)
+                else formdata.append('imgUrl', '')
+
+        cardEndpoints.editCard(this.client, formdata as any)
+            .then(response => {
+                if (response?.isError === false) {
+                    this.refreshCards()
+                }
+            })
+
+    }
+
+    updateCardIsFavorite = async ( { cardId }: TUpdateCardIsFavorite) => {
+        const card = this.getCardById(cardId)
+        if (!card) return
+
+        const isFavorite = card.isFavorite ? 'false' : 'true'
+        card.isFavorite = isFavorite === 'true' ? true : false
+
+        cardEndpoints.editCard(this.client, {
+            cardId,
+            isFavorite
+        })
+        .then(response => {
+            if (response?.isError === false) {
+                this.refreshCards()
             }
-        }
-
-        clearTimeout(this.delayTimer)
-        this.delayTimer = setTimeout(async () => {
-            const formData = new FormData()
-            formData.append('cardId', cardId.toString())
-            formData.append('term', card.term || '')
-            formData.append('definition', card.definition || '')
-
-            if (isSwitchFavorite) formData.append('isFavorite', String(card.isFavorite))
-
-            if (isDeleteImg) {
-                formData.append('isDeleteImg', 'true')
-            } else if (image) {
-                formData.append('img', image)
-            }
-
-            cardEndpoints.editCard(this.client, formData as any)
-                .then( () => this.refreshCards())
-
-        }, isDeleteImg || image || isSwitchFavorite ? 0 : this.DELAY_TIME)
+        })
 
     }
 
     switchOrder = async ( { cardId1, cardId2 }: TSwitchOrder )  => {
-        cardEndpoints.switchOrder( this.client,  {cardId1, cardId2} )
+        cardEndpoints.switchOrder( this.client,  { cardId1, cardId2 } )
     }
 
 }
@@ -95,27 +126,19 @@ type TSwitchOrder = {
     cardId2: number
 }
 
-type TEditCard = {
+type TUpdateCard = {
     cardId: number,
-    name?: string,
-    value?: string,
-    isSwitchFavorite?: boolean,
-    image?: Blob | undefined
-    isDeleteImg?: boolean
-}
-
-type TCardsFilter = {
-    by_search: string,
-    by_alphabet: string,
-}
-
-type TCard = {
-    id: number,
-    order: number,
     term: string,
-    definition?: string,
-    isFavorite?: boolean,
-    imgUrl?: string,
+    definition: string | undefined
+}
+
+type TUpdateCardImage = {
+    cardId: number,
+    img: File | undefined
+}
+
+type TUpdateCardIsFavorite = {
+    cardId: number,
 }
 
 export { CardStore }

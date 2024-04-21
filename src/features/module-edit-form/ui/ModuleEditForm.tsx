@@ -1,5 +1,5 @@
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -10,6 +10,8 @@ import { ModuleStore, CardStore } from 'entities/module';
 import { CardImage } from './CardImage';
 import { DragDropContext, Draggable, DragUpdate, Droppable, DropResult } from 'react-beautiful-dnd'
 import { CircularLoader } from "shared/ui/loaders/CircularLoader";
+import { useInitModuleEditForm } from '../model/useInitModuleEditForm';
+import { useAbortController } from 'entities/session';
 
 interface IOuterProps {
     moduleId: number
@@ -22,8 +24,11 @@ interface IInnerProps {
 }
 
 const ModuleEditForm = ( { moduleId }: IOuterProps) => {
-    const moduleStore = new ModuleStore();
-    const cardStore = new CardStore(moduleId);
+    const { moduleStore, cardStore } = useInitModuleEditForm(moduleId)
+    useAbortController([moduleStore, cardStore])
+
+    if (!moduleStore || !cardStore) return
+    if (moduleStore?.client.isLoading || cardStore?.client.isLoading) return <CircularLoader/>
 
     return (<ObserverModuleEditForm
                 moduleId={moduleId}
@@ -34,16 +39,10 @@ const ModuleEditForm = ( { moduleId }: IOuterProps) => {
 
 const ObserverModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: IInnerProps ) => {
 
-    useEffect( () => {
-        console.log('request')
-        cardStore.refreshCards()
-        moduleStore.refreshModules()
-    }, [moduleId])
-
     const module = moduleStore.getModuleById(moduleId)
     const cards = cardStore.cards;
 
-    if (!cards || !module) return <CircularLoader/>
+    if (!module) return
 
     const handleDragEnd = (result: DropResult ) => {
         const { destination, source } = result
@@ -88,7 +87,11 @@ const ObserverModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: 
                     label="Название"
                     variant="standard"
                     value={module.name}
-                    onChange={(e) => moduleStore.editModule({id: moduleId, name: e.target.name, value: e.target.value})}/>
+                    onChange={(e) => moduleStore.updateModule({
+                        moduleId,
+                        name: e.target.value,
+                        description: module.description
+                    })}/>
             </div>
             <div className={'py-2 mb-2 w-2/6 md-max:w-full'}>
                     <TextField
@@ -100,7 +103,11 @@ const ObserverModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: 
                         label="Описание"
                         variant="standard"
                         value={module.description}
-                        onChange={(e) => moduleStore.editModule({id: moduleId, name: e.target.name, value: e.target.value})} />
+                        onChange={(e) => moduleStore.updateModule({
+                            moduleId,
+                            name: module.name,
+                            description: e.target.value
+                        })} />
             </div>
             <div className='mb-4'>
                     <div className='font-normal text-xs text-slate-400 mb-1'>
@@ -149,10 +156,10 @@ const ObserverModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: 
                                                                         InputLabelProps={{style: {fontSize: 12}}}
                                                                         inputProps={{style: {fontSize: 14}}}
                                                                         value={card.term}
-                                                                        onChange={(e) => cardStore.editCard({
+                                                                        onChange={(e) => cardStore.updateCard({
                                                                             cardId: card.id,
-                                                                            name: e.target.name,
-                                                                            value: e.target.value
+                                                                            term: e.target.value,
+                                                                            definition: card.definition
                                                                         })}/>}
                                                                     Definition={<TextField
                                                                         multiline
@@ -163,10 +170,10 @@ const ObserverModuleEditForm = observer(( { moduleId, moduleStore, cardStore }: 
                                                                         InputLabelProps={{style: {fontSize: 12}}}
                                                                         inputProps={{style: {fontSize: 14}}}
                                                                         value={card.definition}
-                                                                        onChange={(e) => cardStore.editCard({
+                                                                        onChange={(e) => cardStore.updateCard({
                                                                             cardId: card.id,
-                                                                            name: e.target.name,
-                                                                            value: e.target.value
+                                                                            term: card.term,
+                                                                            definition: e.target.value
                                                                         })}/>}
                                                                     DeleteCard={
                                                                         <Button

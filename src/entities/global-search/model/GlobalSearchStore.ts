@@ -36,8 +36,15 @@ export class GlobalSearchStore {
         folders: []
     }
 
-    DELAY_TIME: number = 1000
-    delayTimer: NodeJS.Timer | undefined
+    DEBOUNCE_DELAY: number = 1000
+    DEBOUNCE_TIMER_ID: NodeJS.Timer | undefined
+
+    private debouncedCall = async<T> (callback: () => Promise<T>) => {
+        clearTimeout(this.DEBOUNCE_TIMER_ID)
+        return new Promise<T>( resolve => {
+            this.DEBOUNCE_TIMER_ID = setTimeout( () => resolve(callback()), this.DEBOUNCE_DELAY)
+        })
+    }
 
     private checkIsFiltered = () => {
         //@ts-ignore
@@ -61,8 +68,7 @@ export class GlobalSearchStore {
 
     setSearchFilter = (value: TGlobalSearchParams['by_search']) => {
         this.filters.by_search = value ?? ''
-        clearTimeout(this.delayTimer)
-        this.delayTimer = setTimeout(this.search, this.DELAY_TIME)
+        this.debouncedCall(this.search)
         this.checkIsFiltered()
     }
 
@@ -92,11 +98,13 @@ export class GlobalSearchStore {
     }
 
     search = async () => {
-        globalSearchEndpoints.globalSearch(this.client, this.filters)
+        return globalSearchEndpoints.globalSearch(this.client, this.filters)
             .then(result => {
                 if (result?.isError === false) {
-                    runInAction(() => this.searchResult.modules = result.modules)
-                    runInAction(() => this.searchResult.folders = result.folders)
+                    runInAction(() => {
+                        this.searchResult.modules = result.modules
+                        this.searchResult.folders = result.folders
+                    })
                 }
             })
     }

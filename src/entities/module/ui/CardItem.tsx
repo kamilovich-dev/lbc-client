@@ -12,10 +12,9 @@ interface IProps {
     isOwner: boolean | undefined,
     isFavorite: boolean,
     handleSwitchFavorite: (cardId: number) => void
-    handleEditCard: ( cardId: number, name: string, value: string) => void
 }
 
-export const CardItem = ( {cardId, cardIdx, termin, definition, imgUrl, isFavorite, isOwner, handleSwitchFavorite, handleEditCard} : IProps  ) => {
+export const CardItem = ( {cardId, cardIdx, termin, definition, imgUrl, isFavorite, isOwner, handleSwitchFavorite} : IProps  ) => {
 
     const [isShowImageModal, setIsShowImageModal] = useState(false)
     const srcUrl = imgUrl ? import.meta.env.VITE_LBC_SERVER_STATIC_URL + '/' + imgUrl : imgUrl
@@ -42,10 +41,6 @@ export const CardItem = ( {cardId, cardIdx, termin, definition, imgUrl, isFavori
                                 name='term'
                                 variant="standard"
                                 value={termin}
-                                onChange={(e) => handleEditCard(
-                                    cardId,
-                                    e.target.name,
-                                    e.target.value)}
                                 />
                         </div>
                         {srcUrl ?
@@ -71,10 +66,6 @@ export const CardItem = ( {cardId, cardIdx, termin, definition, imgUrl, isFavori
                                 name='definition'
                                 variant="standard"
                                 value={definition}
-                                onChange={(e) => handleEditCard(
-                                    cardId,
-                                    e.target.name,
-                                    e.target.value)}
                                 />
                     </div>
                     <div className='flex w-2/12 justify-end'>

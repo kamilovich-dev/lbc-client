@@ -15,13 +15,20 @@ class ModuleStore {
         isListed: false, /*Отображение списком*/
         isFiltered: false, /*Активирован фильтр*/
     }
-    DELAY_TIME: number = 1000
-    delayTimer: NodeJS.Timer | undefined
+    DEBOUNCE_DELAY: number = 1000
+    DEBOUNCE_TIMER_ID: NodeJS.Timer | undefined
     client: Client;
 
     constructor() {
         makeAutoObservable(this)
         this.client = new Client()
+    }
+
+    private debouncedCall = async<T> (callback: () => Promise<T>) => {
+        clearTimeout(this.DEBOUNCE_TIMER_ID)
+        return new Promise<T>( resolve => {
+            this.DEBOUNCE_TIMER_ID = setTimeout( () => resolve(callback()), this.DEBOUNCE_DELAY)
+        })
     }
 
     private checkIsFiltered = () => {
@@ -79,31 +86,43 @@ class ModuleStore {
         })
     }
 
-    editModule = ( { id, name, value } : TEditModule ) => {
-        const module = this.modules.find(module => module.id == id)
+    updateModule = ( { moduleId, name, description } : TUpdateModule ) => {
+        const module = this.modules.find(module => module.id === moduleId)
         if (!module) return
 
-        if (name == 'name') module.name = value
-        if (name == 'description') module.description = value
-        if (name == 'isPublished') module.isPublished = module.isPublished ? !module.isPublished : true
+        module.name = name
+        module.description = description
 
-        clearTimeout(this.delayTimer)
-        if (name == 'name' || name == 'description') {
-            this.delayTimer = setTimeout(() => {
-                this.edit(module).then( (result) => {
-                    if (result?.isError === false) this.refreshModules()
-                })
-            }, this.DELAY_TIME)
-        } else this.edit(module)
+        if (name === '') return
+
+        this.debouncedCall(() => moduleEndpoints.editModule(this.client, {
+            moduleId,
+            name,
+            description,
+        }))
+        .then(response => {
+            if (response?.isError === false) {
+                this.refreshModules()
+            }
+        })
     }
 
-    private edit= async (module: TModule) => {
-        return moduleEndpoints.editModule(this.client, {
-            moduleId: module.id,
-            name: module.name,
-            isPublished: module.isPublished,
-            description: module.description
+    updateModuleIsPublished = async ( { moduleId }: TUpdateModuleIsFavorite) => {
+        const module = this.modules.find(module => module.id === moduleId)
+        if (!module) return
+
+        module.isPublished = module.isPublished ? false : true
+
+        moduleEndpoints.editModule(this.client, {
+            moduleId,
+            isPublished: module.isPublished
         })
+        .then(response => {
+            if (response?.isError === false) {
+                this.refreshModules()
+            }
+        })
+
     }
 
     refreshModules = async () => {
@@ -134,8 +153,7 @@ class ModuleStore {
 
     setSearchFilter = (value: TMduleSearchParams['by_search']) => {
         this.filters.by_search = value ?? ''
-        clearTimeout(this.delayTimer)
-        this.delayTimer = setTimeout(this.refreshModules, this.DELAY_TIME)
+        this.debouncedCall(this.refreshModules)
         this.checkIsFiltered()
     }
 
@@ -159,10 +177,14 @@ type TView = {
     isFiltered: boolean,
 }
 
-type TEditModule = {
-    id: number,
+type TUpdateModule = {
+    moduleId: number,
     name: string,
-    value: string,
+    description: string,
+}
+
+type TUpdateModuleIsFavorite = {
+    moduleId: number,
 }
 
 export { ModuleStore }

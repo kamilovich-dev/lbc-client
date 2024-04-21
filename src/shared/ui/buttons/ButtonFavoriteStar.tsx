@@ -8,7 +8,7 @@ interface IProps {
 
 const ButtonFavoriteStar = ( { isFavorite, onClick }: IProps ) => {
     return (
-        <button className='w-10 h-10 flex rounded-full justify-center items-center hover:bg-slate-200 active:bg-slate-300'
+        <button className='w-10 h-10 flex rounded-full justify-center items-center active:bg-slate-300'
               onClick={onClick}>
             <SvgIcon
                      className={ isFavorite ? 'text-yellow-400' : 'text-slate-300'}>

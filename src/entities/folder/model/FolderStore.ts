@@ -41,7 +41,7 @@ export class FolderStore {
         this.client = new Client()
     }
 
-    private debouncedCall = async<T>(callback: T extends Function ? T : any) => {
+    private debouncedCall = async<T> (callback: () => Promise<T>) => {
         clearTimeout(this.DEBOUNCE_TIMER_ID)
         return new Promise<T>( resolve => {
             this.DEBOUNCE_TIMER_ID = setTimeout( () => resolve(callback()), this.DEBOUNCE_DELAY)

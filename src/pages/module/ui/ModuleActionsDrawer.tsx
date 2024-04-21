@@ -17,7 +17,7 @@ const ModuleActionsDrawer = ( {module, setIsShowModal, moduleStore, isShowModal}
     if (!module) return
 
     const handlePublicateClick = (module: TModule) => {
-        moduleStore.editModule( {id: module.id, name: 'isPublished', value: '' } )
+        moduleStore.updateModuleIsPublished( {moduleId: module.id } )
         setIsShowModal(false)
     }
 

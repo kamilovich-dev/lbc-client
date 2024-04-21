@@ -18,16 +18,16 @@ import type {
   TSwitchOrderPayload,
 } from './types/cards'
 
-export async function getCards(client: Client, payload: TGetCardsPayload ): Promise<TGetCardsReturn | undefined> {
+export async function getCards(client: Client, payload: TGetCardsPayload ): Promise<TGetCardsReturn> {
     return request(client, 'post', '/card', payload)
 }
 
-export async function addCard(client: Client, payload: TAddCardPayload ): Promise<TAddCardReturn | undefined> {
+export async function addCard(client: Client, payload: TAddCardPayload ): Promise<TAddCardReturn> {
   return request(client, 'post', '/card/create', payload)
 }
 
-export async function editCard(client: Client, payload: TEditCardPayload ): Promise<TEditCardReturn | undefined> {
-  return request(client, 'post', '/card/update', payload)
+export async function editCard(client: Client, formDataPayload: TEditCardPayload ): Promise<TEditCardReturn> {
+  return request(client, 'post', '/card/update', formDataPayload)
 }
 
 export async function deleteCard(client: Client, payload: TDeleteCardPayload): Promise<void | TError | undefined> {

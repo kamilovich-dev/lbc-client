@@ -73,9 +73,6 @@ class SessionStore {
         return await userEndpoints.passwordReset(this.client, { email, password, token })
     }
 
-    updateAvatar = async(avatarUrl?: null, avatarFile?: File): Promise<TUpdateAvatarReturn> => {
-        return await userEndpoints.updateAvatar(this.client, { avatarFile, avatarUrl })
-    }
 }
 
 export { SessionStore }

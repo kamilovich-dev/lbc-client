@@ -15,7 +15,7 @@ import { ErrorPage } from 'pages/error/ErrorPage';
 import { ModulesPage } from 'pages/modules/ModulesPage';
 import { ModuleEditPage } from 'pages/module-edit/ModuleEditPage';
 import { ModulePage } from "pages/module/ModulePage";
-import { CardsModePage } from "pages/cards-mode/CardsModePage";
+import { CardsModePage } from "pages/modes/cards-mode/CardsModePage";
 import { LandingPage } from "pages/landing/LandingPage";
 import { ProfilePage } from "pages/profile/ProfilePage";
 import { FoldersPage } from "pages/folders/FoldersPage";

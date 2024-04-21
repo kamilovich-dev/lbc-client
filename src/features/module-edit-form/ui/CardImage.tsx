@@ -47,7 +47,7 @@ const CardImage = observer(( { cardId, url, cardStore }: IProps ) => {
           <input hidden type='file' id={inputId} onChange={
             e => {
               console.log('change')
-              cardStore?.editCard( {cardId, image: e.target.files ? e.target.files[0] : undefined })
+              cardStore?.updateCardImage( {cardId, img: e.target.files ? e.target.files[0] : undefined })
           }}>
           </input>
 
@@ -57,7 +57,7 @@ const CardImage = observer(( { cardId, url, cardStore }: IProps ) => {
                 const input = document.getElementById(inputId)
                 //@ts-ignore
                 if (input) input.value = null
-                cardStore?.editCard( { cardId, isDeleteImg: true })
+                cardStore?.updateCardImage( { cardId, img: undefined })
               }}>
                 <DeleteIcon />
               </SvgIcon>

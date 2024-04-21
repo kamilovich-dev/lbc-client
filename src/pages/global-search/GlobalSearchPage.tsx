@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 import { ListModules } from "pages/modules/ui/ListModules"
 import { ListFolders } from "pages/folders/ui/ListFolders"
@@ -12,7 +12,20 @@ import { useAbortController } from "entities/session"
 import { GlobalListHeader } from "./ui/GlobalListHeader"
 
 export const GlobalSearchPage = () => {
-    const globalSearchStore = new GlobalSearchStore()
+
+    useEffect(() => {
+        const globalSearchStore = new GlobalSearchStore()
+        globalSearchStore.search()
+        .then(() => {
+            setGlobalSearchStore(globalSearchStore)
+        })
+    }, [])
+
+    const [globalSearchStore, setGlobalSearchStore] = useState<GlobalSearchStore | undefined>(undefined)
+    useAbortController([globalSearchStore])
+
+    if (!globalSearchStore) return <CircularLoader/>
+
     return <ObservedGlobalSearchPage globalSearchStore={globalSearchStore} />
 }
 
@@ -21,11 +34,6 @@ interface IProps {
 }
 
 const ObservedGlobalSearchPage = observer(( {globalSearchStore}: IProps ) => {
-    useAbortController([globalSearchStore])
-
-    useEffect(() => {
-        globalSearchStore.search()
-    }, [])
 
     return (
         <>

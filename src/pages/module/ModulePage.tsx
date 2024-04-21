@@ -44,12 +44,8 @@ const ObservedModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
     const module = moduleStore.getModuleById(cardStore.moduleId)
     const cards = cardStore.cards
 
-    const handleEditCard = (cardId: number, name: string, value: string) => {
-        cardStore.editCard( { cardId, name, value } )
-    }
-
     const handleSwitchFavorite = (cardId: number) => {
-        cardStore.editCard( { cardId, isSwitchFavorite: true } )
+        cardStore.updateCardIsFavorite( { cardId } )
     }
 
     const createdAtString = module?.createdAt ? new Date(module.createdAt).toLocaleString() : ''
@@ -155,7 +151,6 @@ const ObservedModulePage = observer(( { moduleStore, cardStore }: IProps ) => {
                             cardId={card.id}
                             cardIdx={idx}
                             isOwner={module?.options.isOwner}
-                            handleEditCard={handleEditCard}
                             handleSwitchFavorite={handleSwitchFavorite}
                             isFavorite={card.isFavorite || false}
                         />
