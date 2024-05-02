@@ -4,6 +4,7 @@ import { SelectionModeAnimation } from "./SelectionModeAnimation";
 
 type TMixedCard = {
     id: number,
+    imgUrl: string,
     value: string,
     isFound: boolean,
     isSelected: boolean,
@@ -15,6 +16,7 @@ export class SelectionModeStore {
     cards: TCard[]
     private maxMixCardsLength = 18 /*Максимальное количество перемешанных карточек*/
     private timerId: NodeJS.Timer | undefined
+    private penaltyOffsetMs: number = 0
     selectionModeAnimation: SelectionModeAnimation | undefined
 
     mixedCards: TMixedCard[] = [] /*Перемешанные карточки - термины и определения*/
@@ -104,6 +106,7 @@ export class SelectionModeStore {
             this.mixedCards[i] = {
                 id: card.id,
                 value: card.term,
+                imgUrl: card.imgUrl ? `${import.meta.env.VITE_LBC_SERVER_STATIC_URL}/${card.imgUrl}` : '',
                 isFound: false,
                 isSelected: false
             }
@@ -111,6 +114,7 @@ export class SelectionModeStore {
             this.mixedCards[i + 1] = {
                 id: card.id,
                 value: card.definition,
+                imgUrl: '',
                 isFound: false,
                 isSelected: false
             }
@@ -121,11 +125,12 @@ export class SelectionModeStore {
 
     private initTimer = () => {
         const startDate = new Date()
+        this.penaltyOffsetMs = 0
 
         clearInterval(this.timerId)
         this.timerId = setInterval(() => {
             const nowDate = new Date()
-            runInAction(() => this.timerValue = this.formatTime(nowDate.getTime() - startDate.getTime()))
+            runInAction(() => this.timerValue = this.formatTime(nowDate.getTime() + this.penaltyOffsetMs - startDate.getTime()))
         }, 100)
     }
 
@@ -152,7 +157,7 @@ export class SelectionModeStore {
 
         card.isSelected = true
         await this.selectionModeAnimation?.select(mixedCardIdx)
-        this.mixedCards[mixedCardIdx] = card
+        runInAction(() => this.mixedCards[mixedCardIdx] = card)
 
         const secondSelectedCardIdx = this.mixedCards.findIndex( (card, idx) => card.isSelected === true && mixedCardIdx !== idx)
 
@@ -162,21 +167,24 @@ export class SelectionModeStore {
             const secondCard = this.mixedCards[secondSelectedCardIdx]
             const isFound = card.id === secondCard.id ? true : false
 
-            this.mixedCards[mixedCardIdx] = {
+            runInAction(() => this.mixedCards[mixedCardIdx] = {
                 ...card,
                 isSelected: false,
                 isFound
-            }
+            })
 
-            this.mixedCards[secondSelectedCardIdx] = {
+            runInAction(() => this.mixedCards[secondSelectedCardIdx] = {
                 ...secondCard,
                 isSelected: false,
                 isFound
-            }
+            })
 
             if (isFound) {
                 await this.selectionModeAnimation?.match(mixedCardIdx, secondSelectedCardIdx)
-            } else await this.selectionModeAnimation?.mismatch(mixedCardIdx, secondSelectedCardIdx)
+            } else {
+                runInAction(() => this.penaltyOffsetMs += 1000)
+                await this.selectionModeAnimation?.mismatch(mixedCardIdx, secondSelectedCardIdx)
+            }
         }
 
         const foundCount = this.mixedCards.filter(card => card.isFound === true)

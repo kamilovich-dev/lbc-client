@@ -6,9 +6,16 @@ export class SelectionModeAnimation {
 
   private basicDuration: number = 400
   controllers: Array<Controller> = []
+  penaltyController: Controller
 
   constructor( controllersCount: number ) {
     makeAutoObservable(this)
+
+    this.penaltyController = new Controller({
+      from: { transform: '', transformOrigin: '', display: 'none', opacity: 0 },
+      config: { mass: 5, tension: 500, friction: 80, duration: this.basicDuration },
+    })
+
     this.initControllers(controllersCount)
   }
 
@@ -46,6 +53,13 @@ export class SelectionModeAnimation {
 
   mismatch = async (idx1: number, idx2: number) => {
     return await Promise.all([
+        this.penaltyController.start({
+          from: { transform: 'translateY(0px)', opacity: 0.6, display: 'block' },
+          to: [
+            { transform: 'translateY(-100px)', opacity: 0, display: 'block' },
+            { display: 'none' }
+          ]
+        }),
         this.controllers[idx1].start({
             from: { transform: 'rotateZ(-5deg)', backgroundColor: '#D34646' },
             to: [
