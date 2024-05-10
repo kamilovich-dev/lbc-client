@@ -3,7 +3,7 @@ import { useInitSelectionMode } from "./model/useInitSelectionMode"
 import { useParams } from "react-router-dom";
 import { CircularLoader } from "shared/ui/loaders/CircularLoader";
 import { CardsNotFound } from "shared/ui/info/CardsNotFound";
-import { SelectionModeStore } from "features/modes/selection-mode/model/SelectionModeStore";
+import { SelectionModeStore } from "features/modes/selection-mode";
 import { SelectionModeHeader } from "./ui/SelectionModeHeader";
 import { useEffect } from "react";
 import { useSpring, animated } from "@react-spring/web";

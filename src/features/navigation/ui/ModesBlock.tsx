@@ -22,7 +22,7 @@ const ModesBlock = ( ) => {
         {
             icon: <RepeatIcon />,
             text: 'Заучивание',
-            handleClick: () => navigate(generatePath(routePaths.CARDS_MODE, { moduleId: params.moduleId ?? '' }))
+            handleClick: () => navigate(generatePath(routePaths.MEMORY_MODE, { moduleId: params.moduleId ?? '' }))
         },
         {
             icon: <QuizIcon />,
