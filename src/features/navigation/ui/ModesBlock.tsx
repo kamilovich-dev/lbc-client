@@ -27,7 +27,7 @@ const ModesBlock = ( ) => {
         {
             icon: <QuizIcon />,
             text: 'Тест',
-            handleClick: () => navigate(generatePath(routePaths.CARDS_MODE, { moduleId: params.moduleId ?? '' }))
+            handleClick: () => navigate(generatePath(routePaths.TEST_MODE, { moduleId: params.moduleId ?? '' }))
         },
         {
             icon: <FactCheckIcon />,

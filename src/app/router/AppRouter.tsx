@@ -26,6 +26,7 @@ import { AddModulePage } from "pages/folders/AddModulePage"
 import { ProfileEditPage } from "pages/profile/ProfieEditPage";
 import { SelectionModePage } from "pages/modes/selection-mode/SelectionModePage";
 import { MemoryModePage } from "pages/modes/memory-mode/MemoryModePage";
+import { TestModePage } from "pages/modes/test-mode/TestModePage";
 
 export const AppRouter = () => {
 
@@ -112,6 +113,10 @@ export const AppRouter = () => {
                         {
                             element: <MemoryModePage/>,
                             path: routePaths.MEMORY_MODE
+                        },
+                        {
+                            element: <TestModePage/>,
+                            path: routePaths.TEST_MODE
                         }
                     ]
                 },
